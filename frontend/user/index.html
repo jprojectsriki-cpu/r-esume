@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/lp.css?v=20261114c">
+    <link rel="stylesheet" href="css/lp.css?v=20261114d">
     <script>
         document.documentElement.classList.add('js');
         try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
@@ -35,7 +35,11 @@
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
 
     <symbol id="sh-octa" viewBox="0 0 200 240"><polygon class="f1" points="100,10 10,120 100,160"/><polygon class="f2" points="100,10 100,160 190,120"/><polygon class="f2" points="100,230 10,120 100,160"/><polygon class="f3" points="100,230 100,160 190,120"/></symbol>
-    </svg>
+    
+    <symbol id="sh-tetra" viewBox="0 0 200 190"><polygon class="f1" points="100,10 15,150 185,130"/><polygon class="f2" points="100,10 15,150 110,180"/><polygon class="f3" points="100,10 110,180 185,130"/></symbol>
+    <symbol id="sh-prism" viewBox="0 0 220 160"><polygon class="f1" points="30,120 75,40 165,10 120,90"/><polygon class="f2" points="120,150 210,120 165,10 75,40"/><polygon class="f3" points="30,120 120,150 75,40"/></symbol>
+    <symbol id="sh-pyr" viewBox="0 0 200 180"><polygon class="f2" points="100,10 20,140 100,175"/><polygon class="f3" points="100,10 100,175 180,140"/></symbol>
+</svg>
 
 <div class="sample-bar">デザイン確認用のサンプルです。お申し込みは、まだできません。 / Design preview. Applications are not open yet.</div>
 
@@ -69,10 +73,12 @@
 <main id="top">
 
 <section class="hero">
-    <svg class="solid s-octa tone-a" viewBox="0 0 200 240" aria-hidden="true"><use href="#sh-octa"/></svg>
+    <svg class="solid s-octa tone-b" viewBox="0 0 200 240" aria-hidden="true"><use href="#sh-octa"/></svg>
+    <svg class="solid s-tetra tone-c" viewBox="0 0 200 190" aria-hidden="true"><use href="#sh-tetra"/></svg>
+    <svg class="solid s-prism tone-a" viewBox="0 0 220 160" aria-hidden="true"><use href="#sh-prism"/></svg>
     <div class="container hero-grid">
         <div>
-            <h1>スマホで作る、<br><ruby>日本<rt>にほん</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby>。</h1>
+            <h1>スマホで作る、<br><span class="hl"><ruby>日本<rt>にほん</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby></span>。</h1>
             <p class="hero-lead"><ruby>写真<rt>しゃしん</rt></ruby>を<ruby>撮<rt>と</rt></ruby>って、<ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えるだけ。<ruby>志望動機<rt>しぼうどうき</rt></ruby>と<ruby>自己<rt>じこ</rt></ruby>PRも<ruby>自動<rt>じどう</rt></ruby>で<ruby>作<rt>つく</rt></ruby>れます。</p>
             <p class="en">Make a Japanese resume (rirekisho) on your smartphone. Take a photo, answer a few questions, done.</p>
             <div class="hero-cta">
@@ -147,7 +153,7 @@
     </div>
 </section>
 
-<section class="section bg-surface" id="flow">
+<section class="section bg-dark" id="flow">
     <div class="container">
         <div class="section-head">
             <h2>ご<ruby>利用<rt>りよう</rt></ruby>の<ruby>流<rt>なが</rt></ruby>れ</h2>
@@ -208,6 +214,8 @@
 </section>
 
 <section class="final">
+    <svg class="solid s-pyr tone-d" viewBox="0 0 200 180" aria-hidden="true"><use href="#sh-pyr"/></svg>
+    <svg class="solid s-tetra tone-d" viewBox="0 0 200 190" aria-hidden="true"><use href="#sh-tetra"/></svg>
     <div class="container">
         <h2><ruby>今日<rt>きょう</rt></ruby>から、<ruby>履歴書<rt>りれきしょ</rt></ruby>づくりを<ruby>始<rt>はじ</rt></ruby>めよう。</h2>
         <button type="button" class="btn btn-lg" data-open="dlgApply">申し込む｜1,100円（税込・1年間）</button>

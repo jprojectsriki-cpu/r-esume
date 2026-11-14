@@ -202,3 +202,72 @@ dialog::backdrop { background: rgba(20,36,58,.55); }
     html { scroll-behavior: auto; }
     .btn, .faq summary .icon { transition: none; }
 }
+
+
+/* ===== 4版：ヘッダーの折り返し修正 + 少し派手に ===== */
+:root { --sun: #FFD43B; --deep: #173B6C; }
+.btn, .furi-btn, .main-nav a, .text-link, .brand { white-space: nowrap; flex-shrink: 0; }
+.header-actions { flex-wrap: nowrap; }
+.main-nav { display: none !important; }
+@media (min-width: 1024px) { .main-nav { display: flex !important; } }
+
+/* 立体の色 */
+.tone-b { --s1: #E8F3FD; --s2: #8FBBE8; --s3: #4F89CC; }
+.tone-c { --s1: #FFFFFF; --s2: #B9D6F2; --s3: #7FAEE0; }
+.tone-d { --s1: #4F89CC; --s2: #2F6DB5; --s3: #1E55A0; }
+
+/* ヒーロー */
+.hero { background: linear-gradient(155deg, #E8F2FC 0%, #CFE3F7 48%, #A9C9EA 100%); }
+.hero h1 { font-size: clamp(36px, 10vw, 56px); }
+.hl { background: linear-gradient(transparent 60%, var(--sun) 60%); padding: 0 4px; margin: 0 -4px; }
+.hero .s-octa { width: 260px; right: -70px; bottom: -40px; }
+.hero .s-tetra { width: 120px; left: -34px; bottom: -22px; z-index: 1; }
+.hero .s-prism { display: none; width: 190px; z-index: 1; }
+.hero-tags li { background: rgba(255,255,255,0.85); border-radius: 999px; padding: 4px 12px; color: var(--ink); }
+.paper { transform: rotate(2deg); box-shadow: 0 2px 4px rgba(20,36,58,.1), 0 28px 48px -16px rgba(20,36,58,.4); }
+.seal { box-shadow: none; }
+
+/* できること：色のついた丸いアイコン */
+.feature { grid-template-columns: 48px 1fr; gap: 4px 16px; padding: 22px 0; }
+.feature .icon { width: 48px; height: 48px; padding: 12px; margin-top: 0; border-radius: 50%; background: var(--primary); color: #fff; }
+.feature:nth-child(2) .icon { background: #2F8FD6; }
+.feature:nth-child(3) .icon { background: var(--sun); color: var(--ink); }
+.feature:nth-child(4) .icon { background: var(--deep); }
+.feature p { grid-column: 2; }
+
+/* 流れ：濃い青の帯 */
+.bg-dark { background: var(--deep); color: #fff; position: relative; overflow: hidden; }
+.bg-dark .en { color: #C9DAEE; }
+.bg-dark .flow li::before { background: rgba(255,255,255,0.35); }
+.bg-dark .flow .no { background: var(--sun); color: var(--ink); width: 40px; height: 40px; font-size: 18px; }
+.bg-dark .flow li { padding-left: 56px; }
+.bg-dark .flow li::before { left: 19px; top: 40px; }
+
+/* 料金 */
+.price-box { border: 2px solid var(--primary); box-shadow: 8px 8px 0 #BFD9F4; position: relative; }
+.price-big strong { color: var(--primary); font-size: 60px; }
+.price-box::before { content: "1年間"; position: absolute; top: -16px; right: 20px; background: var(--sun); color: var(--ink); font-weight: 700; font-size: 14px; line-height: 1; padding: 9px 14px; border-radius: 999px; }
+
+/* 最後の申込 */
+.final { position: relative; overflow: hidden; background: linear-gradient(135deg, #2160AD 0%, #173B6C 100%); }
+.final .container { position: relative; z-index: 2; }
+.final .s-pyr { width: 150px; right: -20px; top: -10px; }
+.final .s-tetra { width: 90px; right: 30%; bottom: -24px; display: none; }
+.final .btn { background: var(--sun); color: var(--ink); border-color: var(--sun); }
+.final .btn:hover { background: #FFE26E; border-color: #FFE26E; }
+
+@media (min-width: 768px) {
+    .hero .s-octa { width: 540px; right: -130px; top: -90px; bottom: auto; }
+    .hero .s-tetra { width: 200px; left: -50px; bottom: -40px; }
+    .hero .s-prism { display: block; right: 44%; top: 10px; opacity: 0.9; }
+    .final .s-pyr { width: 240px; right: 6%; top: auto; bottom: -30px; }
+    .final .s-tetra { display: block; }
+}
+@media (min-width: 1024px) {
+    .hero h1 { font-size: 60px; }
+    .hero .s-octa { right: -40px; }
+}
+
+/* ヘッダーのボタン：スマホ幅では隠す（.btn の display に負けていたのが、縦書きの原因） */
+.header-actions .header-login { display: none; }
+@media (min-width: 768px) { .header-actions .header-login { display: inline-flex; } }
