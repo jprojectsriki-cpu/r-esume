@@ -1,68 +1,71 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
-    <title>ログイン | R-ESUME</title>
-    <link rel="icon" href="img/favicon.png" type="image/png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/loading.css?v=20261114m">
-    <link rel="stylesheet" href="css/lp.css?v=20261114m">
-    <link rel="stylesheet" href="css/auth.css?v=20261114m">
-    <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title data-en="Log in | R-ESUME">ログイン | R-ESUME</title>
+<link href="img/favicon.png" rel="icon" type="image/png"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="css/loading.css?v=20261114n" rel="stylesheet"/>
+<link href="css/lp.css?v=20261114n" rel="stylesheet"/>
+<link href="css/auth.css?v=20261114n" rel="stylesheet"/>
+<script src="js/i18n.js?v=20261114n"></script>
+<script>
         document.documentElement.classList.add('js');
         try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
     </script>
 </head>
 <body>
-<script src="js/loading.js?v=20261114m"></script>
-<canvas id="bg3d" aria-hidden="true"></canvas>
-
+<script src="js/loading.js?v=20261114n"></script>
+<canvas aria-hidden="true" id="bg3d"></canvas>
 <header class="site-header">
-    <div class="header-inner">
-        <a class="brand" href="index.html" aria-label="R-ESUME トップへ"><span class="brand-mark"><img src="img/logo.png" alt="" width="24" height="28"></span><span class="brand-name">R-ESUME</span></a>
-        <div class="header-actions">
-            <button type="button" class="furi-btn" id="furiBtn" aria-pressed="true">ふりがな ON</button>
-        </div>
-    </div>
+<div class="header-inner">
+<a aria-label="R-ESUME トップへ" class="brand" data-aria-en="Go to the top of R-ESUME" href="index.html"><span class="brand-mark"><img alt="" height="28" src="img/logo.png" width="24"/></span><span class="brand-name">R-ESUME</span></a>
+<div class="header-tools" data-skip="">
+<div aria-label="言語 / Language" class="lang-switch" data-aria-en="Language" role="group">
+<button aria-pressed="true" class="lang-opt" data-set-lang="ja" type="button">日本語</button>
+<button aria-pressed="false" class="lang-opt" data-set-lang="en" type="button">English</button>
+</div>
+<button aria-pressed="true" class="furi-btn" id="furiBtn" type="button"><span>ふりがな ON</span></button>
+</div>
+</div>
 </header>
-
 <main class="auth-main">
-    <div class="auth-card">
-        <h1>ログイン</h1>
-        <p class="en">Log in</p>
-        <form id="loginForm" novalidate>
-            <div class="field">
-                <label for="lgEmail">メールアドレス / Email</label>
-                <input type="email" id="lgEmail" name="email" maxlength="200" autocomplete="username" inputmode="email" required>
-            </div>
-            <div class="field">
-                <label for="lgPass">パスワード / Password</label>
-                <div class="pw-row">
-                    <input type="password" id="lgPass" name="password" maxlength="64" autocomplete="current-password" required>
-                    <button type="button" class="pw-toggle" id="pwToggle" aria-pressed="false" aria-controls="lgPass"><ruby>表示<rt>ひょうじ</rt></ruby></button>
-                </div>
-                <p class="hint">お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みのときに<ruby>決<rt>き</rt></ruby>めたパスワードを<ruby>入力<rt>にゅうりょく</rt></ruby>してください。 / Enter the password you set when you applied.</p>
-            </div>
-            <p class="form-msg" id="loginMsg" role="status" aria-live="polite"></p>
-            <button type="submit" class="btn btn-lg btn-block" id="loginBtn">ログイン / Log in</button>
-        </form>
-        <p class="auth-sub">まだお<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みでない<ruby>方<rt>かた</rt></ruby>は、<a href="index.html#price"><ruby>料金<rt>りょうきん</rt></ruby>のページ</a>から<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>めます。お<ruby>支払<rt>しはら</rt></ruby>いの<ruby>確認<rt>かくにん</rt></ruby><ruby>後<rt>ご</rt></ruby>に、アカウントが<ruby>発行<rt>はっこう</rt></ruby>されます。<span class="en" style="display:block;margin-top:4px">New here? Apply from the price section. Your account is issued after we confirm your payment.</span></p>
-    </div>
+<div class="auth-card">
+        <div class="auth-badge" aria-hidden="true"><img src="img/logo.png" alt="" width="28" height="33"></div>
+<h1><span data-l="ja" lang="ja">ログイン</span><span data-l="en" lang="en">Log in</span></h1>
+
+<form id="loginForm" novalidate="">
+<div class="field">
+<label for="lgEmail"><span data-l="ja" lang="ja">メールアドレス</span><span data-l="en" lang="en">Email</span></label>
+<input autocomplete="username" id="lgEmail" inputmode="email" maxlength="200" name="email" required="" type="email"/>
+</div>
+<div class="field">
+<label for="lgPass"><span data-l="ja" lang="ja">パスワード</span><span data-l="en" lang="en">Password</span></label>
+<div class="pw-row">
+<input autocomplete="current-password" id="lgPass" maxlength="64" name="password" required="" type="password"/>
+<button aria-controls="lgPass" aria-pressed="false" class="pw-toggle" id="pwToggle" type="button"><span data-l="ja" lang="ja"><ruby>表示<rt>ひょうじ</rt></ruby></span><span data-l="en" lang="en">Show</span></button>
+</div>
+<p class="hint"><span data-l="ja" lang="ja">お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みのときに<ruby>決<rt>き</rt></ruby>めたパスワードを<ruby>入力<rt>にゅうりょく</rt></ruby>してください。</span><span data-l="en" lang="en">Enter the password you set when you applied.</span></p>
+</div>
+<p aria-live="polite" class="form-msg" id="loginMsg" role="status"></p>
+<button class="btn btn-lg btn-block" id="loginBtn" type="submit"><span data-l="ja" lang="ja">ログイン</span><span data-l="en" lang="en">Log in</span></button>
+</form>
+<p class="auth-sub"><span data-l="ja" lang="ja">まだお<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みでない<ruby>方<rt>かた</rt></ruby>は、<a href="index.html#price"><ruby>料金<rt>りょうきん</rt></ruby>のページ</a>から<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>めます。お<ruby>支払<rt>しはら</rt></ruby>いの<ruby>確認<rt>かくにん</rt></ruby><ruby>後<rt>ご</rt></ruby>に、アカウントが<ruby>発行<rt>はっこう</rt></ruby>されます。</span><span data-l="en" lang="en">New here? You can apply from the price section. Your account is issued after we confirm your payment.</span></p>
+</div>
 </main>
-
 <footer class="auth-foot">
-    <div class="container">
-        <p><a href="index.html">トップページ</a>　&copy; 2026 R-ESUME / ReicherRick. All rights reserved.</p>
-    </div>
+<div class="container">
+<p><span data-l="ja" lang="ja"><a href="index.html">トップページ</a>　© 2026 R-ESUME</span><span data-l="en" lang="en">ReicherRick. All rights reserved.</span></p>
+</div>
 </footer>
-
-<script src="js/config.js?v=20261114m"></script>
-<script src="js/common.js?v=20261114m"></script>
-<script src="js/bg3d.js?v=20261114m"></script>
-<script src="js/login.js?v=20261114m"></script>
+<script src="js/config.js?v=20261114n"></script>
+<script src="js/common.js?v=20261114n"></script>
+<script src="js/bg3d.js?v=20261114n"></script>
+<script src="js/login.js?v=20261114n"></script>
 </body>
 </html>

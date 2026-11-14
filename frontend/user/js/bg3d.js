@@ -6,6 +6,8 @@
     var ctx = cv.getContext('2d');
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var W = 0, H = 0, dpr = 1, cur = 0;
+    var colorful = cv.getAttribute('data-bg') === 'colorful';
+    var HUES = [212, 198, 172, 48, 28, 336, 266];   // 青・水色・青緑・黄・橙・ピンク・紫（ローディングと同じ）
 
     // 正二十面体（立方体ではない立体）
     var t = (1 + Math.sqrt(5)) / 2;
@@ -42,7 +44,7 @@
             return [x, y, z];
         });
         ctx.lineJoin = 'round'; ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-        F.forEach(function (f) {
+        F.forEach(function (f, fi) {
             var a = tv[f[0]], b = tv[f[1]], c = tv[f[2]];
             var ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
             var vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
@@ -52,7 +54,8 @@
             var nl = Math.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]); n = [n[0] / nl, n[1] / nl, n[2] / nl];
             if (n[2] <= 0) return;                                                       // 裏面は描かない
             var lit = Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
-            ctx.fillStyle = 'hsla(' + hue.toFixed(1) + ',72%,' + (66 + 26 * lit).toFixed(1) + '%,0.92)';
+            if (colorful) ctx.fillStyle = 'hsla(' + HUES[fi % HUES.length] + ',80%,' + (62 + 18 * lit).toFixed(1) + '%,0.95)';
+            else ctx.fillStyle = 'hsla(' + hue.toFixed(1) + ',72%,' + (66 + 26 * lit).toFixed(1) + '%,0.92)';
             ctx.beginPath();
             [a, b, c].forEach(function (v, i) {
                 var k = 1 + v[2] * 0.12, X = cx + v[0] * R * k, Y = cy - v[1] * R * k;

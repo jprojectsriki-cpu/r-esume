@@ -391,3 +391,24 @@ main { position: relative; z-index: 1; overflow-x: clip; }
 .price-list li { align-items: flex-start; line-height: 2; }
 .price-list li > span { flex: 1; min-width: 0; }
 .price-list .icon { margin-top: 0.4em; }
+
+/* ===== 言語切り替え（日本語 / English） ===== */
+html[data-lang="en"] [data-l="ja"] { display: none !important; }
+html:not([data-lang="en"]) [data-l="en"] { display: none !important; }
+html[data-lang="en"] .furi-btn { display: none; }          /* ふりがなは日本語のときだけ */
+.header-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.header-actions { margin-left: 0 !important; }
+@media (min-width: 1024px) { .header-tools { margin-left: 8px; } }
+.lang-switch { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-s); background: #fff; overflow: hidden; }
+.lang-opt { min-height: 44px; min-width: 44px; padding: 0 10px; border: 0; background: transparent; color: var(--ink-2); font: inherit; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.lang-opt + .lang-opt { border-left: 1px solid var(--line); }
+.lang-opt[aria-pressed="true"] { background: var(--primary); color: #fff; font-weight: 700; }
+.lang-opt:focus-visible, .furi-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+@media (max-width: 420px) {
+    .header-inner { gap: 6px; padding-left: 12px; padding-right: 12px; }
+    .brand-name { font-size: 17px; }
+    .brand-mark { width: 30px; height: 30px; }
+    .lang-opt { padding: 0 7px; font-size: 13px; min-width: 40px; }
+    .furi-btn { padding: 0 8px; font-size: 13px; }
+    .header-tools { gap: 6px; }
+}

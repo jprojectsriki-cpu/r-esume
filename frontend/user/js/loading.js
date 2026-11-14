@@ -56,7 +56,7 @@
         if (dlg) return;
         dlg = document.createElement('dialog');
         dlg.id = 'rLoading';
-        dlg.setAttribute('aria-label', '読み込み中 / Loading');
+        dlg.setAttribute('aria-label', window.RI18n ? window.RI18n.t('読み込み中', 'Loading') : '読み込み中');
         dlg.innerHTML =
             '<div class="rl-box" role="status" aria-live="polite" aria-busy="true">' +
             '<canvas class="rl-canvas" aria-hidden="true"></canvas>' +
@@ -67,8 +67,8 @@
         dlg.addEventListener('cancel', function (e) { e.preventDefault(); });   // Esc では閉じない
     }
     function setText(html) {
-        textEl.innerHTML = (html || '<ruby>読<rt>よ</rt></ruby>み<ruby>込<rt>こ</rt></ruby>み<ruby>中<rt>ちゅう</rt></ruby>') +
-            '<span class="rl-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="rl-en">Loading…</span>';
+        textEl.innerHTML = (html || (window.RI18n && window.RI18n.lang() === 'en' ? 'Loading' : '<ruby>読<rt>よ</rt></ruby>み<ruby>込<rt>こ</rt></ruby>み<ruby>中<rt>ちゅう</rt></ruby>')) +
+            '<span class="rl-dots" aria-hidden="true"><i></i><i></i><i></i></span>';
     }
     function painted() {   // 画面に反映（描画）されるまで待つ
         return new Promise(function (res) { requestAnimationFrame(function () { requestAnimationFrame(res); }); });

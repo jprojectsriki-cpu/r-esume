@@ -16,3 +16,26 @@
 .auth-foot { position: relative; z-index: 1; background: var(--ink); color: #fff; padding: 22px 0; font-size: 13px; text-align: center; }
 .auth-foot a { color: #fff; }
 [hidden] { display: none !important; }
+
+/* ===== ログイン・マイページを、少しPOPに ===== */
+.auth-main { position: relative; overflow: hidden; }
+.auth-main::before, .auth-main::after { content: ""; position: absolute; z-index: 0; pointer-events: none; }
+.auth-main::before { width: 120px; height: 120px; border-radius: 50%; background: var(--sun); left: max(-30px, calc(50% - 360px)); top: 36px; opacity: .9; }
+.auth-main::after { width: 84px; height: 84px; border-radius: 22px; background: #FF6B8B; right: max(-20px, calc(50% - 330px)); bottom: 44px; transform: rotate(18deg); opacity: .85; }
+.auth-card { position: relative; z-index: 1; border: 2px solid var(--ink); border-radius: 18px; padding: 40px 22px 26px; box-shadow: 7px 7px 0 var(--sun), 7px 7px 0 2px var(--ink); }
+.auth-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 12px; border-radius: 16px 16px 0 0; background: linear-gradient(90deg, #2160AD 0 25%, #FFD43B 25% 50%, #2EC4B6 50% 75%, #FF6B8B 75% 100%); }
+.auth-badge { position: absolute; right: 18px; top: -22px; width: 56px; height: 56px; border-radius: 50%; background: var(--sun); border: 2px solid var(--ink); display: grid; place-items: center; transform: rotate(8deg); box-shadow: 2px 3px 0 var(--ink); }
+.auth-badge img { display: block; width: 28px; height: auto; }
+.auth-card h1 { font-size: 32px; letter-spacing: .01em; }
+.auth-card h1 [data-l] { background: linear-gradient(transparent 62%, var(--sun) 62%); padding: 0 4px; }
+.auth-card .field input { border: 2px solid var(--ink); border-radius: 10px; background: #fff; }
+.auth-card .field input:focus { outline: 3px solid var(--focus); outline-offset: 1px; }
+.auth-card .btn-lg { border: 2px solid var(--ink); border-radius: 12px; box-shadow: 0 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+.auth-card .btn-lg:hover { transform: translateY(-1px); box-shadow: 0 5px 0 var(--ink); }
+.auth-card .btn-lg:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+.auth-card .btn-secondary { border: 2px solid var(--ink); border-radius: 12px; box-shadow: 0 3px 0 var(--ink); }
+.pw-toggle { border: 2px solid var(--ink); background: var(--sun); color: var(--ink); border-radius: 8px; right: 5px; }
+.my-role { background: var(--sun); color: var(--ink); border: 2px solid var(--ink); }
+.my-limit { border-left-color: var(--sun); background: var(--tint); border-radius: 10px; }
+.auth-card .form-msg.is-error { padding: 10px 12px; border: 2px solid var(--error); border-radius: 10px; background: #FFF1F0; }
+@media (prefers-reduced-motion: reduce) { .auth-card .btn-lg { transition: none; } }
