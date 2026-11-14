@@ -56,16 +56,17 @@
 
     /* ---- 申込フォーム ---- */
     var form = $('#applyForm'), msg = $('#applyMsg'), btn = $('#applyBtn');
-    function setMsg(text, kind) { msg.textContent = text || ''; msg.className = 'form-msg' + (kind ? ' is-' + kind : ''); }
+    function setMsg(html, kind, plain) { if (plain) { msg.textContent = html || ''; } else { msg.innerHTML = html || ''; } msg.className = 'form-msg' + (kind ? ' is-' + kind : ''); }
+    function rb(k, y) { return '<ruby>' + k + '<rt>' + y + '</rt></ruby>'; }
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         var name = form.name.value.trim(), email = form.email.value.trim(), pass = form.password.value;
-        if (!name) { setMsg('お名前を入力してください。 / Please enter your name.', 'error'); form.name.focus(); return; }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setMsg('メールアドレスの形式を確認してください。 / Please check your email address.', 'error'); form.email.focus(); return; }
-        if (pass.length < 8 || pass.length > 64) { setMsg('パスワードは8〜64文字で入力してください。 / Password must be 8–64 characters.', 'error'); form.password.focus(); return; }
-        if (!apiReady()) { setMsg('これはデザイン確認用のサンプルです。お申し込みは、まだできません。 / This is a design preview. Applications are not open yet.', 'error'); return; }
+        if (!name) { setMsg('お' + rb('名前', 'なまえ') + 'を' + rb('入力', 'にゅうりょく') + 'してください。 / Please enter your name.', 'error'); form.name.focus(); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setMsg('メールアドレスの' + rb('形式', 'けいしき') + 'を' + rb('確認', 'かくにん') + 'してください。 / Please check your email address.', 'error'); form.email.focus(); return; }
+        if (pass.length < 8 || pass.length > 64) { setMsg('パスワードは8〜64' + rb('文字', 'もじ') + 'で' + rb('入力', 'にゅうりょく') + 'してください。 / Password must be 8–64 characters.', 'error'); form.password.focus(); return; }
+        if (!apiReady()) { setMsg('これはデザイン' + rb('確認用', 'かくにんよう') + 'のサンプルです。お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みは、まだできません。 / This is a design preview. Applications are not open yet.', 'error'); return; }
 
-        btn.disabled = true; setMsg('送信しています… / Sending…');
+        btn.disabled = true; setMsg(rb('送信', 'そうしん') + 'しています… / Sending…');
         // Content-Type を text/plain にすると、ブラウザの事前確認（プリフライト）が不要になり、GASで受け取れる
         fetch(CONFIG.API_URL, {
             method: 'POST',
@@ -73,13 +74,13 @@
             body: JSON.stringify({ action: 'apply', name: name, email: email, password: pass, website: form.website.value })
         }).then(function (r) { return r.json(); }).then(function (res) {
             if (res && res.ok) {
-                setMsg('お申し込みを受け付けました。メールをご確認ください。 / Thank you! Please check your email.', 'ok');
+                setMsg('お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みを' + rb('受', 'う') + 'け' + rb('付', 'つ') + 'けました。メールをご' + rb('確認', 'かくにん') + 'ください。 / Thank you! Please check your email.', 'ok');
                 form.reset();
             } else {
-                setMsg((res && res.message) || 'お申し込みできませんでした。', 'error');
+                if (res && res.message) { setMsg(res.message, 'error', true); } else { setMsg('お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みできませんでした。', 'error'); }
             }
         }).catch(function () {
-            setMsg('通信できませんでした。時間をおいてもう一度お試しください。 / Network error. Please try again.', 'error');
+            setMsg(rb('通信', 'つうしん') + 'できませんでした。' + rb('時間', 'じかん') + 'をおいてもう' + rb('一度', 'いちど') + 'お' + rb('試', 'ため') + 'しください。 / Network error. Please try again.', 'error');
         }).then(function () { btn.disabled = false; });
     });
 

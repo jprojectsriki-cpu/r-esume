@@ -216,7 +216,7 @@ function sendApplyMails_(name, email, a) {
       '',
       '■ 申込番号：' + a.applicationId,
       '■ サービス：R-ESUME 履歴書作成（1年間）',
-      '■ 金額　　：' + amount + '円（税込・1年間）',
+      '■ 金額　　：' + yen_(amount) + '（税込・1年間）',
       '■ お支払い：' + PAYMENT_METHODS[a.payment],
       '■ 支払期限：' + deadline,
       '',
@@ -246,7 +246,7 @@ function sendApplyMails_(name, email, a) {
         '申込番号：' + a.applicationId,
         'お名前　：' + name,
         'メール　：' + email,
-        '金額　　：' + amount + '円',
+        '金額　　：' + yen_(amount),
         'お支払い：' + PAYMENT_METHODS[a.payment],
         '支払期限：' + deadline
       ].join('\n')
@@ -294,4 +294,10 @@ function cleanupTestApply() {
     }
   });
   Logger.log('テスト用の行を ' + removed + ' 行削除しました。');
+}
+
+
+/** 金額を「¥1,100」の形にする */
+function yen_(n) {
+  return '¥' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

@@ -1,6 +1,1 @@
-/* R-ESUME フロントエンド設定
- * API_URL: R-ESUME の GAS Web アプリの URL（R-5b で Webアプリを公開したあとに設定する）
- */
-window.RESUME_CONFIG = {
-  API_URL: ''
-};
+window.RESUME_CONFIG = { API_URL: 'https://script.google.com/macros/s/AKfycbwFDJNrWwv3ke6wYw1-lBcTA2THmpfV63uYYZP-ccc3efEaginGQCfN__1Saqq6330zAQ/exec' };
