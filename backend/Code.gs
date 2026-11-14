@@ -65,6 +65,14 @@ function doPost(e) {
         return json_(logout_(req.token));
       case 'me':
         return json_(checkSession_(req.token));
+      case 'adminList':
+        return json_(adminList_(req.token));
+      case 'adminIssue':
+        return json_(adminIssue_(req.token, String(req.applicationId || '')));
+      case 'adminCancel':
+        return json_(adminCancel_(req.token, String(req.applicationId || ''), req.reason));
+      case 'adminSetUser':
+        return json_(adminSetUser_(req.token, String(req.userId || ''), String(req.status || '')));
       default:
         return json_({ ok: false, message: '不明な操作です。' });
     }

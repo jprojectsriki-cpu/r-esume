@@ -20,7 +20,9 @@
         document.getElementById('myName').textContent = u.name;
         document.getElementById('myRole').innerHTML = isAdmin ? T(rb('管理者', 'かんりしゃ'), 'Administrator') : T(rb('受講生', 'じゅこうせい'), 'Student');
         var lim = document.getElementById('myLimit');
-        if (isAdmin) { lim.innerHTML = T(rb('管理者', 'かんりしゃ') + 'としてログインしています。' + rb('管理画面', 'かんりがめん') + 'は、' + rb('次', 'つぎ') + 'のステップで' + rb('公開', 'こうかい') + 'します。', 'You are logged in as an administrator. The admin screen will open in the next step.'); }
+        document.getElementById('adminLink').hidden = !isAdmin;
+        document.getElementById('mySoon').hidden = isAdmin;
+        if (isAdmin) { lim.innerHTML = T(rb('管理者', 'かんりしゃ') + 'としてログインしています。', 'You are logged in as an administrator.'); }
         else if (u.expired) { lim.innerHTML = T(rb('利用', 'りよう') + rb('期限', 'きげん') + 'が' + rb('過', 'す') + 'ぎています（' + ymd(u.validUntil) + 'まで）。', 'Your access has expired (it ended on ' + ymd(u.validUntil) + ').'); }
         else { lim.innerHTML = T(rb('利用', 'りよう') + rb('期限', 'きげん') + '：' + ymd(u.validUntil) + 'まで', 'Valid until: ' + ymd(u.validUntil)); }
         document.getElementById('myBody').hidden = false;
