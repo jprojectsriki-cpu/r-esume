@@ -9,8 +9,6 @@
 (function () {
     'use strict';
     var MIN_MS = 600, FAILSAFE_MS = 60000;
-    var script = document.currentScript;
-    var logoSrc = script ? new URL('../img/logo.png', script.src).href : 'img/logo.png';
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var dlg, cv, ctx, textEl, count = 0, shownAt = 0, raf = 0, failTimer = 0, closing = null;
 
@@ -62,7 +60,7 @@
         dlg.innerHTML =
             '<div class="rl-box" role="status" aria-live="polite" aria-busy="true">' +
             '<canvas class="rl-canvas" aria-hidden="true"></canvas>' +
-            '<div class="rl-logo"><span class="rl-logo-mark"><img src="' + logoSrc + '" alt="" width="28" height="32"></span><span class="rl-name">R-ESUME</span></div>' +
+            '<div class="rl-logo"><span class="rl-name">R-ESUME</span></div>' +
             '<p class="rl-text"></p></div>';
         document.body.appendChild(dlg);
         cv = dlg.querySelector('canvas'); ctx = cv.getContext('2d'); textEl = dlg.querySelector('.rl-text');
