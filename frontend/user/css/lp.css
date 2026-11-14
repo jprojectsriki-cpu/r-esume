@@ -373,3 +373,11 @@ main { position: relative; z-index: 1; overflow-x: clip; }
 /* フッターのリンク：ふりがな（ruby）が混ざると、flex のままでは二段にくずれるため、通常の行にする */
 .footer-col a, .footer-col button { display: block; width: auto; min-height: 40px; padding: 6px 0; line-height: 1.9; white-space: normal; }
 @media (min-width: 768px) { .footer-grid { grid-template-columns: 1.3fr 0.9fr 0.9fr 1.6fr; } }
+
+/* フッターのリンクは、1行におさめる */
+.footer-col a, .footer-col button { white-space: nowrap; }
+.footer-col:last-child { grid-column: 1 / -1; }
+@media (min-width: 768px) {
+    .footer-grid { grid-template-columns: minmax(0, 1.3fr) auto auto auto; column-gap: 48px; }
+    .footer-col:last-child { grid-column: auto; }
+}
