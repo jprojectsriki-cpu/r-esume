@@ -19,3 +19,4 @@ npm-debug.log*
 # ===== ログ・一時ファイル =====
 *.log
 *.tmp
+frontend/user/index.legal.html
