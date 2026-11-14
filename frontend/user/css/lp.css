@@ -319,3 +319,8 @@ main { position: relative; z-index: 1; overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
     .js [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
+
+
+/* 流れの見出しは、固定（sticky）にしない。固定すると、1・2番の項目に重なるため */
+#flow .section-head { position: static; }
+.p-photo img { display: block; }
