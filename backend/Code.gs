@@ -57,6 +57,8 @@ function doPost(e) {
 
   try {
     switch (req.action) {
+      case 'apply':
+        return json_(apply_(req));
       default:
         return json_({ ok: false, message: '不明な操作です。' });
     }

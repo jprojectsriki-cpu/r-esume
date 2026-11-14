@@ -79,3 +79,30 @@ function setupAdmin() {
   props.deleteProperty('ADMIN_PASSWORD');
   Logger.log('管理者を登録しました: ' + email);
 }
+
+
+/** メールアドレスでユーザーを探す（見つからなければ null） */
+function findUserByEmail_(email) {
+  const sheet = getSheet_(SHEET_USERS);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return null;
+
+  const rows = sheet.getRange(2, 1, lastRow - 1, 11).getValues();
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i];
+    if (String(r[1]).trim().toLowerCase() === email) {
+      return {
+        row: i + 2,
+        userId: String(r[0]),
+        email: String(r[1]),
+        passwordHash: String(r[2]),
+        salt: String(r[3]),
+        name: String(r[4]),
+        role: String(r[5]),
+        status: String(r[6]),
+        validUntil: r[7] || null
+      };
+    }
+  }
+  return null;
+}

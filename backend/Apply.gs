@@ -1,0 +1,297 @@
+/**
+ * R-ESUME API - 申し込み
+ * - お支払いは銀行振込だけ。振込先は、スクリプト プロパティ BANK_INFO に入れる（コードには書かない）
+ * - 期限切れ・キャンセルで「入金待ち」のまま残ったアカウントは、同じメールアドレスで申し込み直せる
+ */
+
+// 料金（税込・1年間。更新も同じ料金）
+const PRICE = 1100;
+const PLAN_CODE = 'STD';
+// お支払い方法の名前
+const PAYMENT_METHODS = { bank_transfer: '銀行振込' };
+const PAYMENT_DEFAULT = 'bank_transfer';
+const PAYMENT_DAYS = 7; // 支払期限（日）
+const APPLY_LIMIT_PER_HOUR = 30; // 1時間に受け付ける申込の上限（いたずら・連続送信の防止）
+
+/** 申込番号を作る（例：RE-20261114-K7Q2） */
+function makeApplicationId_() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 見間違えやすい O/0/I/1 は使わない
+  let rand = '';
+  for (let i = 0; i < 4; i++) rand += chars.charAt(Math.floor(Math.random() * chars.length));
+  const date = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyyMMdd');
+  return 'RE-' + date + '-' + rand;
+}
+
+/** Applications シートを読み込んで、オブジェクトの配列にする */
+function readApplications_() {
+  const sheet = getSheet_(SHEET_APPLICATIONS);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return [];
+  return sheet.getRange(2, 1, lastRow - 1, 15).getValues().map(function (r, i) {
+    return {
+      row: i + 2,
+      applicationId: String(r[0]),
+      userId: String(r[1]),
+      email: String(r[2]),
+      name: String(r[3]),
+      plan: String(r[4]),
+      amount: Number(r[5]),
+      paymentMethod: String(r[6]),
+      status: String(r[7]),
+      createdAt: r[8] || null,
+      expiresAt: r[9] || null,
+      paidAt: r[10] || null,
+      issuedAt: r[11] || null,
+      cancelledAt: r[12] || null,
+      note: String(r[13] || ''),
+      remindedAt: r[14] || null
+    };
+  });
+}
+
+/** 申し込みを受け付ける */
+function apply_(req) {
+  // ロボット対策：見えない欄（website）に何か入っていたら、受け付けたふりをして何もしない
+  if (String(req.website || '').trim()) return { ok: true };
+
+  const name = String(req.name || '').trim();
+  const email = String(req.email || '').trim().toLowerCase();
+  const password = String(req.password || '');
+
+  // ---- 入力チェック ----
+  if (!name || name.length > 50) return { ok: false, message: 'お名前を50文字以内で入力してください。' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 200) {
+    return { ok: false, message: 'メールアドレスの形式を確認してください。' };
+  }
+  if (password.length < 8 || password.length > 64) {
+    return { ok: false, message: 'パスワードは8〜64文字で入力してください。' };
+  }
+
+  // ---- 1時間あたりの上限 ----
+  const cache = CacheService.getScriptCache();
+  const hourKey = 'applycount_' + Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyyMMddHH');
+  const count = Number(cache.get(hourKey) || 0);
+  if (count >= APPLY_LIMIT_PER_HOUR) {
+    return { ok: false, message: 'ただいまお申し込みが集中しています。しばらくしてからもう一度お試しください。' };
+  }
+  cache.put(hourKey, String(count + 1), 3600);
+
+  // ---- 登録（同時に申し込みが来ても重ならないよう、順番に処理する） ----
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  let application;
+  try {
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + PAYMENT_DAYS * 24 * 60 * 60 * 1000);
+    const salt = generateSalt_();
+    let userId;
+
+    const existing = findUserByEmail_(email);
+    if (existing) {
+      // 利用中・停止中のアカウントは、新しく申し込めない
+      if (existing.status !== 'pending') {
+        return {
+          ok: false,
+          message: 'このメールアドレスはすでに登録されています。利用期限の更新は、ログイン後のマイページからお申し込みください。'
+        };
+      }
+
+      // 「入金待ち」のアカウント：お支払い待ちの申込がまだ有効なら、二重の申し込みを防ぐ
+      const apps = readApplications_().filter(function (a) { return a.userId === existing.userId; });
+      const open = apps.filter(function (a) {
+        if (a.status === 'paid') return true;
+        return a.status === 'awaiting_payment' && a.expiresAt && new Date(a.expiresAt).getTime() > now.getTime();
+      });
+      if (open.length) {
+        return {
+          ok: false,
+          message: 'このメールアドレスでは、お支払い待ちのお申し込み（' + open[0].applicationId + '）があります。受付メールに書かれた支払期限までにお支払いください。'
+        };
+      }
+
+      // 期限が過ぎたのに、まだ「入金待ち」のままの申込は、ここで「期限切れ」にする（期限切れメールは送らない）
+      const appSheet = getSheet_(SHEET_APPLICATIONS);
+      const stamp = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy/MM/dd HH:mm');
+      apps.filter(function (a) { return a.status === 'awaiting_payment'; }).forEach(function (a) {
+        appSheet.getRange(a.row, 8).setValue('expired');
+        appSheet.getRange(a.row, 14).setValue((a.note ? a.note + '\n' : '') + '[' + stamp + ' 期限切れ（申し込み直しのため）]');
+      });
+
+      // 期限切れ・キャンセルで残っていたアカウントを、新しい内容で使い直す（C：passwordHash、D：salt、E：name）
+      userId = existing.userId;
+      getSheet_(SHEET_USERS).getRange(existing.row, 3, 1, 3).setValues([[hashPassword_(password, salt), salt, name]]);
+    } else {
+      userId = Utilities.getUuid();
+      getSheet_(SHEET_USERS).appendRow([
+        userId, email, hashPassword_(password, salt), salt, name,
+        'user',      // role
+        'pending',   // status（入金待ち）
+        '',          // validUntil（発行時に入れる）
+        now, '', ''  // createdAt, activatedAt, lastLoginAt
+      ]);
+    }
+
+    application = {
+      applicationId: makeApplicationId_(),
+      plan: PLAN_CODE,
+      amount: PRICE,
+      payment: PAYMENT_DEFAULT,
+      expiresAt: expiresAt
+    };
+    getSheet_(SHEET_APPLICATIONS).appendRow([
+      application.applicationId, userId, email, name, application.plan, application.amount,
+      application.payment, 'awaiting_payment', now, expiresAt, '', '', '', '', ''
+    ]);
+  } finally {
+    lock.releaseLock();
+  }
+
+  sendApplyMails_(name, email, application);
+
+  return {
+    ok: true,
+    applicationId: application.applicationId,
+    expiresAt: application.expiresAt.toISOString()
+  };
+}
+
+/**
+ * 振込先の案内（受付メール・リマインドメールで使う）
+ * 振込先は、スクリプト プロパティ BANK_INFO（例：「〇〇銀行 〇〇支店 普通 1234567 ナカムラ リキ」）
+ */
+function bankLines_(applicationId) {
+  const bank = String(PropertiesService.getScriptProperties().getProperty('BANK_INFO') || '').trim();
+  const code = String(applicationId || '').slice(-4);
+  if (!bank) return ['振込先の口座は、追ってメールでお知らせします。'];
+  return [
+    '■ 振込先　：' + bank,
+    '',
+    '振込名義（お名前）の前に、申込番号の最後の4文字「' + code + '」を付けてください。',
+    '（例：' + code + ' ヤマダ タロウ）',
+    '振込手数料は、お客様のご負担となります。',
+    '',
+    '【ATMでの振り込み方】',
+    '1. 銀行のATMで「振込」を選びます。',
+    '2. 上の「振込先」の銀行・支店・口座の種類（普通）・口座番号を入れます。',
+    '3. 金額を入れます（上の「金額」と同じ）。',
+    '4. 振込名義（あなたの名前）の前に「' + code + '」を入れます。',
+    '5. 内容を確かめて、お金を払います（現金か、キャッシュカード）。',
+    '6. 明細書（レシート）は、アカウントが届くまで捨てないでください。',
+    '※ コンビニのATMは、キャッシュカードがないと振り込めないことがあります。現金のときは、銀行のATMを使ってください。',
+    '※ わからないときは、銀行の窓口で、このメールを見せてください。',
+    '',
+    '[How to pay at an ATM]',
+    '1. At a bank ATM, choose "振込" (Transfer).',
+    '2. Enter the bank, branch, account type (普通 = ordinary) and account number shown in "振込先" above.',
+    '3. Enter the amount shown in "金額" above.',
+    '4. Before your name (振込名義), enter "' + code + '". Your name is entered in katakana. Example: ' + code + ' ヤマダ タロウ',
+    '5. Check the details and pay (cash or cash card).',
+    '6. Keep the receipt (明細書) until you receive your account email.',
+    '* Convenience store ATMs often accept transfers only with a cash card. To pay in cash, please use a bank ATM.',
+    '* If you are not sure, show this email to the staff at the bank counter.'
+  ];
+}
+
+/** 【確認用】振込先（BANK_INFO）が入っているかをログに出す */
+function checkBankInfo() {
+  const bank = PropertiesService.getScriptProperties().getProperty('BANK_INFO');
+  Logger.log('BANK_INFO：' + (bank ? '入っています' : 'まだです（スクリプト プロパティに入れてください）'));
+  Logger.log(bankLines_('RE-20261114-AB12').join('\n'));
+}
+
+/** 受付メール（申込者あて）と、新着通知（管理者あて）を送る */
+function sendApplyMails_(name, email, a) {
+  const deadline = Utilities.formatDate(a.expiresAt, 'Asia/Tokyo', 'yyyy年M月d日 HH:mm');
+  const amount = a.amount.toLocaleString('ja-JP');
+
+  MailApp.sendEmail({
+    to: email,
+    subject: '【R-ESUME】お申し込みを受け付けました（' + a.applicationId + '）',
+    name: 'R-ESUME',
+    body: [
+      name + ' 様',
+      '',
+      'R-ESUME にお申し込みいただき、ありがとうございます。',
+      '以下の内容でお申し込みを受け付けました。',
+      '',
+      '■ 申込番号：' + a.applicationId,
+      '■ サービス：R-ESUME 履歴書作成（1年間）',
+      '■ 金額　　：' + amount + '円（税込・1年間）',
+      '■ お支払い：' + PAYMENT_METHODS[a.payment],
+      '■ 支払期限：' + deadline,
+      '',
+    ].concat(bankLines_(a.applicationId)).concat([
+      '',
+      'お支払いを確認したあと、アカウントを発行してメールでお知らせします。',
+      'ログインには、お申し込み時に設定したパスワードをお使いください。',
+      '',
+      '※ 支払期限を過ぎると、お申し込みは自動的に取り消されます。',
+      '※ このメールに心当たりがない場合は、このメールを破棄してください。',
+      '',
+      '----------------------------------------',
+      'R-ESUME｜留学生向け自動履歴書作成システム',
+      'https://jprojectsriki-cpu.github.io/r-esume/frontend/user/'
+    ]).join('\n')
+  });
+
+  const adminEmail = PropertiesService.getScriptProperties().getProperty('ADMIN_EMAIL');
+  if (adminEmail) {
+    MailApp.sendEmail({
+      to: adminEmail,
+      subject: '【R-ESUME管理】新しいお申し込み（' + a.applicationId + '）',
+      name: 'R-ESUME',
+      body: [
+        '新しいお申し込みがありました。',
+        '',
+        '申込番号：' + a.applicationId,
+        'お名前　：' + name,
+        'メール　：' + email,
+        '金額　　：' + amount + '円',
+        'お支払い：' + PAYMENT_METHODS[a.payment],
+        '支払期限：' + deadline
+      ].join('\n')
+    });
+  }
+}
+
+/**
+ * 【テスト用】申込の動作確認
+ * 管理者のメールアドレスに「+retest」を付けたアドレスで申し込む
+ * （Gmailは「名前+好きな文字@gmail.com」宛のメールも、本人の受信箱に届く）
+ */
+function testApply() {
+  const adminEmail = PropertiesService.getScriptProperties().getProperty('ADMIN_EMAIL');
+  const testEmail = adminEmail.replace('@', '+retest@');
+
+  const res1 = apply_({ name: 'テスト 太郎', email: testEmail, password: 'testpass123' });
+  Logger.log('① 1回目の申込 → ' + JSON.stringify(res1));
+
+  const res2 = apply_({ name: 'テスト 太郎', email: testEmail, password: 'testpass123' });
+  Logger.log('② 同じメールで2回目 → ' + JSON.stringify(res2));
+
+  const res3 = apply_({ name: 'テスト', email: 'x@example.com', password: 'short' });
+  Logger.log('③ パスワードが短い → ' + JSON.stringify(res3));
+
+  const res4 = apply_({ name: 'ロボット', email: 'bot@example.com', password: 'testpass123', website: 'http://spam' });
+  Logger.log('④ ロボット（見えない欄に入力あり） → ' + JSON.stringify(res4) + '（ok:true でも何も登録されない）');
+}
+
+/**
+ * 【テスト後の片づけ】メールに「+retest」を含む申込とアカウントを、Applications と Users から削除する
+ */
+function cleanupTestApply() {
+  let removed = 0;
+  [[SHEET_APPLICATIONS, 3], [SHEET_USERS, 2]].forEach(function (def) {
+    const sheet = getSheet_(def[0]);
+    const lastRow = sheet.getLastRow();
+    if (lastRow < 2) return;
+    const emails = sheet.getRange(2, def[1], lastRow - 1, 1).getValues();
+    for (let i = emails.length - 1; i >= 0; i--) {
+      if (String(emails[i][0]).toLowerCase().indexOf('+retest@') !== -1) {
+        sheet.deleteRow(i + 2);
+        removed++;
+      }
+    }
+  });
+  Logger.log('テスト用の行を ' + removed + ' 行削除しました。');
+}
