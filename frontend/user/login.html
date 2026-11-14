@@ -1,25 +1,68 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>ログイン | R-ESUME</title>
-<link rel="icon" href="img/favicon.png" type="image/png">
-<style>
-  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #FFF9EB;
-         font-family: "Hiragino Sans", "Yu Gothic", sans-serif; color: #1E1B4B; font-weight: 700; }
-  .card { background: #fff; border: 3.5px solid #1E1B4B; box-shadow: 6px 6px 0 #1E1B4B; border-radius: 20px;
-          padding: 28px 24px; text-align: center; max-width: 340px; margin: 20px; line-height: 1.7; }
-  a { display: inline-block; margin-top: 12px; min-height: 48px; line-height: 48px; padding: 0 24px; border: 3.5px solid #1E1B4B;
-      border-radius: 999px; background: #FFBE0B; color: #1E1B4B; text-decoration: none; box-shadow: 4px 4px 0 #1E1B4B; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>ログイン | R-ESUME</title>
+    <link rel="icon" href="img/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/loading.css?v=20261114m">
+    <link rel="stylesheet" href="css/lp.css?v=20261114m">
+    <link rel="stylesheet" href="css/auth.css?v=20261114m">
+    <script>
+        document.documentElement.classList.add('js');
+        try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
+    </script>
 </head>
 <body>
-  <div class="card">
-    <p>ログイン画面は、次のステップ（R-5b）で公開します。</p>
-    <p>The login page will open soon.</p>
-    <a href="index.html">トップへ戻る / Back</a>
-  </div>
+<script src="js/loading.js?v=20261114m"></script>
+<canvas id="bg3d" aria-hidden="true"></canvas>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="R-ESUME トップへ"><span class="brand-mark"><img src="img/logo.png" alt="" width="24" height="28"></span><span class="brand-name">R-ESUME</span></a>
+        <div class="header-actions">
+            <button type="button" class="furi-btn" id="furiBtn" aria-pressed="true">ふりがな ON</button>
+        </div>
+    </div>
+</header>
+
+<main class="auth-main">
+    <div class="auth-card">
+        <h1>ログイン</h1>
+        <p class="en">Log in</p>
+        <form id="loginForm" novalidate>
+            <div class="field">
+                <label for="lgEmail">メールアドレス / Email</label>
+                <input type="email" id="lgEmail" name="email" maxlength="200" autocomplete="username" inputmode="email" required>
+            </div>
+            <div class="field">
+                <label for="lgPass">パスワード / Password</label>
+                <div class="pw-row">
+                    <input type="password" id="lgPass" name="password" maxlength="64" autocomplete="current-password" required>
+                    <button type="button" class="pw-toggle" id="pwToggle" aria-pressed="false" aria-controls="lgPass"><ruby>表示<rt>ひょうじ</rt></ruby></button>
+                </div>
+                <p class="hint">お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みのときに<ruby>決<rt>き</rt></ruby>めたパスワードを<ruby>入力<rt>にゅうりょく</rt></ruby>してください。 / Enter the password you set when you applied.</p>
+            </div>
+            <p class="form-msg" id="loginMsg" role="status" aria-live="polite"></p>
+            <button type="submit" class="btn btn-lg btn-block" id="loginBtn">ログイン / Log in</button>
+        </form>
+        <p class="auth-sub">まだお<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みでない<ruby>方<rt>かた</rt></ruby>は、<a href="index.html#price"><ruby>料金<rt>りょうきん</rt></ruby>のページ</a>から<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>めます。お<ruby>支払<rt>しはら</rt></ruby>いの<ruby>確認<rt>かくにん</rt></ruby><ruby>後<rt>ご</rt></ruby>に、アカウントが<ruby>発行<rt>はっこう</rt></ruby>されます。<span class="en" style="display:block;margin-top:4px">New here? Apply from the price section. Your account is issued after we confirm your payment.</span></p>
+    </div>
+</main>
+
+<footer class="auth-foot">
+    <div class="container">
+        <p><a href="index.html">トップページ</a>　&copy; 2026 R-ESUME / ReicherRick. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="js/config.js?v=20261114m"></script>
+<script src="js/common.js?v=20261114m"></script>
+<script src="js/bg3d.js?v=20261114m"></script>
+<script src="js/login.js?v=20261114m"></script>
 </body>
 </html>

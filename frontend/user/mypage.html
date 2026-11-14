@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>マイページ | R-ESUME</title>
+    <link rel="icon" href="img/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/loading.css?v=20261114m">
+    <link rel="stylesheet" href="css/lp.css?v=20261114m">
+    <link rel="stylesheet" href="css/auth.css?v=20261114m">
+    <script>
+        document.documentElement.classList.add('js');
+        try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
+    </script>
+</head>
+<body>
+<script src="js/loading.js?v=20261114m"></script>
+<canvas id="bg3d" aria-hidden="true"></canvas>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="R-ESUME トップへ"><span class="brand-mark"><img src="img/logo.png" alt="" width="24" height="28"></span><span class="brand-name">R-ESUME</span></a>
+        <div class="header-actions">
+            <button type="button" class="furi-btn" id="furiBtn" aria-pressed="true">ふりがな ON</button>
+        </div>
+    </div>
+</header>
+
+<main class="auth-main">
+    <div class="auth-card">
+        <div id="myBody" hidden>
+            <p class="my-hello">ようこそ / Welcome</p>
+            <p class="my-name"><span id="myName"></span> さん</p>
+            <span class="my-role" id="myRole"></span>
+            <p class="my-limit" id="myLimit"></p>
+            <p class="my-soon"><ruby>履歴書<rt>りれきしょ</rt></ruby>の<ruby>入力<rt>にゅうりょく</rt></ruby>は、<ruby>次<rt>つぎ</rt></ruby>のステップで<ruby>公開<rt>こうかい</rt></ruby>します。<span class="en" style="display:block">The resume editor will open soon.</span></p>
+            <button type="button" class="btn btn-secondary btn-block" id="logoutBtn" style="margin-top:20px">ログアウト / Log out</button>
+        </div>
+        <div id="myError" hidden>
+            <p><ruby>通信<rt>つうしん</rt></ruby>できませんでした。<ruby>時間<rt>じかん</rt></ruby>をおいて、もう<ruby>一度<rt>いちど</rt></ruby><ruby>開<rt>ひら</rt></ruby>いてください。</p>
+            <p class="en">Network error. Please open this page again later.</p>
+            <a class="btn btn-secondary btn-block" href="login.html" style="margin-top:16px">ログインへ / Log in</a>
+        </div>
+    </div>
+</main>
+
+<footer class="auth-foot">
+    <div class="container">
+        <p><a href="index.html">トップページ</a>　&copy; 2026 R-ESUME / ReicherRick. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="js/config.js?v=20261114m"></script>
+<script src="js/common.js?v=20261114m"></script>
+<script src="js/bg3d.js?v=20261114m"></script>
+<script src="js/mypage.js?v=20261114m"></script>
+</body>
+</html>
