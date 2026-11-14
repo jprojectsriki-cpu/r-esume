@@ -82,4 +82,18 @@
             setMsg('通信できませんでした。時間をおいてもう一度お試しください。 / Network error. Please try again.', 'error');
         }).then(function () { btn.disabled = false; });
     });
+
+    /* ---- よくある質問のしぼりこみ ---- */
+    var chips = $all('.chip'), qas = $all('.qa');
+    chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+            var f = chip.getAttribute('data-filter');
+            chips.forEach(function (c) { var on = c === chip; c.classList.toggle('is-on', on); c.setAttribute('aria-pressed', String(on)); });
+            qas.forEach(function (q) {
+                var show = f === 'all' || q.getAttribute('data-cat') === f;
+                q.hidden = !show;
+                if (show) q.classList.add('is-in');   // 表示のアニメーションを待たずに見せる
+            });
+        });
+    });
 })();

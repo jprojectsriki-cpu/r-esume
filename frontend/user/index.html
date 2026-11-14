@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/lp.css?v=20261114f">
+    <link rel="stylesheet" href="css/lp.css?v=20261114g">
     <script>
         document.documentElement.classList.add('js');
         try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
@@ -188,20 +188,38 @@
         <div class="section-head" data-reveal="down">
             <h2>よくある<ruby>質問<rt>しつもん</rt></ruby></h2>
             <p class="en">FAQ</p>
+            <div class="help-card">
+                <p class="help-title">さがしている答えが、ありませんか？</p>
+                <p class="help-text">お問い合わせから、ご連絡ください。 / Please contact us.</p>
+                <a class="btn btn-secondary" href="https://jprojectsriki-cpu.github.io/rikis_collection/#contact">お問い合わせ / Contact</a>
+            </div>
         </div>
-        <div class="faq">
-            <details data-reveal="left" style="--d:0.00s"><summary>スマホだけで使えますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans">はい。入力も写真も、スマホだけでできます。パソコンでも使えます。 / Yes. You can do everything on your smartphone. A PC also works.</div></details>
-            <details data-reveal="right" style="--d:0.06s"><summary>日本語が苦手でも使えますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans">画面にはふりがなと英語があります。ふりがなは、上のボタンでいつでも消せます。 / The screens have furigana and English. You can turn furigana on and off with the button at the top.</div></details>
-            <details data-reveal="left" style="--d:0.12s"><summary>写真は、どうやって入れますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans">「カメラで撮る」か「写真を選ぶ」のどちらかを選びます。LINEなどのアプリの中でカメラが使えないときは、「写真を選ぶ」を使ってください。 / Choose "take a photo" or "choose a photo". If the camera does not work inside an app such as LINE, please choose a photo from your files.</div></details>
-            <details data-reveal="right" style="--d:0.00s"><summary>履歴書は、どんな形式ですか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans">厚生労働省の「履歴書様式例」（A4）に沿っています。性別欄は任意で、通勤時間・扶養家族・配偶者の欄はありません。 / It follows the sample resume format of Japan's Ministry of Health, Labour and Welfare (A4). The gender field is optional.</div></details>
-            <details data-reveal="left" style="--d:0.06s"><summary>入力した内容は、AIの学習に使われますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans">いいえ。入力した内容は、AIの学習には使いません。 / No. What you enter is not used to train AI.</div></details>
-            <details data-reveal="right" style="--d:0.12s"><summary>返金はできますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans">アカウントを発行する前なら、全額お返しします。発行後は、原則としてお返しできません。 / Before your account is issued, we refund the full amount. After it is issued, refunds are not available in principle.</div></details>
+        <div>
+            <div class="chips" role="group" aria-label="質問のしぼりこみ">
+                <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">すべて</button>
+                <button type="button" class="chip" data-filter="use" aria-pressed="false">使い方</button>
+                <button type="button" class="chip" data-filter="photo" aria-pressed="false">写真・入力</button>
+                <button type="button" class="chip" data-filter="pay" aria-pressed="false">料金・お支払い</button>
+                <button type="button" class="chip" data-filter="safe" aria-pressed="false">安全・個人情報</button>
+            </div>
+            <div class="faq">
+            <details class="qa" data-cat="use" open data-reveal="left" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">スマホだけで使えますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>はい。入力も写真も、スマホだけでできます。パソコンでも使えます。 / Yes. You can do everything on your smartphone. A PC also works.</p></div></details>
+            <details class="qa" data-cat="use" data-reveal="right" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">日本語が苦手でも使えますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>画面にはふりがなと英語があります。ふりがなは、上のボタンでいつでも消せます。 / The screens have furigana and English. You can turn furigana on and off with the button at the top.</p></div></details>
+            <details class="qa" data-cat="use" data-reveal="left" style="--d:0.12s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">履歴書は、どんな形式ですか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>厚生労働省の「履歴書様式例」（A4）に沿っています。性別欄は任意で、通勤時間・扶養家族・配偶者の欄はありません。 / It follows the sample resume format of Japan's Ministry of Health, Labour and Welfare (A4). The gender field is optional.</p></div></details>
+            <details class="qa" data-cat="photo" data-reveal="right" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">写真は、どうやって入れますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>「カメラで撮る」か「写真を選ぶ」のどちらかを選びます。LINEなどのアプリの中でカメラが使えないときは、「写真を選ぶ」を使ってください。 / Choose "take a photo" or "choose a photo". If the camera does not work inside an app such as LINE, please choose a photo from your files.</p></div></details>
+            <details class="qa" data-cat="pay" data-reveal="left" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">料金と、使える期間を教えてください。</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>1,100円（税込）で、アカウントを発行した日から1年間ご利用いただけます。 / 1,100 yen (tax included) for 1 year from the day your account is issued.</p></div></details>
+            <details class="qa" data-cat="pay" data-reveal="right" style="--d:0.12s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">どうやって支払いますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>銀行振込だけです。お申し込みから7日以内にお振り込みください。入金を確認したら、アカウントを発行してメールでお知らせします。 / Bank transfer only. Please pay within 7 days of applying. We will email you when your account is ready.</p></div></details>
+            <details class="qa" data-cat="pay" data-reveal="left" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">返金はできますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>アカウントを発行する前なら、全額お返しします。発行後は、原則としてお返しできません。 / Before your account is issued, we refund the full amount. After it is issued, refunds are not available in principle.</p></div></details>
+            <details class="qa" data-cat="safe" data-reveal="right" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">入力した内容は、AIの学習に使われますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>いいえ。入力した内容は、AIの学習には使いません。 / No. What you enter is not used to train AI.</p></div></details>
+            </div>
         </div>
     </div>
 </section>
@@ -210,16 +228,44 @@
 
 <footer class="site-footer">
     <div class="container">
-        <div class="brand"><span class="brand-name">R-ESUME</span></div>
-        <div class="footer-links">
-            <button type="button" data-open="dlgLaw">特定商取引法に基づく表記</button>
-            <button type="button" data-open="dlgTerms">利用規約</button>
-            <button type="button" data-open="dlgPrivacy">プライバシーポリシー</button>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <span class="brand-mark is-small"><img src="img/logo.png" alt="" width="26" height="30"></span>
+                    <span class="brand-name">R-ESUME</span>
+                </div>
+                <p><ruby>留学生<rt>りゅうがくせい</rt></ruby>のための、スマホで<ruby>作<rt>つく</rt></ruby>る<ruby>履歴書<rt>りれきしょ</rt></ruby>システム。<ruby>写真<rt>しゃしん</rt></ruby>を<ruby>撮<rt>と</rt></ruby>って<ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えるだけ。</p>
+                <a href="https://jprojectsriki-cpu.github.io/rikis_collection/" class="footer-series"><span>R-シリーズ<ruby>一覧<rt>いちらん</rt></ruby>へ</span><svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+            </div>
+            <div class="footer-col">
+                <p class="footer-head">R-ESUME</p>
+                <ul>
+                    <li><a href="#features">できること</a></li>
+                    <li><a href="#flow"><ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby></a></li>
+                    <li><a href="#price"><ruby>料金<rt>りょうきん</rt></ruby></a></li>
+                    <li><a href="#faq">よくある<ruby>質問<rt>しつもん</rt></ruby></a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <p class="footer-head">アカウント</p>
+                <ul>
+                    <li><button type="button" data-open="dlgApply"><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む</button></li>
+                    <li><a href="login.html">ログイン</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <p class="footer-head">サポート</p>
+                <ul>
+                    <li><button type="button" data-open="dlgTerms"><ruby>利用<rt>りよう</rt></ruby><ruby>規約<rt>きやく</rt></ruby></button></li>
+                    <li><button type="button" data-open="dlgPrivacy">プライバシーポリシー</button></li>
+                    <li><button type="button" data-open="dlgLaw"><ruby>特定<rt>とくてい</rt></ruby><ruby>商取引法<rt>しょうとりひきほう</rt></ruby>に<ruby>基<rt>もと</rt></ruby>づく<ruby>表記<rt>ひょうき</rt></ruby></button></li>
+                    <li><a href="https://jprojectsriki-cpu.github.io/rikis_collection/#contact">お<ruby>問<rt>と</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせ</a></li>
+                </ul>
+            </div>
         </div>
-        <p class="footer-small">R-SERIES｜運営：ReicherRick　© ReicherRick</p>
+        <p class="copyright">&copy; 2026 R-ESUME / ReicherRick. All rights reserved.</p>
     </div>
 </footer>
-
 <!-- 申込ダイアログ -->
 <dialog id="dlgApply" aria-labelledby="dlgApplyTitle">
     <div class="dlg-head"><h2 id="dlgApplyTitle">お申し込み / Apply</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
@@ -269,8 +315,8 @@
     <div class="dlg-body"><p>プライバシーポリシーは、公開前に掲載します。（サンプルのため準備中です）</p></div>
 </dialog>
 
-<script src="js/config.js?v=20261114f"></script>
-<script src="js/bg3d.js?v=20261114f"></script>
-<script src="js/lp.js?v=20261114f"></script>
+<script src="js/config.js?v=20261114g"></script>
+<script src="js/bg3d.js?v=20261114g"></script>
+<script src="js/lp.js?v=20261114g"></script>
 </body>
 </html>

@@ -324,3 +324,48 @@ main { position: relative; z-index: 1; overflow-x: clip; }
 /* 流れの見出しは、固定（sticky）にしない。固定すると、1・2番の項目に重なるため */
 #flow .section-head { position: static; }
 .p-photo img { display: block; }
+
+
+/* ===== 6版：フッター（R-ANGUAGE と同じ並び）・よくある質問 ===== */
+.site-footer { padding: 52px 0 28px; font-size: 14px; }
+.footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.footer-brand { grid-column: 1 / -1; }
+.footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.footer-logo .brand-mark { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,.12); display: grid; place-items: center; }
+.footer-logo .brand-name { font-size: 20px; font-weight: 700; letter-spacing: .03em; }
+.footer-brand p { color: rgba(255,255,255,.78); line-height: 2; max-width: 30em; }
+.footer-series { display: inline-flex; align-items: center; min-height: 44px; gap: 6px; margin-top: 8px; color: var(--sun); font-weight: 700; text-decoration: none; }
+.footer-series:hover { text-decoration: underline; }
+.footer-head { margin-bottom: 8px; color: var(--sun); font-weight: 700; letter-spacing: .05em; }
+.footer-col ul { display: grid; gap: 0; }
+.footer-col a, .footer-col button { display: inline-flex; align-items: center; min-height: 40px; padding: 0; border: 0; background: none; color: rgba(255,255,255,.88); text-decoration: none; text-align: left; font: inherit; cursor: pointer; }
+.footer-col a:hover, .footer-col button:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.site-footer rt { opacity: .8; }
+.copyright { margin-top: 32px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.7); font-size: 13px; }
+@media (min-width: 768px) { .footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1.2fr; } .footer-brand { grid-column: auto; } }
+
+/* よくある質問 */
+.help-card { margin-top: 20px; max-width: 320px; padding: 18px; background: #fff; border: 1px solid var(--line); border-top: 5px solid var(--sun); border-radius: var(--r-m); }
+.help-title { font-weight: 700; line-height: 1.5; }
+.help-text { margin: 4px 0 14px; font-size: 14px; color: var(--ink-2); line-height: 1.6; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.chip { min-height: 44px; padding: 0 16px; border: 1.5px solid var(--primary); border-radius: 999px; background: #fff; color: var(--primary); font-weight: 500; cursor: pointer; transition: background .15s, color .15s; }
+.chip:hover { background: var(--tint); }
+.chip.is-on { background: var(--primary); color: #fff; font-weight: 700; }
+.faq { display: grid; gap: 10px; border: 0; background: none; max-width: none; margin-top: 0; }
+.faq .qa { --cat: var(--primary); border: 1px solid var(--line); border-left: 6px solid var(--cat); border-radius: var(--r-m); background: rgba(255,255,255,.86); overflow: hidden; }
+.faq .qa:last-child { border-bottom: 1px solid var(--line); }
+.faq .qa[data-cat="photo"] { --cat: #1773AE; }
+.faq .qa[data-cat="pay"] { --cat: #D99A00; }
+.faq .qa[data-cat="safe"] { --cat: #17794A; }
+.faq .qa[open] { background: #fff; box-shadow: 0 8px 20px -12px rgba(20,36,58,.35); }
+.faq .qa summary { gap: 12px; padding: 12px 16px 12px 12px; min-height: 60px; font-weight: 700; justify-content: flex-start; }
+.faq .qa summary .icon { margin-left: auto; }
+.faq .qa[open] summary { background: none; }
+.q-badge, .a-badge { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 15px; line-height: 1; }
+.q-badge { background: var(--cat); color: #fff; }
+.qa[data-cat="pay"] .q-badge { color: var(--ink); }
+.faq .ans { display: flex; gap: 12px; padding: 4px 16px 18px 12px; max-width: none; }
+.a-badge { background: var(--sun); color: var(--ink); }
+.faq .ans p { margin-top: 2px; max-width: 36em; }
+.qa[hidden] { display: none; }
