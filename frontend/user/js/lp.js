@@ -38,7 +38,7 @@
             if (d && d.showModal) { setMenu(false); d.showModal(); }
         });
     });
-    $all('dialog').forEach(function (d) {
+    $all('dialog:not(#rLoading)').forEach(function (d) {
         $all('[data-close]', d).forEach(function (c) { c.addEventListener('click', function () { d.close(); }); });
         d.addEventListener('click', function (e) { if (e.target === d) d.close(); }); // 外側をタップで閉じる
     });
@@ -66,22 +66,35 @@
         if (pass.length < 8 || pass.length > 64) { setMsg('パスワードは8〜64' + rb('文字', 'もじ') + 'で' + rb('入力', 'にゅうりょく') + 'してください。 / Password must be 8–64 characters.', 'error'); form.password.focus(); return; }
         if (!apiReady()) { setMsg('これはデザイン' + rb('確認用', 'かくにんよう') + 'のサンプルです。お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みは、まだできません。 / This is a design preview. Applications are not open yet.', 'error'); return; }
 
-        btn.disabled = true; setMsg(rb('送信', 'そうしん') + 'しています… / Sending…');
+        btn.disabled = true; setMsg('');
+        var failed = rb('通信', 'つうしん') + 'できませんでした。' + rb('時間', 'じかん') + 'をおいてもう' + rb('一度', 'いちど') + 'お' + rb('試', 'ため') + 'しください。 / Network error. Please try again.';
+        // 処理が終わり、結果を画面に出したあとで、ローディング画面を消す
         // Content-Type を text/plain にすると、ブラウザの事前確認（プリフライト）が不要になり、GASで受け取れる
-        fetch(CONFIG.API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'apply', name: name, email: email, password: pass, website: form.website.value })
-        }).then(function (r) { return r.json(); }).then(function (res) {
-            if (res && res.ok) {
-                setMsg('お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みを' + rb('受', 'う') + 'け' + rb('付', 'つ') + 'けました。メールをご' + rb('確認', 'かくにん') + 'ください。 / Thank you! Please check your email.', 'ok');
-                form.reset();
-            } else {
-                if (res && res.message) { setMsg(res.message, 'error', true); } else { setMsg('お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みできませんでした。', 'error'); }
-            }
-        }).catch(function () {
-            setMsg(rb('通信', 'つうしん') + 'できませんでした。' + rb('時間', 'じかん') + 'をおいてもう' + rb('一度', 'いちど') + 'お' + rb('試', 'ため') + 'しください。 / Network error. Please try again.', 'error');
-        }).then(function () { btn.disabled = false; });
+        var task = function () {
+            return fetch(CONFIG.API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'apply', name: name, email: email, password: pass, website: form.website.value })
+            }).then(function (r) { return r.json(); });
+        };
+        var done = function () { btn.disabled = false; };
+        var opts = {
+            text: rb('送信', 'そうしん') + 'しています',
+            onSuccess: function (res) {
+                if (res && res.ok) {
+                    setMsg('お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みを' + rb('受', 'う') + 'け' + rb('付', 'つ') + 'けました。メールをご' + rb('確認', 'かくにん') + 'ください。 / Thank you! Please check your email.', 'ok');
+                    form.reset();
+                } else if (res && res.message) {
+                    setMsg(res.message, 'error', true);
+                } else {
+                    setMsg('お' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みできませんでした。', 'error');
+                }
+                done();
+            },
+            onError: function () { setMsg(failed, 'error'); done(); }
+        };
+        if (window.RLoading) { window.RLoading.run(task, opts); }
+        else { task().then(opts.onSuccess, opts.onError); }
     });
 
     /* ---- よくある質問のしぼりこみ ---- */
