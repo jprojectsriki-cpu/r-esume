@@ -59,6 +59,12 @@ function doPost(e) {
     switch (req.action) {
       case 'apply':
         return json_(apply_(req));
+      case 'login':
+        return json_(login_(req.email, req.password));
+      case 'logout':
+        return json_(logout_(req.token));
+      case 'me':
+        return json_(checkSession_(req.token));
       default:
         return json_({ ok: false, message: '不明な操作です。' });
     }
