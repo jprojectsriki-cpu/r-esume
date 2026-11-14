@@ -1,24 +1,287 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>R-ESUME | 準備中</title>
-<style>
-  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
-         background: #fff7d6; font-family: "Hiragino Sans", "Yu Gothic", sans-serif; color: #222; }
-  .card { background: #fff; border: 3px solid #222; box-shadow: 6px 6px 0 #222; border-radius: 16px;
-          padding: 32px 28px; text-align: center; max-width: 360px; }
-  h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: .04em; }
-  p { margin: 6px 0; line-height: 1.7; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>R-ESUME | 留学生向け 自動履歴書作成システム</title>
+    <meta name="description" content="R-ESUME（レジュメ）は、留学生のための履歴書作成システムです。スマホで写真を撮って、質問に答えるだけ。厚生労働省の様式例に沿った履歴書をつくれます。">
+    <link rel="icon" href="img/favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/lp.css?v=20261114a">
+    <script>
+        document.documentElement.classList.add('js');
+        try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
+    </script>
 </head>
 <body>
-  <div class="card">
-    <h1>R-ESUME</h1>
-    <p>留学生向け自動履歴書作成システム</p>
-    <p>Automatic Resume Maker for International Students</p>
-    <p><strong>ただいま準備中です / Coming soon</strong></p>
-  </div>
+
+<svg width="0" height="0" class="sprite" aria-hidden="true">
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+    <symbol id="i-steps" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol>
+    <symbol id="i-printer" viewBox="0 0 24 24"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+</svg>
+
+<div class="sample-bar">デザイン確認用のサンプルです。お申し込みは、まだできません。 / Design preview. Applications are not open yet.</div>
+
+<header class="site-header">
+    <div class="header-inner">
+        <a class="brand" href="#top" aria-label="R-ESUME トップへ">
+            <span class="brand-mark"><img src="img/logo.png" alt="" width="30" height="30"></span>
+            <span class="brand-name">R-ESUME</span>
+        </a>
+        <nav class="main-nav" aria-label="メニュー">
+            <a href="#features">特長</a>
+            <a href="#flow">使い方</a>
+            <a href="#price">料金</a>
+            <a href="#faq">よくある質問</a>
+        </nav>
+        <div class="header-actions">
+            <button type="button" class="furi-btn" id="furiBtn" aria-pressed="true">ふりがな ON</button>
+            <a class="pop-btn btn-white header-login" href="login.html">ログイン</a>
+            <button type="button" class="pop-btn btn-yellow header-login" data-open="dlgApply">申し込む</button>
+            <button type="button" class="icon-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="メニューを開く">
+                <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+            </button>
+        </div>
+    </div>
+    <nav class="mobile-menu" id="mobileMenu" aria-label="スマホ用メニュー">
+        <a href="#features">特長 / Features</a>
+        <a href="#flow">使い方 / How it works</a>
+        <a href="#price">料金 / Price</a>
+        <a href="#faq">よくある質問 / FAQ</a>
+        <a href="login.html">ログイン / Log in</a>
+    </nav>
+</header>
+
+<main id="top">
+
+<!-- ヒーロー -->
+<section class="hero">
+    <div class="container hero-grid">
+        <div>
+            <span class="pill"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>留学生のための履歴書づくり</span>
+            <h1>スマホで作る、<br><span class="mark"><ruby>日本<rt>にほん</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby></span>。</h1>
+            <p class="hero-lead"><ruby>写真<rt>しゃしん</rt></ruby>を<ruby>撮<rt>と</rt></ruby>って、<ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えるだけ。<br><ruby>志望動機<rt>しぼうどうき</rt></ruby>も<ruby>自己<rt>じこ</rt></ruby>PRも<ruby>自動<rt>じどう</rt></ruby>でできます。</p>
+            <p class="en">Make a Japanese resume (rirekisho) on your smartphone. Take a photo, answer a few questions, done.</p>
+            <div class="hero-cta">
+                <button type="button" class="pop-btn btn-yellow btn-lg" data-open="dlgApply">
+                    <span><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む｜1,100<ruby>円<rt>えん</rt></ruby></span>
+                    <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+                </button>
+                <a class="link-btn" href="login.html">ログイン / Log in</a>
+            </div>
+            <ul class="hero-tags">
+                <li><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>厚生労働省の様式例に対応</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>スマホ向け</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-bank"/></svg>銀行振込</li>
+            </ul>
+        </div>
+
+        <div class="hero-visual" role="img" aria-label="スマホの画面に、履歴書のイメージが表示されている">
+            <span class="blob b1" aria-hidden="true"></span>
+            <span class="blob b2" aria-hidden="true"></span>
+            <div class="phone" aria-hidden="true">
+                <div class="resume">
+                    <h2>履歴書</h2>
+                    <div class="resume-top">
+                        <div>
+                            <div class="r-row"><small>ふりがな</small>ヤマダ　タロウ</div>
+                            <div class="r-row"><small>氏名</small>山田　太郎（見本）</div>
+                            <div class="r-row"><small>生年月日</small>2002年4月1日生</div>
+                        </div>
+                        <div class="r-photo"><div><svg class="icon"><use href="#i-camera"/></svg><br>写真<br>30×40mm</div></div>
+                    </div>
+                    <div class="r-table">
+                        <div><span>2021</span><span>4</span><span>○○大学 入学</span></div>
+                        <div><span>2025</span><span>3</span><span>○○大学 卒業</span></div>
+                        <div><span>2025</span><span>4</span><span>株式会社○○ 入社</span></div>
+                    </div>
+                    <div class="r-motive">志望の動機：人と話すことが好きで、…</div>
+                </div>
+            </div>
+            <div class="sticker" aria-hidden="true">自動で<br>できる！</div>
+        </div>
+    </div>
+</section>
+
+<!-- 特長 -->
+<section class="section bg-white band" id="features">
+    <div class="container">
+        <h2 class="section-title reveal">R-ESUME の<ruby>特長<rt>とくちょう</rt></ruby></h2>
+        <p class="section-sub reveal">Features</p>
+        <div class="cards">
+            <article class="card c1 reveal">
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-steps"/></svg></div>
+                <h3>1つずつ、スマホで<ruby>入力<rt>にゅうりょく</rt></ruby></h3>
+                <span class="en">Step-by-step input on your phone</span>
+                <p>名前・住所・学歴など、1ページに1つずつ入力します。入力した内容は自動で保存されるので、あとから続きができます。</p>
+            </article>
+            <article class="card c2 reveal">
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg></div>
+                <h3><ruby>証明写真<rt>しょうめいしゃしん</rt></ruby>は、カメラかファイルで</h3>
+                <span class="en">Take your photo, or choose a file</span>
+                <p>その場でカメラで撮るか、持っている写真を選びます。履歴書の枠の大きさに合わせて、位置を調整できます。</p>
+            </article>
+            <article class="card c3 reveal">
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-sparkles"/></svg></div>
+                <h3><ruby>志望動機<rt>しぼうどうき</rt></ruby>・<ruby>自己<rt>じこ</rt></ruby>PRを<ruby>自動作成<rt>じどうさくせい</rt></ruby></h3>
+                <span class="en">Your motivation and self-PR, written for you</span>
+                <p>性格や志望する業種を選ぶと、文章ができあがります。ほかの人と同じ文章にならないように作られ、あとから自由に書き直せます。</p>
+            </article>
+            <article class="card c4 reveal">
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-printer"/></svg></div>
+                <h3><ruby>印刷<rt>いんさつ</rt></ruby>・PDFで<ruby>保存<rt>ほぞん</rt></ruby></h3>
+                <span class="en">Print it, or save it as a PDF</span>
+                <p>厚生労働省の履歴書様式例に沿った、A4の履歴書になります。国籍・在留資格・日本語能力も入れられます。</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- 使い方 -->
+<section class="section bg-mint band" id="flow">
+    <div class="container">
+        <h2 class="section-title reveal">ご<ruby>利用<rt>りよう</rt></ruby>の<ruby>流<rt>なが</rt></ruby>れ</h2>
+        <p class="section-sub reveal" style="color: var(--dark);">How it works</p>
+        <ol class="steps">
+            <li class="step reveal"><span class="step-no">1</span><div><h3><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む</h3><p>名前・メール・パスワードを入力<br>Apply</p></div></li>
+            <li class="step reveal"><span class="step-no">2</span><div><h3><ruby>銀行振込<rt>ぎんこうふりこみ</rt></ruby></h3><p>メールの口座に1,100円を振込<br>Bank transfer</p></div></li>
+            <li class="step reveal"><span class="step-no">3</span><div><h3>アカウント<ruby>発行<rt>はっこう</rt></ruby></h3><p>入金を確認して、メールでお知らせ<br>Account issued</p></div></li>
+            <li class="step reveal"><span class="step-no">4</span><div><h3>ログインして<ruby>入力<rt>にゅうりょく</rt></ruby></h3><p>スマホで履歴書をつくる<br>Make your resume</p></div></li>
+            <li class="step reveal"><span class="step-no">5</span><div><h3><ruby>印刷<rt>いんさつ</rt></ruby>・PDF</h3><p>A4の履歴書をすぐに出力<br>Print or save</p></div></li>
+        </ol>
+    </div>
+</section>
+
+<!-- 料金 -->
+<section class="section band" id="price">
+    <div class="container">
+        <h2 class="section-title reveal"><ruby>料金<rt>りょうきん</rt></ruby></h2>
+        <p class="section-sub reveal">Price</p>
+        <div class="price-card reveal">
+            <span class="price-label">R-ESUME ご利用プラン</span>
+            <p class="price">1,100<small>円（税込）</small></p>
+            <p class="price-note">1年間ご利用いただけます / for 1 year</p>
+            <ul class="price-list">
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>スマホで履歴書を入力・プレビュー</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>証明写真（カメラ・ファイル選択）</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>志望動機・自己PRの自動作成</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>印刷・PDFに保存（A4）</li>
+            </ul>
+            <div class="pay-box"><strong>お支払い：銀行振込のみ</strong><br>お申し込みから7日以内にお振り込みください。入金を確認したら、アカウントを発行してメールでお知らせします。</div>
+            <button type="button" class="pop-btn btn-yellow btn-lg btn-block" data-open="dlgApply">申し込む / Apply</button>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="section bg-yellow band" id="faq">
+    <div class="container">
+        <h2 class="section-title reveal">よくある<ruby>質問<rt>しつもん</rt></ruby></h2>
+        <p class="section-sub reveal" style="color: var(--dark);">FAQ</p>
+        <div class="faq">
+            <details class="reveal"><summary>スマホだけで使えますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans">はい。入力も写真も、スマホだけでできます。パソコンでも使えます。 / Yes. You can do everything on your smartphone. A PC also works.</div></details>
+            <details class="reveal"><summary>日本語が苦手でも使えますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans">画面にはふりがなと英語があります。ふりがなは、上のボタンでいつでも消せます。 / The screens have furigana and English. You can turn furigana on and off with the button at the top.</div></details>
+            <details class="reveal"><summary>写真は、どうやって入れますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans">「カメラで撮る」か「写真を選ぶ」のどちらかを選びます。LINEなどのアプリの中でカメラが使えないときは、「写真を選ぶ」を使ってください。 / Choose "take a photo" or "choose a photo". If the camera does not work inside an app such as LINE, please choose a photo from your files.</div></details>
+            <details class="reveal"><summary>履歴書は、どんな形式ですか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans">厚生労働省の「履歴書様式例」（A4）に沿っています。性別欄は任意で、通勤時間・扶養家族・配偶者の欄はありません。 / It follows the sample resume format of Japan's Ministry of Health, Labour and Welfare (A4). The gender field is optional.</div></details>
+            <details class="reveal"><summary>入力した内容は、AIの学習に使われますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans">いいえ。入力した内容は、AIの学習には使いません。 / No. What you enter is not used to train AI.</div></details>
+            <details class="reveal"><summary>返金はできますか？ <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans">アカウントを発行する前なら、全額お返しします。発行後は、原則としてお返しできません。 / Before your account is issued, we refund the full amount. After it is issued, refunds are not available in principle.</div></details>
+        </div>
+    </div>
+</section>
+
+<!-- 最後の呼びかけ -->
+<section class="section bg-purple band final on-dark">
+    <div class="container">
+        <h2 class="reveal"><ruby>今日<rt>きょう</rt></ruby>から、<ruby>履歴書<rt>りれきしょ</rt></ruby>づくりを<ruby>始<rt>はじ</rt></ruby>めよう。</h2>
+        <button type="button" class="pop-btn btn-yellow btn-lg" data-open="dlgApply">申し込む｜1,100円（税込・1年間）</button>
+    </div>
+</section>
+
+</main>
+
+<footer class="site-footer on-dark">
+    <div class="container">
+        <div class="brand" style="color:#fff;"><span class="brand-mark"><img src="img/logo.png" alt="" width="30" height="30"></span><span class="brand-name">R-ESUME</span></div>
+        <div class="footer-links">
+            <button type="button" data-open="dlgLaw">特定商取引法に基づく表記</button>
+            <button type="button" data-open="dlgTerms">利用規約</button>
+            <button type="button" data-open="dlgPrivacy">プライバシーポリシー</button>
+        </div>
+        <p class="footer-small">R-SERIES｜運営：ReicherRick<br>© ReicherRick</p>
+    </div>
+</footer>
+
+<!-- 申込ダイアログ -->
+<dialog id="dlgApply" aria-labelledby="dlgApplyTitle">
+    <div class="dlg-head"><h2 id="dlgApplyTitle">お申し込み / Apply</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <form class="dlg-body" id="applyForm" novalidate>
+        <div class="pay-mini">R-ESUME（1年間）：<strong>1,100円（税込）</strong>／お支払いは銀行振込のみ</div>
+        <div class="field">
+            <label for="apName">お名前 / Name</label>
+            <input type="text" id="apName" name="name" maxlength="50" autocomplete="name" required>
+        </div>
+        <div class="field">
+            <label for="apEmail">メールアドレス / Email</label>
+            <input type="email" id="apEmail" name="email" maxlength="200" autocomplete="email" inputmode="email" required>
+            <p class="hint">受付メールと、アカウント発行のお知らせが届きます。 / We will send you emails here.</p>
+        </div>
+        <div class="field">
+            <label for="apPass">パスワード / Password</label>
+            <input type="password" id="apPass" name="password" minlength="8" maxlength="64" autocomplete="new-password" required>
+            <p class="hint">8〜64文字。ログインのときに使います。 / 8–64 characters. You will use it to log in.</p>
+        </div>
+        <div class="hp" aria-hidden="true"><label>website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <p class="form-msg" id="applyMsg" role="status" aria-live="polite"></p>
+        <button type="submit" class="pop-btn btn-yellow btn-lg btn-block" id="applyBtn">申し込む / Apply</button>
+    </form>
+</dialog>
+
+<!-- 特商法 -->
+<dialog id="dlgLaw" aria-labelledby="dlgLawTitle">
+    <div class="dlg-head"><h2 id="dlgLawTitle">特定商取引法に基づく表記</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dlg-body"><dl>
+        <dt>販売事業者名</dt><dd>ReicherRick</dd>
+        <dt>代表者</dt><dd>中村 力</dd>
+        <dt>所在地</dt><dd>〒902-0062 沖縄県那覇市字松川362番地9　シティテラス松川402号</dd>
+        <dt>電話番号</dt><dd>080-9107-4916</dd>
+        <dt>販売価格</dt><dd>1,100円（税込・1年間）</dd>
+        <dt>お支払い方法</dt><dd>銀行振込のみ（振込手数料はお客様のご負担）</dd>
+        <dt>お支払い時期</dt><dd>お申し込みから7日以内</dd>
+        <dt>サービスの提供時期</dt><dd>入金を確認し、アカウントを発行した時点から、1年間ご利用いただけます。</dd>
+        <dt>返金</dt><dd>アカウント発行前は全額を返金します。発行後は、原則として返金できません。</dd>
+    </dl></div>
+</dialog>
+<dialog id="dlgTerms" aria-labelledby="dlgTermsTitle">
+    <div class="dlg-head"><h2 id="dlgTermsTitle">利用規約</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dlg-body"><p>利用規約は、公開前に掲載します。（サンプルのため準備中です）</p></div>
+</dialog>
+<dialog id="dlgPrivacy" aria-labelledby="dlgPrivacyTitle">
+    <div class="dlg-head"><h2 id="dlgPrivacyTitle">プライバシーポリシー</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dlg-body"><p>プライバシーポリシーは、公開前に掲載します。（サンプルのため準備中です）</p></div>
+</dialog>
+
+<script src="js/config.js?v=20261114a"></script>
+<script src="js/lp.js?v=20261114a"></script>
 </body>
 </html>
