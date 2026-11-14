@@ -44,11 +44,11 @@
     });
 
     /* ---- ふわっと表示 ---- */
-    var reveals = $all('.reveal');
+    var reveals = $all('[data-reveal]');
     if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
-        }, { threshold: 0.12 });
+        }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
         reveals.forEach(function (el) { io.observe(el); });
     } else {
         reveals.forEach(function (el) { el.classList.add('is-in'); });
