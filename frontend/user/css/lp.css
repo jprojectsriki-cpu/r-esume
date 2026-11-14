@@ -381,3 +381,13 @@ main { position: relative; z-index: 1; overflow-x: clip; }
     .footer-grid { grid-template-columns: minmax(0, 1.3fr) auto auto auto; column-gap: 48px; }
     .footer-col:last-child { grid-column: auto; }
 }
+
+
+/* ロゴ */
+.brand-mark { width: 36px; height: 36px; border-radius: 8px; background: var(--tint); display: grid; place-items: center; flex: none; }
+.brand-mark img { display: block; }
+.footer-logo .brand-mark { width: 40px; height: 40px; background: #fff; }   /* 濃い背景でロゴが見えるよう、白い台に載せる */
+/* 料金の項目：アイコンと文字を上にそろえる。ふりがなの有無で高さが変わらないよう、行間をそろえる */
+.price-list li { align-items: flex-start; line-height: 2; }
+.price-list li > span { flex: 1; min-width: 0; }
+.price-list .icon { margin-top: 0.4em; }
