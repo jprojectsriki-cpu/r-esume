@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/lp.css?v=20261114g">
+    <link rel="stylesheet" href="css/lp.css?v=20261114h">
     <script>
         document.documentElement.classList.add('js');
         try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
@@ -37,21 +37,21 @@
 
 <canvas id="bg3d" aria-hidden="true"></canvas>
 
-<div class="sample-bar">デザイン確認用のサンプルです。お申し込みは、まだできません。 / Design preview. Applications are not open yet.</div>
+<div class="sample-bar">デザイン<ruby>確認<rt>かくにん</rt></ruby><ruby>用<rt>よう</rt></ruby>のサンプルです。お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みは、まだできません。 / Design preview. Applications are not open yet.</div>
 
 <header class="site-header">
     <div class="header-inner">
         <a class="brand" href="#top" aria-label="R-ESUME トップへ"><span class="brand-name">R-ESUME</span></a>
         <nav class="main-nav" aria-label="メニュー">
             <a href="#features">できること</a>
-            <a href="#flow">使い方</a>
-            <a href="#price">料金</a>
-            <a href="#faq">よくある質問</a>
+            <a href="#flow"><ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby></a>
+            <a href="#price"><ruby>料金<rt>りょうきん</rt></ruby></a>
+            <a href="#faq">よくある<ruby>質問<rt>しつもん</rt></ruby></a>
         </nav>
         <div class="header-actions">
             <button type="button" class="furi-btn" id="furiBtn" aria-pressed="true">ふりがな ON</button>
             <a class="btn btn-secondary header-login" href="login.html">ログイン</a>
-            <button type="button" class="btn header-login" data-open="dlgApply">申し込む</button>
+            <button type="button" class="btn header-login" data-open="dlgApply"><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む</button>
             <button type="button" class="icon-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="メニューを開く">
                 <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
             </button>
@@ -59,9 +59,9 @@
     </div>
     <nav class="mobile-menu" id="mobileMenu" aria-label="スマホ用メニュー">
         <a href="#features">できること / Features</a>
-        <a href="#flow">使い方 / How it works</a>
-        <a href="#price">料金 / Price</a>
-        <a href="#faq">よくある質問 / FAQ</a>
+        <a href="#flow"><ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby> / How it works</a>
+        <a href="#price"><ruby>料金<rt>りょうきん</rt></ruby> / Price</a>
+        <a href="#faq">よくある<ruby>質問<rt>しつもん</rt></ruby> / FAQ</a>
         <a href="login.html">ログイン / Log in</a>
     </nav>
 </header>
@@ -71,7 +71,7 @@
 <section class="hero">
     <div class="container hero-grid">
         <div data-reveal="left">
-            <h1>スマホで作る、<br><span class="hl"><ruby>日本<rt>にほん</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby></span>。</h1>
+            <h1>スマホで<ruby>作<rt>つく</rt></ruby>る、<br><span class="hl"><ruby>日本<rt>にほん</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby></span>。</h1>
             <p class="hero-lead"><ruby>写真<rt>しゃしん</rt></ruby>を<ruby>撮<rt>と</rt></ruby>って、<ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えるだけ。<ruby>志望動機<rt>しぼうどうき</rt></ruby>と<ruby>自己<rt>じこ</rt></ruby>PRも<ruby>自動<rt>じどう</rt></ruby>で<ruby>作<rt>つく</rt></ruby>れます。</p>
             <p class="en">Make a Japanese resume (rirekisho) on your smartphone. Take a photo, answer a few questions, done.</p>
             <div class="hero-cta">
@@ -79,9 +79,9 @@
                 <a class="btn btn-lg btn-secondary" href="login.html">ログイン / Log in</a>
             </div>
             <ul class="hero-tags">
-                <li><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>厚生労働省の様式例に対応</li>
-                <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>スマホで入力</li>
-                <li><svg class="icon" aria-hidden="true"><use href="#i-bank"/></svg>銀行振込</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><ruby>厚生労働省<rt>こうせいろうどうしょう</rt></ruby>の<ruby>様式例<rt>ようしきれい</rt></ruby>に<ruby>対応<rt>たいおう</rt></ruby></li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>スマホで<ruby>入力<rt>にゅうりょく</rt></ruby></li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-bank"/></svg><ruby>銀行<rt>ぎんこう</rt></ruby><ruby>振込<rt>ふりこみ</rt></ruby></li>
             </ul>
         </div>
 
@@ -123,23 +123,23 @@
         <div>
             <article class="feature" data-reveal="right" style="--d:0.00s">
                 <svg class="icon" aria-hidden="true"><use href="#i-steps"/></svg>
-                <h3>1つずつ入力 <span class="en">Step-by-step input</span></h3>
-                <p>名前・住所・学歴などを、1ページに1つずつ入力します。入力した内容は自動で保存されるので、あとから続きができます。</p>
+                <h3>1つずつ<ruby>入力<rt>にゅうりょく</rt></ruby> <span class="en">Step-by-step input</span></h3>
+                <p><ruby>名前<rt>なまえ</rt></ruby>・<ruby>住所<rt>じゅうしょ</rt></ruby>・<ruby>学歴<rt>がくれき</rt></ruby>などを、1ページに1つずつ<ruby>入力<rt>にゅうりょく</rt></ruby>します。<ruby>入力<rt>にゅうりょく</rt></ruby>した<ruby>内容<rt>ないよう</rt></ruby>は<ruby>自動<rt>じどう</rt></ruby>で<ruby>保存<rt>ほぞん</rt></ruby>されるので、あとから<ruby>続<rt>つづ</rt></ruby>きができます。</p>
             </article>
             <article class="feature" data-reveal="up" style="--d:0.08s">
                 <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
                 <h3><ruby>証明写真<rt>しょうめいしゃしん</rt></ruby> <span class="en">ID photo</span></h3>
-                <p>その場でカメラで撮るか、持っている写真を選びます。履歴書の枠の大きさに合わせて、位置を調整できます。</p>
+                <p>その<ruby>場<rt>ば</rt></ruby>でカメラで<ruby>撮<rt>と</rt></ruby>るか、<ruby>持<rt>も</rt></ruby>っている<ruby>写真<rt>しゃしん</rt></ruby>を<ruby>選<rt>えら</rt></ruby>びます。<ruby>履歴書<rt>りれきしょ</rt></ruby>の<ruby>枠<rt>わく</rt></ruby>の<ruby>大<rt>おお</rt></ruby>きさに<ruby>合<rt>あ</rt></ruby>わせて、<ruby>位置<rt>いち</rt></ruby>を<ruby>調整<rt>ちょうせい</rt></ruby>できます。</p>
             </article>
             <article class="feature" data-reveal="left" style="--d:0.16s">
                 <svg class="icon" aria-hidden="true"><use href="#i-sparkles"/></svg>
                 <h3><ruby>志望動機<rt>しぼうどうき</rt></ruby>・<ruby>自己<rt>じこ</rt></ruby>PR <span class="en">Motivation and self-PR</span></h3>
-                <p>性格や志望する業種を選ぶと、文章ができあがります。ほかの人と同じ文章にならないように作られ、あとから自由に書き直せます。</p>
+                <p><ruby>性格<rt>せいかく</rt></ruby>や<ruby>志望<rt>しぼう</rt></ruby>する<ruby>業種<rt>ぎょうしゅ</rt></ruby>を<ruby>選<rt>えら</rt></ruby>ぶと、<ruby>文章<rt>ぶんしょう</rt></ruby>ができあがります。ほかの<ruby>人<rt>ひと</rt></ruby>と<ruby>同<rt>おな</rt></ruby>じ<ruby>文章<rt>ぶんしょう</rt></ruby>にならないように<ruby>作<rt>つく</rt></ruby>られ、あとから<ruby>自由<rt>じゆう</rt></ruby>に<ruby>書<rt>か</rt></ruby>き<ruby>直<rt>なお</rt></ruby>せます。</p>
             </article>
             <article class="feature" data-reveal="down" style="--d:0.24s">
                 <svg class="icon" aria-hidden="true"><use href="#i-printer"/></svg>
                 <h3><ruby>印刷<rt>いんさつ</rt></ruby>・PDF <span class="en">Print or save as PDF</span></h3>
-                <p>厚生労働省の履歴書様式例に沿った、A4の履歴書になります。国籍・在留資格・日本語能力も入れられます。</p>
+                <p><ruby>厚生労働省<rt>こうせいろうどうしょう</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby><ruby>様式例<rt>ようしきれい</rt></ruby>に<ruby>沿<rt>そ</rt></ruby>った、A4の<ruby>履歴書<rt>りれきしょ</rt></ruby>になります。<ruby>国籍<rt>こくせき</rt></ruby>・<ruby>在留資格<rt>ざいりゅうしかく</rt></ruby>・<ruby>日本語<rt>にほんご</rt></ruby><ruby>能力<rt>のうりょく</rt></ruby>も<ruby>入<rt>い</rt></ruby>れられます。</p>
             </article>
             <!-- TODO: お客様の声・実績の数字は、本物ができてから、ここに入れる（いまは作らない） -->
         </div>
@@ -153,11 +153,11 @@
             <p class="en">How it works</p>
         </div>
         <ol class="flow">
-            <li data-reveal="up" style="--d:0.00s"><span class="no">1</span><h3><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む</h3><p>名前・メール・パスワードを入力 <span class="en">Apply</span></p></li>
-            <li data-reveal="up" style="--d:0.10s"><span class="no">2</span><h3><ruby>銀行振込<rt>ぎんこうふりこみ</rt></ruby></h3><p>メールの口座に1,100円を振込 <span class="en">Bank transfer</span></p></li>
-            <li data-reveal="up" style="--d:0.20s"><span class="no">3</span><h3>アカウント<ruby>発行<rt>はっこう</rt></ruby></h3><p>入金を確認して、メールでお知らせ <span class="en">Account issued</span></p></li>
-            <li data-reveal="up" style="--d:0.30s"><span class="no">4</span><h3>ログインして<ruby>入力<rt>にゅうりょく</rt></ruby></h3><p>スマホで履歴書をつくる <span class="en">Make your resume</span></p></li>
-            <li data-reveal="up" style="--d:0.40s"><span class="no">5</span><h3><ruby>印刷<rt>いんさつ</rt></ruby>・PDF</h3><p>A4の履歴書をすぐに出力 <span class="en">Print or save</span></p></li>
+            <li data-reveal="up" style="--d:0.00s"><span class="no">1</span><h3><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む</h3><p><ruby>名前<rt>なまえ</rt></ruby>・メール・パスワードを<ruby>入力<rt>にゅうりょく</rt></ruby> <span class="en">Apply</span></p></li>
+            <li data-reveal="up" style="--d:0.10s"><span class="no">2</span><h3><ruby>銀行振込<rt>ぎんこうふりこみ</rt></ruby></h3><p>メールの<ruby>口座<rt>こうざ</rt></ruby>に1,100<ruby>円<rt>えん</rt></ruby>を<ruby>振込<rt>ふりこみ</rt></ruby> <span class="en">Bank transfer</span></p></li>
+            <li data-reveal="up" style="--d:0.20s"><span class="no">3</span><h3>アカウント<ruby>発行<rt>はっこう</rt></ruby></h3><p><ruby>入金<rt>にゅうきん</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>して、メールでお<ruby>知<rt>し</rt></ruby>らせ <span class="en">Account issued</span></p></li>
+            <li data-reveal="up" style="--d:0.30s"><span class="no">4</span><h3>ログインして<ruby>入力<rt>にゅうりょく</rt></ruby></h3><p>スマホで<ruby>履歴書<rt>りれきしょ</rt></ruby>をつくる <span class="en">Make your resume</span></p></li>
+            <li data-reveal="up" style="--d:0.40s"><span class="no">5</span><h3><ruby>印刷<rt>いんさつ</rt></ruby>・PDF</h3><p>A4の<ruby>履歴書<rt>りれきしょ</rt></ruby>をすぐに<ruby>出力<rt>しゅつりょく</rt></ruby> <span class="en">Print or save</span></p></li>
         </ol>
     </div>
 </section>
@@ -167,18 +167,18 @@
         <div class="section-head" data-reveal="left">
             <h2><ruby>料金<rt>りょうきん</rt></ruby></h2>
             <p class="en">Price</p>
-            <p style="margin-top:16px;max-width:22em">お支払いは銀行振込だけです。お申し込みから7日以内にお振り込みください。</p>
+            <p style="margin-top:16px;max-width:22em">お<ruby>支払<rt>しはら</rt></ruby>いは<ruby>銀行<rt>ぎんこう</rt></ruby><ruby>振込<rt>ふりこみ</rt></ruby>だけです。お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みから7<ruby>日以内<rt>にちいない</rt></ruby>にお<ruby>振<rt>ふ</rt></ruby>り<ruby>込<rt>こ</rt></ruby>みください。</p>
         </div>
         <div class="price-box" data-reveal="right">
-            <p class="price-big"><strong>1,100円</strong><span>税込・1年間 / for 1 year</span></p>
+            <p class="price-big"><strong>1,100<ruby>円<rt>えん</rt></ruby></strong><span><ruby>税込<rt>ぜいこみ</rt></ruby>・1<ruby>年間<rt>ねんかん</rt></ruby> / for 1 year</span></p>
             <ul class="price-list">
-                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>スマホで履歴書を入力・プレビュー</li>
-                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>証明写真（カメラ・ファイル選択）</li>
-                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>志望動機・自己PRの自動作成</li>
-                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>印刷・PDFに保存（A4）</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>スマホで<ruby>履歴書<rt>りれきしょ</rt></ruby>を<ruby>入力<rt>にゅうりょく</rt></ruby>・プレビュー</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><ruby>証明写真<rt>しょうめいしゃしん</rt></ruby>（カメラ・ファイル<ruby>選択<rt>せんたく</rt></ruby>）</li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><ruby>志望<rt>しぼう</rt></ruby><ruby>動機<rt>どうき</rt></ruby>・<ruby>自己<rt>じこ</rt></ruby>PRの<ruby>自動<rt>じどう</rt></ruby><ruby>作成<rt>さくせい</rt></ruby></li>
+                <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><ruby>印刷<rt>いんさつ</rt></ruby>・PDFに<ruby>保存<rt>ほぞん</rt></ruby>（A4）</li>
             </ul>
-            <p class="notice">入金を確認したら、アカウントを発行してメールでお知らせします。発行前なら、全額お返しします。</p>
-            <button type="button" class="btn btn-lg btn-block" data-open="dlgApply">申し込む / Apply</button>
+            <p class="notice"><ruby>入金<rt>にゅうきん</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>したら、アカウントを<ruby>発行<rt>はっこう</rt></ruby>してメールでお<ruby>知<rt>し</rt></ruby>らせします。<ruby>発行<rt>はっこう</rt></ruby><ruby>前<rt>まえ</rt></ruby>なら、<ruby>全額<rt>ぜんがく</rt></ruby>お<ruby>返<rt>かえ</rt></ruby>しします。</p>
+            <button type="button" class="btn btn-lg btn-block" data-open="dlgApply"><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む / Apply</button>
         </div>
     </div>
 </section>
@@ -189,36 +189,36 @@
             <h2>よくある<ruby>質問<rt>しつもん</rt></ruby></h2>
             <p class="en">FAQ</p>
             <div class="help-card">
-                <p class="help-title">さがしている答えが、ありませんか？</p>
-                <p class="help-text">お問い合わせから、ご連絡ください。 / Please contact us.</p>
-                <a class="btn btn-secondary" href="https://jprojectsriki-cpu.github.io/rikis_collection/#contact">お問い合わせ / Contact</a>
+                <p class="help-title">さがしている<ruby>答<rt>こた</rt></ruby>えが、ありませんか？</p>
+                <p class="help-text">お<ruby>問<rt>と</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせから、ご<ruby>連絡<rt>れんらく</rt></ruby>ください。 / Please contact us.</p>
+                <a class="btn btn-secondary" href="https://jprojectsriki-cpu.github.io/rikis_collection/#contact">お<ruby>問<rt>と</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせ / Contact</a>
             </div>
         </div>
         <div>
             <div class="chips" role="group" aria-label="質問のしぼりこみ">
                 <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">すべて</button>
-                <button type="button" class="chip" data-filter="use" aria-pressed="false">使い方</button>
-                <button type="button" class="chip" data-filter="photo" aria-pressed="false">写真・入力</button>
-                <button type="button" class="chip" data-filter="pay" aria-pressed="false">料金・お支払い</button>
-                <button type="button" class="chip" data-filter="safe" aria-pressed="false">安全・個人情報</button>
+                <button type="button" class="chip" data-filter="use" aria-pressed="false"><ruby>使<rt>つか</rt></ruby>い<ruby>方<rt>かた</rt></ruby></button>
+                <button type="button" class="chip" data-filter="photo" aria-pressed="false"><ruby>写真<rt>しゃしん</rt></ruby>・<ruby>入力<rt>にゅうりょく</rt></ruby></button>
+                <button type="button" class="chip" data-filter="pay" aria-pressed="false"><ruby>料金<rt>りょうきん</rt></ruby>・お<ruby>支払<rt>しはら</rt></ruby>い</button>
+                <button type="button" class="chip" data-filter="safe" aria-pressed="false"><ruby>安全<rt>あんぜん</rt></ruby>・<ruby>個人情報<rt>こじんじょうほう</rt></ruby></button>
             </div>
             <div class="faq">
-            <details class="qa" data-cat="use" open data-reveal="left" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">スマホだけで使えますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>はい。入力も写真も、スマホだけでできます。パソコンでも使えます。 / Yes. You can do everything on your smartphone. A PC also works.</p></div></details>
-            <details class="qa" data-cat="use" data-reveal="right" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">日本語が苦手でも使えますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>画面にはふりがなと英語があります。ふりがなは、上のボタンでいつでも消せます。 / The screens have furigana and English. You can turn furigana on and off with the button at the top.</p></div></details>
-            <details class="qa" data-cat="use" data-reveal="left" style="--d:0.12s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">履歴書は、どんな形式ですか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>厚生労働省の「履歴書様式例」（A4）に沿っています。性別欄は任意で、通勤時間・扶養家族・配偶者の欄はありません。 / It follows the sample resume format of Japan's Ministry of Health, Labour and Welfare (A4). The gender field is optional.</p></div></details>
-            <details class="qa" data-cat="photo" data-reveal="right" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">写真は、どうやって入れますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>「カメラで撮る」か「写真を選ぶ」のどちらかを選びます。LINEなどのアプリの中でカメラが使えないときは、「写真を選ぶ」を使ってください。 / Choose "take a photo" or "choose a photo". If the camera does not work inside an app such as LINE, please choose a photo from your files.</p></div></details>
-            <details class="qa" data-cat="pay" data-reveal="left" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">料金と、使える期間を教えてください。</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>1,100円（税込）で、アカウントを発行した日から1年間ご利用いただけます。 / 1,100 yen (tax included) for 1 year from the day your account is issued.</p></div></details>
-            <details class="qa" data-cat="pay" data-reveal="right" style="--d:0.12s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">どうやって支払いますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>銀行振込だけです。お申し込みから7日以内にお振り込みください。入金を確認したら、アカウントを発行してメールでお知らせします。 / Bank transfer only. Please pay within 7 days of applying. We will email you when your account is ready.</p></div></details>
-            <details class="qa" data-cat="pay" data-reveal="left" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">返金はできますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>アカウントを発行する前なら、全額お返しします。発行後は、原則としてお返しできません。 / Before your account is issued, we refund the full amount. After it is issued, refunds are not available in principle.</p></div></details>
-            <details class="qa" data-cat="safe" data-reveal="right" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">入力した内容は、AIの学習に使われますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
-                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>いいえ。入力した内容は、AIの学習には使いません。 / No. What you enter is not used to train AI.</p></div></details>
+            <details class="qa" data-cat="use" open data-reveal="left" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">スマホだけで<ruby>使<rt>つか</rt></ruby>えますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>はい。<ruby>入力<rt>にゅうりょく</rt></ruby>も<ruby>写真<rt>しゃしん</rt></ruby>も、スマホだけでできます。パソコンでも<ruby>使<rt>つか</rt></ruby>えます。 / Yes. You can do everything on your smartphone. A PC also works.</p></div></details>
+            <details class="qa" data-cat="use" data-reveal="right" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text"><ruby>日本語<rt>にほんご</rt></ruby>が<ruby>苦手<rt>にがて</rt></ruby>でも<ruby>使<rt>つか</rt></ruby>えますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p><ruby>画面<rt>がめん</rt></ruby>にはふりがなと<ruby>英語<rt>えいご</rt></ruby>があります。ふりがなは、<ruby>上<rt>うえ</rt></ruby>のボタンでいつでも<ruby>消<rt>け</rt></ruby>せます。 / The screens have furigana and English. You can turn furigana on and off with the button at the top.</p></div></details>
+            <details class="qa" data-cat="use" data-reveal="left" style="--d:0.12s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text"><ruby>履歴書<rt>りれきしょ</rt></ruby>は、どんな<ruby>形式<rt>けいしき</rt></ruby>ですか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p><ruby>厚生労働省<rt>こうせいろうどうしょう</rt></ruby>の「<ruby>履歴書<rt>りれきしょ</rt></ruby><ruby>様式例<rt>ようしきれい</rt></ruby>」（A4）に<ruby>沿<rt>そ</rt></ruby>っています。<ruby>性別<rt>せいべつ</rt></ruby><ruby>欄<rt>らん</rt></ruby>は<ruby>任意<rt>にんい</rt></ruby>で、<ruby>通勤時間<rt>つうきんじかん</rt></ruby>・<ruby>扶養家族<rt>ふようかぞく</rt></ruby>・<ruby>配偶者<rt>はいぐうしゃ</rt></ruby>の<ruby>欄<rt>らん</rt></ruby>はありません。 / It follows the sample resume format of Japan's Ministry of Health, Labour and Welfare (A4). The gender field is optional.</p></div></details>
+            <details class="qa" data-cat="photo" data-reveal="right" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text"><ruby>写真<rt>しゃしん</rt></ruby>は、どうやって<ruby>入<rt>い</rt></ruby>れますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>「カメラで<ruby>撮<rt>と</rt></ruby>る」か「<ruby>写真<rt>しゃしん</rt></ruby>を<ruby>選<rt>えら</rt></ruby>ぶ」のどちらかを<ruby>選<rt>えら</rt></ruby>びます。LINEなどのアプリの<ruby>中<rt>なか</rt></ruby>でカメラが<ruby>使<rt>つか</rt></ruby>えないときは、「<ruby>写真<rt>しゃしん</rt></ruby>を<ruby>選<rt>えら</rt></ruby>ぶ」を<ruby>使<rt>つか</rt></ruby>ってください。 / Choose "take a photo" or "choose a photo". If the camera does not work inside an app such as LINE, please choose a photo from your files.</p></div></details>
+            <details class="qa" data-cat="pay" data-reveal="left" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text"><ruby>料金<rt>りょうきん</rt></ruby>と、<ruby>使<rt>つか</rt></ruby>える<ruby>期間<rt>きかん</rt></ruby>を<ruby>教<rt>おし</rt></ruby>えてください。</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>1,100<ruby>円<rt>えん</rt></ruby>（<ruby>税込<rt>ぜいこみ</rt></ruby>）で、アカウントを<ruby>発行<rt>はっこう</rt></ruby>した<ruby>日<rt>ひ</rt></ruby>から1<ruby>年間<rt>ねんかん</rt></ruby>ご<ruby>利用<rt>りよう</rt></ruby>いただけます。 / 1,100 yen (tax included) for 1 year from the day your account is issued.</p></div></details>
+            <details class="qa" data-cat="pay" data-reveal="right" style="--d:0.12s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text">どうやって<ruby>支払<rt>しはら</rt></ruby>いますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p><ruby>銀行<rt>ぎんこう</rt></ruby><ruby>振込<rt>ふりこみ</rt></ruby>だけです。お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みから7<ruby>日以内<rt>にちいない</rt></ruby>にお<ruby>振<rt>ふ</rt></ruby>り<ruby>込<rt>こ</rt></ruby>みください。<ruby>入金<rt>にゅうきん</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>したら、アカウントを<ruby>発行<rt>はっこう</rt></ruby>してメールでお<ruby>知<rt>し</rt></ruby>らせします。 / Bank transfer only. Please pay within 7 days of applying. We will email you when your account is ready.</p></div></details>
+            <details class="qa" data-cat="pay" data-reveal="left" style="--d:0.00s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text"><ruby>返金<rt>へんきん</rt></ruby>はできますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>アカウントを<ruby>発行<rt>はっこう</rt></ruby>する<ruby>前<rt>まえ</rt></ruby>なら、<ruby>全額<rt>ぜんがく</rt></ruby>お<ruby>返<rt>かえ</rt></ruby>しします。<ruby>発行<rt>はっこう</rt></ruby><ruby>後<rt>ご</rt></ruby>は、<ruby>原則<rt>げんそく</rt></ruby>としてお<ruby>返<rt>かえ</rt></ruby>しできません。 / Before your account is issued, we refund the full amount. After it is issued, refunds are not available in principle.</p></div></details>
+            <details class="qa" data-cat="safe" data-reveal="right" style="--d:0.06s"><summary><span class="q-badge" aria-hidden="true">Q</span><span class="q-text"><ruby>入力<rt>にゅうりょく</rt></ruby>した<ruby>内容<rt>ないよう</rt></ruby>は、AIの<ruby>学習<rt>がくしゅう</rt></ruby>に<ruby>使<rt>つか</rt></ruby>われますか？</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+                <div class="ans"><span class="a-badge" aria-hidden="true">A</span><p>いいえ。<ruby>入力<rt>にゅうりょく</rt></ruby>した<ruby>内容<rt>ないよう</rt></ruby>は、AIの<ruby>学習<rt>がくしゅう</rt></ruby>には<ruby>使<rt>つか</rt></ruby>いません。 / No. What you enter is not used to train AI.</p></div></details>
             </div>
         </div>
     </div>
@@ -268,55 +268,55 @@
 </footer>
 <!-- 申込ダイアログ -->
 <dialog id="dlgApply" aria-labelledby="dlgApplyTitle">
-    <div class="dlg-head"><h2 id="dlgApplyTitle">お申し込み / Apply</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dlg-head"><h2 id="dlgApplyTitle">お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>み / Apply</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
     <form class="dlg-body" id="applyForm" novalidate>
-        <div class="pay-mini">R-ESUME（1年間）：<strong>1,100円（税込）</strong>／お支払いは銀行振込のみ</div>
+        <div class="pay-mini">R-ESUME（1<ruby>年間<rt>ねんかん</rt></ruby>）：<strong>1,100<ruby>円<rt>えん</rt></ruby>（<ruby>税込<rt>ぜいこみ</rt></ruby>）</strong>／お<ruby>支払<rt>しはら</rt></ruby>いは<ruby>銀行<rt>ぎんこう</rt></ruby><ruby>振込<rt>ふりこみ</rt></ruby>のみ</div>
         <div class="field">
-            <label for="apName">お名前 / Name</label>
+            <label for="apName">お<ruby>名前<rt>なまえ</rt></ruby> / Name</label>
             <input type="text" id="apName" name="name" maxlength="50" autocomplete="name" required>
         </div>
         <div class="field">
             <label for="apEmail">メールアドレス / Email</label>
             <input type="email" id="apEmail" name="email" maxlength="200" autocomplete="email" inputmode="email" required>
-            <p class="hint">受付メールと、アカウント発行のお知らせが届きます。 / We will send you emails here.</p>
+            <p class="hint"><ruby>受付<rt>うけつけ</rt></ruby>メールと、アカウント<ruby>発行<rt>はっこう</rt></ruby>のお<ruby>知<rt>し</rt></ruby>らせが<ruby>届<rt>とど</rt></ruby>きます。 / We will send you emails here.</p>
         </div>
         <div class="field">
             <label for="apPass">パスワード / Password</label>
             <input type="password" id="apPass" name="password" minlength="8" maxlength="64" autocomplete="new-password" required>
-            <p class="hint">8〜64文字。ログインのときに使います。 / 8–64 characters. You will use it to log in.</p>
+            <p class="hint">8〜64<ruby>文字<rt>もじ</rt></ruby>。ログインのときに<ruby>使<rt>つか</rt></ruby>います。 / 8–64 characters. You will use it to log in.</p>
         </div>
         <div class="hp" aria-hidden="true"><label>website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
         <p class="form-msg" id="applyMsg" role="status" aria-live="polite"></p>
-        <button type="submit" class="btn btn-lg btn-block" id="applyBtn">申し込む / Apply</button>
+        <button type="submit" class="btn btn-lg btn-block" id="applyBtn"><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む / Apply</button>
     </form>
 </dialog>
 
 <!-- 特商法 -->
 <dialog id="dlgLaw" aria-labelledby="dlgLawTitle">
-    <div class="dlg-head"><h2 id="dlgLawTitle">特定商取引法に基づく表記</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dlg-head"><h2 id="dlgLawTitle"><ruby>特定<rt>とくてい</rt></ruby><ruby>商取引法<rt>しょうとりひきほう</rt></ruby>に<ruby>基<rt>もと</rt></ruby>づく<ruby>表記<rt>ひょうき</rt></ruby></h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
     <div class="dlg-body"><dl>
-        <dt>販売事業者名</dt><dd>ReicherRick</dd>
-        <dt>代表者</dt><dd>中村 力</dd>
-        <dt>所在地</dt><dd>〒902-0062 沖縄県那覇市字松川362番地9　シティテラス松川402号</dd>
-        <dt>電話番号</dt><dd>080-9107-4916</dd>
-        <dt>販売価格</dt><dd>1,100円（税込・1年間）</dd>
-        <dt>お支払い方法</dt><dd>銀行振込のみ（振込手数料はお客様のご負担）</dd>
-        <dt>お支払い時期</dt><dd>お申し込みから7日以内</dd>
-        <dt>サービスの提供時期</dt><dd>入金を確認し、アカウントを発行した時点から、1年間ご利用いただけます。</dd>
-        <dt>返金</dt><dd>アカウント発行前は全額を返金します。発行後は、原則として返金できません。</dd>
+        <dt><ruby>販売<rt>はんばい</rt></ruby><ruby>事業者名<rt>じぎょうしゃめい</rt></ruby></dt><dd>ReicherRick</dd>
+        <dt><ruby>代表者<rt>だいひょうしゃ</rt></ruby></dt><dd><ruby>中村<rt>なかむら</rt></ruby> <ruby>力<rt>りき</rt></ruby></dd>
+        <dt><ruby>所在地<rt>しょざいち</rt></ruby></dt><dd>〒902-0062 <ruby>沖縄県那覇市字松川<rt>おきなわけんなはしあざまつかわ</rt></ruby>362<ruby>番地<rt>ばんち</rt></ruby>9　シティテラス<ruby>松川<rt>まつかわ</rt></ruby>402<ruby>号<rt>ごう</rt></ruby></dd>
+        <dt><ruby>電話番号<rt>でんわばんごう</rt></ruby></dt><dd>080-9107-4916</dd>
+        <dt><ruby>販売<rt>はんばい</rt></ruby><ruby>価格<rt>かかく</rt></ruby></dt><dd>1,100<ruby>円<rt>えん</rt></ruby>（<ruby>税込<rt>ぜいこみ</rt></ruby>・1<ruby>年間<rt>ねんかん</rt></ruby>）</dd>
+        <dt>お<ruby>支払<rt>しはら</rt></ruby>い<ruby>方法<rt>ほうほう</rt></ruby></dt><dd><ruby>銀行<rt>ぎんこう</rt></ruby><ruby>振込<rt>ふりこみ</rt></ruby>のみ（<ruby>振込<rt>ふりこみ</rt></ruby><ruby>手数料<rt>てすうりょう</rt></ruby>はお<ruby>客様<rt>きゃくさま</rt></ruby>のご<ruby>負担<rt>ふたん</rt></ruby>）</dd>
+        <dt>お<ruby>支払<rt>しはら</rt></ruby>い<ruby>時期<rt>じき</rt></ruby></dt><dd>お<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>みから7<ruby>日以内<rt>にちいない</rt></ruby></dd>
+        <dt>サービスの<ruby>提供<rt>ていきょう</rt></ruby><ruby>時期<rt>じき</rt></ruby></dt><dd><ruby>入金<rt>にゅうきん</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>し、アカウントを<ruby>発行<rt>はっこう</rt></ruby>した<ruby>時点<rt>じてん</rt></ruby>から、1<ruby>年間<rt>ねんかん</rt></ruby>ご<ruby>利用<rt>りよう</rt></ruby>いただけます。</dd>
+        <dt><ruby>返金<rt>へんきん</rt></ruby></dt><dd>アカウント<ruby>発行<rt>はっこう</rt></ruby><ruby>前<rt>まえ</rt></ruby>は<ruby>全額<rt>ぜんがく</rt></ruby>を<ruby>返金<rt>へんきん</rt></ruby>します。<ruby>発行<rt>はっこう</rt></ruby><ruby>後<rt>ご</rt></ruby>は、<ruby>原則<rt>げんそく</rt></ruby>として<ruby>返金<rt>へんきん</rt></ruby>できません。</dd>
     </dl></div>
 </dialog>
 <dialog id="dlgTerms" aria-labelledby="dlgTermsTitle">
-    <div class="dlg-head"><h2 id="dlgTermsTitle">利用規約</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
-    <div class="dlg-body"><p>利用規約は、公開前に掲載します。（サンプルのため準備中です）</p></div>
+    <div class="dlg-head"><h2 id="dlgTermsTitle"><ruby>利用<rt>りよう</rt></ruby><ruby>規約<rt>きやく</rt></ruby></h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dlg-body"><p><ruby>利用<rt>りよう</rt></ruby><ruby>規約<rt>きやく</rt></ruby>は、<ruby>公開<rt>こうかい</rt></ruby><ruby>前<rt>まえ</rt></ruby>に<ruby>掲載<rt>けいさい</rt></ruby>します。（サンプルのため<ruby>準備中<rt>じゅんびちゅう</rt></ruby>です）</p></div>
 </dialog>
 <dialog id="dlgPrivacy" aria-labelledby="dlgPrivacyTitle">
     <div class="dlg-head"><h2 id="dlgPrivacyTitle">プライバシーポリシー</h2><button type="button" class="dlg-close" data-close aria-label="閉じる"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
-    <div class="dlg-body"><p>プライバシーポリシーは、公開前に掲載します。（サンプルのため準備中です）</p></div>
+    <div class="dlg-body"><p>プライバシーポリシーは、<ruby>公開<rt>こうかい</rt></ruby><ruby>前<rt>まえ</rt></ruby>に<ruby>掲載<rt>けいさい</rt></ruby>します。（サンプルのため<ruby>準備中<rt>じゅんびちゅう</rt></ruby>です）</p></div>
 </dialog>
 
-<script src="js/config.js?v=20261114g"></script>
-<script src="js/bg3d.js?v=20261114g"></script>
-<script src="js/lp.js?v=20261114g"></script>
+<script src="js/config.js?v=20261114h"></script>
+<script src="js/bg3d.js?v=20261114h"></script>
+<script src="js/lp.js?v=20261114h"></script>
 </body>
 </html>
