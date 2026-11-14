@@ -145,14 +145,21 @@
         if (!opt) return;
         var body = opt.body2; if (opt.reason) body.reason = $('cfReason').value.trim();
         toast('');
-        window.RLoading.run(function () { return call(body); }, {
+        // 変更が終わり、一覧を読み直して画面に出したあとで、ローディングを消す
+        var sent = false;
+        window.RLoading.run(function () {
+            return call(body).then(function (res) {
+                if (res && res.ok) { sent = true; return load().then(function () { return res; }); }
+                return res;
+            });
+        }, {
             text: '処理しています',
             onSuccess: function (res) {
                 if (res && res.ok) {
                     toast(opt.done + (res.mailed === false ? '（お客様へのメールが送れませんでした。別の方法でお知らせください）' : ''), res.mailed === false ? 'error' : 'ok');
-                    return load();
+                } else {
+                    toast((res && res.message) || '処理できませんでした。', 'error');
                 }
-                toast((res && res.message) || '処理できませんでした。', 'error');
             },
             onError: function () { toast('通信できませんでした。「更新」で状態を確かめてから、もう一度お試しください。', 'error'); }
         });

@@ -104,11 +104,12 @@
         var p;
         try { p = Promise.resolve(typeof task === 'function' ? task() : task); } catch (e) { p = Promise.reject(e); }
         return p.then(function (res) {
-            try { if (h.onSuccess) h.onSuccess(res); } catch (e) { console.error(e); }
-            return hide().then(function () { return res; });
+            // onSuccess が Promise を返したら、それが終わるまで待ってから消す
+            var after; try { after = h.onSuccess ? h.onSuccess(res) : null; } catch (e) { console.error(e); }
+            return Promise.resolve(after).catch(function (e) { console.error(e); }).then(hide).then(function () { return res; });
         }, function (err) {
-            try { if (h.onError) h.onError(err); } catch (e) { console.error(e); }
-            return hide().then(function () { if (!h.onError) throw err; });
+            var after; try { after = h.onError ? h.onError(err) : null; } catch (e) { console.error(e); }
+            return Promise.resolve(after).catch(function (e) { console.error(e); }).then(hide).then(function () { if (!h.onError) throw err; });
         });
     }
 
