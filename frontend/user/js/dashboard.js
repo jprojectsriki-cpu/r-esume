@@ -31,6 +31,7 @@
         else if (expired) { lim.innerHTML = T(rb('利用', 'りよう') + rb('期限', 'きげん') + 'が' + rb('過', 'す') + 'ぎています（' + ymd(validUntil) + 'まで）。', 'Your access has expired (it ended on ' + ymd(validUntil) + ').'); }
         else { lim.innerHTML = T(rb('利用', 'りよう') + rb('期限', 'きげん') + '：' + ymd(validUntil) + 'まで', 'Valid until: ' + ymd(validUntil)); }
         renderRenew();
+        var pt = $('personaTag'); pt.textContent = persona && persona.top ? '診断ずみ' : '未診断'; pt.hidden = isAdmin;
         var sc = $('stageCount'); sc.textContent = cnt ? cnt + '枚' : ''; sc.hidden = !cnt || isAdmin;
         $('myBody').hidden = false;
     }
@@ -62,7 +63,10 @@
             if (res && res.reason) return kick(res);
         });
     }
-    var cnt = null;
+    var cnt = null, persona = null;
+    function loadPersona() {
+        return A.api({ action: 'personaGet', token: s.token }).then(function (res) { if (res && res.ok) persona = res.persona; }).catch(function () {});
+    }
     function loadCount() {
         return A.api({ action: 'resumeList', token: s.token }).then(function (res) {
             if (res && res.ok && res.resumes) cnt = res.resumes.length + '/' + (res.max || 3);
@@ -80,7 +84,7 @@
         }).catch(function () {});
     }
     window.RLoading.hold(A.api({ action: 'me', token: s.token }).then(function (res) {
-        if (res && res.ok) { user = res.user; return loadRenewal().then(loadCount).then(loadNotices).then(render); }
+        if (res && res.ok) { user = res.user; return loadRenewal().then(loadCount).then(loadPersona).then(loadNotices).then(render); }
         return kick(res);
     }).catch(function () {
         $('myError').hidden = false;

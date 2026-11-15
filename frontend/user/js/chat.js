@@ -16,7 +16,8 @@
     function L(ja, en) { return T(fu(ja), esc(en)); }
 
     var LIM = { rows: 19, lic: 6, mot: 500, wish: 150 };
-    var STAGES = 6;
+    var PMODE = rid === 'persona';   // 性格診断の画面（chat.html#persona）。履歴書とは別に、ユーザーごとに1つ保存する
+    var STAGES = PMODE ? 1 : 6;
     var STATUS_LIST = ['留学', '家族滞在', '技術・人文知識・国際業務', '特定技能', '特定活動', '永住者', '日本人の配偶者等', '永住者の配偶者等', '定住者'];
 
     var D = null, tmp = {}, trail = [], nid = '', curG = [], dirty = false, timer = null, saving = Promise.resolve(), softKey = '', first = true, title = '';
@@ -103,7 +104,9 @@
         var p = saving.catch(function () {}).then(function () {
             if (!dirty || !D) return { ok: true };
             dirty = false;
-            return api({ action: 'resumeSave', resumeId: rid, title: title, data: D }).then(function (res) {
+            var req = PMODE ? { action: 'personaSave', persona: D.persona } : { action: 'resumeSave', resumeId: rid, title: title, data: D };
+            if (PMODE && !D.persona) return { ok: true };
+            return api(req).then(function (res) {
                 if (res && res.ok) { box.clear(); return res; }
                 dirty = true; fail(res); return res;
             }, function (e) { dirty = true; netFail(); throw e; });
@@ -178,10 +181,40 @@
             { k: 'yes', ja: '{決|き}まっている', en: 'I have decided', sj: '{業種|ぎょうしゅ}を{選|えら}ぶ', se: 'Choose the industry' },
             { k: 'no', ja: 'まだ{決|き}まっていない', en: 'Not decided yet', sj: '{性格|せいかく}の{質問|しつもん}に{答|こた}えて、{探|さが}す', se: 'Answer questions to find out' }]; },
         go: function (k) {
-            D.persona = { mode: k === 'yes' ? 'short' : 'full', answers: {} };
-            tmp.qi = 0; tmp.afterInd = k === 'yes' ? 'q' : 'name';
-            return k === 'yes' ? 'industry' : 'q';
+            D.persona = D.persona || {};
+            tmp.afterInd = 'name';
+            if (k === 'yes') return 'industry';
+            return D.persona.top && D.persona.top.length ? 'suggest' : 'noDiag';
         } };
+    // 性格診断の結果があるときは、合いそうな仕事から選ぶ
+    N.suggest = { stage: 1, kind: 'choice',
+        g: function () { return [B('{診断|しんだん}の{結果|けっか}から、{合|あ}いそうな{仕事|しごと}はこの3つ！どれにする？（これは{目安|めやす}です）', 'From your diagnosis, these three may suit you! Which one? (This is only a guide.)', 1)]; },
+        opts: function () {
+            var o = (D.persona.suggest || []).slice(0, 3).map(function (id, i) { var x = indById(id); return x ? { k: id, ja: x.ja, en: x.en, rank: String(i + 1) } : null; }).filter(Boolean);
+            o.push({ k: 'other', ja: 'ほかの{仕事|しごと}から{選|えら}ぶ', en: 'Choose another industry' });
+            return o;
+        },
+        go: function (k) {
+            if (k === 'other') { tmp.afterInd = 'name'; return 'industry'; }
+            D.persona.industry = k; return 'name';
+        } };
+    // まだ性格診断をしていないとき
+    N.noDiag = { stage: 1, kind: 'choice',
+        g: function () { return [B('まだ{決|き}まっていないなら、{性格診断|せいかくしんだん}がおすすめ！{合|あ}いそうな{仕事|しごと}が{分|わ}かるよ。', 'If you have not decided, try the personality diagnosis. It shows what may suit you.', 1)]; },
+        opts: function () { return [
+            { k: 'go', ja: '{性格診断|せいかくしんだん}をする', en: 'Take the diagnosis', sj: '{終|お}わったら、ここに{戻|もど}れます', se: 'You can come back here afterwards' },
+            { k: 'pick', ja: '{自分|じぶん}で{業種|ぎょうしゅ}を{選|えら}ぶ', en: 'Choose an industry myself' }]; },
+        go: function (k) { if (k === 'go') return { nav: 'chat.html#persona' }; tmp.afterInd = 'name'; return 'industry'; } };
+    // 診断の結果と選んだ業種が合わないときの、ひとこと
+    N.advice = { stage: 1, kind: 'choice',
+        g: function () {
+            var sg = (D.persona.suggest || []).slice(0, 3).map(function (id) { var x = indById(id); return x ? x.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1') : ''; }).filter(Boolean).join('・');
+            var me = indById(D.persona.industry), t = topNames();
+            return [B('{診断|しんだん}では、「' + esc1(sg) + '」が{合|あ}いそうでした。', 'The diagnosis suggested: ' + sg + '.'),
+                B('「' + esc1(me ? me.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1') : '') + '」も{大丈夫|だいじょうぶ}！' + (t ? '{志望動機|しぼうどうき}では、あなたの{強|つよ}み（' + esc1(t.ja) + '）が、その{仕事|しごと}でどう{活|い}きるかを{伝|つた}えよう。' : ''), 'It is fine to choose it!', 1)];
+        },
+        opts: function () { return [{ k: 'next', ja: 'つぎへ', en: 'Next' }]; },
+        go: function () { return 'name'; } };
     N.industry = { stage: 1, kind: 'choice',
         g: function () { return [B('どの{業種|ぎょうしゅ}ですか？', 'Which industry?', 1)]; },
         opts: function () {
@@ -189,7 +222,13 @@
             o.push({ k: 'other', ja: 'ほかの{業種|ぎょうしゅ}', en: 'Another industry' });
             return o;
         },
-        go: function (k) { D.persona = D.persona || {}; D.persona.industry = k; return tmp.afterInd || 'name'; } };
+        go: function (k) {
+            D.persona = D.persona || {}; D.persona.industry = k;
+            var sg = D.persona.suggest || [];
+            if (k !== 'other' && sg.length && sg.indexOf(k) < 0) return 'advice';   // 診断と合わないとき
+            return 'name';
+        } };
+    function indById(id) { return P.INDUSTRIES.filter(function (x) { return x.id === id; })[0]; }
     var SCALE_JA = { 5: 'そう思う', 4: 'ややそう思う', 3: 'どちらでもない', 2: 'あまり思わない', 1: 'そう思わない' };
     var SCALE_EN = { 5: 'Agree', 4: 'Somewhat agree', 3: 'Neutral', 2: 'Not really', 1: 'Disagree' };
     N.q = { stage: 1, kind: 'scale',
@@ -203,7 +242,7 @@
         go: function (v) {
             var qs = P.questions(D.persona.mode), i = tmp.qi || 0;
             D.persona.answers[qs[i].id] = +v; tmp.qi = i + 1;
-            return tmp.qi < qs.length ? 'q' : 'result';
+            return tmp.qi < qs.length ? 'q' : 'pResult';
         } };
     function strengthCard(r) {
         function mk(en) {
@@ -215,29 +254,26 @@
         }
         return { ja: mk(false), en: mk(true) };
     }
-    N.result = { stage: 1, kind: 'choice',
+    // 性格診断（別の画面）：はじめ → 質問 → 結果
+    N.pStart = { stage: 1, kind: 'choice',
+        g: function () { return [B('はじめまして！わたしは{案内役|あんないやく}のレジュメル。あなたの{強|つよ}みと、{合|あ}いそうな{仕事|しごと}を{探|さが}そう！', 'Nice to meet you! I am Rejumeru. Let us find your strengths and the jobs that may suit you!'), B('16{個|こ}の{質問|しつもん}に、{直感|ちょっかん}で{答|こた}えてね。3{分|ぷん}くらいです。', 'Answer 16 questions by instinct. It takes about 3 minutes.', 1)]; },
+        opts: function () { return [{ k: 'start', ja: 'はじめる', en: 'Start' }]; },
+        go: function () { D.persona = { mode: 'full', answers: {} }; tmp.qi = 0; return 'q'; } };
+    N.pResult = { stage: 1, kind: 'choice',
         g: function () {
             var r = P.score(D.persona.answers, D.persona.mode);
             D.persona.axes = r.axes;
             D.persona.top = r.topAxes.map(function (a) { return a.key; });
             D.persona.suggest = r.topIndustries.map(function (x) { return x.id; });
             tmp.res = r;
-            var g = [{ banner: { ja: '{診断|しんだん}クリア！', en: 'Done!' } }, { card: strengthCard(r) }];
-            g.push(D.persona.mode === 'full'
-                ? B('{合|あ}いそうな{仕事|しごと}は、この3つ！どれにする？（これは{目安|めやす}です）', 'These three may suit you! Which one? (This is only a guide.)', 1)
-                : B('{強|つよ}みが{出|で}ました！（これは{目安|めやす}です）つぎは、あなたのことを{教|おし}えて。', 'Your strengths are ready! (This is only a guide.) Next, tell me about yourself.', 1));
-            return g;
+            var names = r.topIndustries.map(function (x) { return x.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1'); }).join('・');
+            return [{ banner: { ja: '{診断|しんだん}クリア！', en: 'Done!' } }, { card: strengthCard(r) },
+                B('{合|あ}いそうな{仕事|しごと}は、「' + esc1(names) + '」！（これは{目安|めやす}です）{履歴書|りれきしょ}づくりで、{業種|ぎょうしゅ}を{選|えら}ぶときに{使|つか}われます。', 'These jobs may suit you. This is only a guide, and it is used when you choose an industry for your resume.', 1)];
         },
-        opts: function () {
-            if (D.persona.mode !== 'full') return [{ k: 'next', ja: 'つぎへ', en: 'Next' }];
-            var o = tmp.res.topIndustries.map(function (x, i) { return { k: x.id, ja: x.ja, en: x.en, rank: String(i + 1) }; });
-            o.push({ k: 'other', ja: 'ほかの{仕事|しごと}から{選|えら}ぶ', en: 'Choose another industry' });
-            return o;
-        },
+        opts: function () { return [{ k: 'home', ja: 'ホームへ', en: 'Back to home' }, { k: 'again', ja: 'もう{一度|いちど}{診断|しんだん}する', en: 'Take it again' }]; },
         go: function (k) {
-            if (k === 'other') { tmp.afterInd = 'name'; return 'industry'; }
-            if (k !== 'next') D.persona.industry = k;
-            return 'name';
+            if (k === 'again') { D.persona = { mode: 'full', answers: {} }; tmp.qi = 0; return 'q'; }
+            return { nav: 'dashboard.html' };
         } };
 
     // 基本
@@ -473,9 +509,11 @@
     }
     function enter(id) {
         nid = id; softKey = '';
-        D.chatAt = id;                                   // 続きから作れるように、いまの質問の場所を残す
-        var keep = {}; Object.keys(tmp).forEach(function (k) { if (k !== 'res') keep[k] = tmp[k]; });
-        D.chatTmp = keep;
+        if (!PMODE) {
+            D.chatAt = id;                               // 続きから作れるように、いまの質問の場所を残す
+            var keep = {}; Object.keys(tmp).forEach(function (k) { if (k !== 'res') keep[k] = tmp[k]; });
+            D.chatTmp = keep;
+        }
         curG = N[id].g();
         render();
     }
@@ -513,7 +551,7 @@
         }
         h += '<div class="sub">' + (trail.length ? '<button type="button" class="lk" data-act="back">' + BACK + T('戻る', 'Back') + '</button>' : '<span></span>') +
             (n.opt && n.kind !== 'choice' && n.kind !== 'scale' ? '<button type="button" class="lk" data-act="skip">' + T('スキップ', 'Skip') + '</button>' : '') +
-            '<button type="button" class="lk" data-act="exit">' + T('一覧へ', 'List') + '</button></div>';
+            '<button type="button" class="lk" data-act="exit">' + (PMODE ? T('ホームへ', 'Home') : T('一覧へ', 'List')) + '</button></div>';
         return h;
     }
     function render() {
@@ -607,7 +645,7 @@
         if (act === 'send') { var val = collect(); return submit(val, labelOf(n, val)); }
         if (act === 'skip') { var empty = n.kind === 'ym' ? { y: '', m: '' } : (n.kind === 'date3' ? { y: '', m: '', d: '' } : ''); return submit(empty, labelOf(n, empty), true); }
         if (act === 'back') return back();
-        if (act === 'exit') return leave('resume.html');
+        if (act === 'exit') return leave(PMODE ? 'dashboard.html' : 'resume.html');
     });
     $('cDock').addEventListener('input', function (e) {
         var el = e.target, nm = el.getAttribute && el.getAttribute('data-norm');
@@ -632,14 +670,36 @@
     document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden' && dirty) saveNow().catch(function () {}); });
 
     /* ---------- 最初の読み込み ---------- */
+    if (PMODE) {
+        window.RLoading.hold(api({ action: 'personaGet' }).then(function (res) {
+            if (!res) return;
+            if (res.ok === false) return fail(res);
+            D = fixData({}); D.persona = res.persona && res.persona.top ? res.persona : null;
+            enter(D.persona ? 'pResult' : 'pStart');
+        }).catch(function () { netFail(); }));
+        return;
+    }
     window.RLoading.hold(api({ action: 'resumeGet', resumeId: rid }).then(function (res) {
         if (!res) return;
         if (res.ok === false) return fail(res);
         if (res.expired) { location.replace('resume.html#' + rid); return; }
         title = res.resume.title; D = fixData(res.resume.data);
         tmp = (D.chatTmp && typeof D.chatTmp === 'object') ? D.chatTmp : {};
-        return api({ action: 'qualList' }).then(function (q) { quals = q && q.ok && q.quals ? q.quals : []; }).catch(function () { quals = []; }).then(function () {
-            enter(D.chatAt && N[D.chatAt] ? D.chatAt : 'work');
+        // 性格診断の結果（ユーザーごとに1つ）を、この履歴書の会話にも使う
+        return Promise.all([
+            api({ action: 'personaGet' }).catch(function () { return null; }),
+            api({ action: 'qualList' }).catch(function () { return null; })
+        ]).then(function (rs) {
+            var pr = rs[0], q = rs[1];
+            quals = q && q.ok && q.quals ? q.quals : [];
+            if (pr && pr.ok && pr.persona && pr.persona.top) {
+                var ind = D.persona && D.persona.industry;
+                D.persona = JSON.parse(JSON.stringify(pr.persona)); if (ind) D.persona.industry = ind;
+            }
+            var at = D.chatAt && N[D.chatAt] ? D.chatAt : 'work';
+            if (at === 'noDiag' && D.persona && D.persona.top) at = 'suggest';
+            if (at === 'q' || at === 'result') at = 'work';
+            enter(at);
         });
     }).catch(function () { netFail(); }));
 })();

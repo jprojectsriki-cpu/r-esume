@@ -111,6 +111,10 @@ function doPost(e) {
         return json_(adminNoticeSave_(req.token, req.notice));
       case 'adminNoticeDelete':
         return json_(adminNoticeDelete_(req.token, String(req.noticeId || '')));
+      case 'personaGet':
+        return json_(personaGet_(req.token));
+      case 'personaSave':
+        return json_(personaSave_(req.token, req.persona));
       default:
         return json_({ ok: false, message: '不明な操作です。' });
     }

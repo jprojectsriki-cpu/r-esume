@@ -103,3 +103,8 @@ a.stage:focus-visible { outline: 3px solid var(--g-yellow); outline-offset: 4px;
 .notice-date { margin: 0; font-size: 13px; font-weight: 900; color: var(--g-blue); }
 .notice-card h3 { margin: 2px 0 4px; font-size: 18px; line-height: 1.5; word-break: break-all; }
 .notice-body { margin: 0; white-space: pre-wrap; word-break: break-all; line-height: 1.9; }
+
+/* ヘッダーのログアウトボタン */
+.header-tools { display: flex; align-items: center; gap: 8px; }
+.header-logout { min-height: 44px; padding: 0 14px; font-size: 14px; box-shadow: 3px 3px 0 var(--g-yellow); }
+@media (max-width: 420px) { .site-header .brand-name { font-size: 17px; } .header-inner { gap: 8px; padding: 6px 12px; } .header-logout, .header-tools .furi-btn { padding: 0 8px; font-size: 13px; } }
