@@ -95,7 +95,7 @@
     }
 
     /* ---------- 吹き出しの部品 ---------- */
-    function B(ja, en, say) { return { ja: ja, en: en, say: !!say }; }
+    function B(ja, en, say, spj, spe) { return { ja: ja, en: en, say: !!say, key: say ? nid : '', sj: spj, se: spe }; }
     var CAT = '<svg width="76" height="92" viewBox="0 0 80 96" aria-hidden="true"><g stroke="#EAF2FB" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M20 96Q20 72 40 70Q60 72 60 96Z" fill="#111827"/><path d="M13 36L17 5L39 21Z" fill="#111827"/><path d="M67 36L63 5L41 21Z" fill="#111827"/><ellipse cx="40" cy="45" rx="30" ry="26" fill="#111827"/><path d="M40 72L25 65V81Z" fill="#D7263D"/><path d="M40 72L55 65V81Z" fill="#D7263D"/><rect x="36" y="68" width="8" height="8" rx="2" fill="#FFD43B"/><path d="M58 15L73 2L78 8L63 21Z" fill="#FFD43B" stroke="#14243A"/><path d="M58 15L63 21L56 22Z" fill="#14243A" stroke="#14243A" stroke-width="1"/></g><path d="M20 12L24 22L32 17Z" fill="#FFD43B"/><path d="M60 12L56 22L48 17Z" fill="#FFD43B"/><ellipse cx="27" cy="43" rx="8" ry="10" fill="#FFD43B"/><ellipse cx="53" cy="43" rx="8" ry="10" fill="#FFD43B"/><ellipse cx="27" cy="43" rx="2.6" ry="8" fill="#111827"/><ellipse cx="53" cy="43" rx="2.6" ry="8" fill="#111827"/><circle cx="30" cy="38" r="2" fill="#fff"/><circle cx="56" cy="38" r="2" fill="#fff"/><path d="M36 54H44L40 59Z" fill="#FFD43B"/><g stroke="#EAF2FB" stroke-width="2" stroke-linecap="round" fill="none"><path d="M40 59Q35 65 30 62M40 59Q45 65 50 62"/><path d="M15 52L2 49M15 58L2 61M65 52L78 49M65 58L78 61"/></g></svg>';
     var SPK = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14243A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
     var BACK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
@@ -108,7 +108,7 @@
             if (it.card) { h += '<div class="card' + fr + '">' + T(fu(it.card.ja), it.card.en) + '</div>'; return; }
             if (it.hint) { h += '<p class="hint' + fr + '">' + L(it.hint.ja, it.hint.en) + '</p>'; return; }
             var say = '';
-            if (it.say) { sayTexts.push(T(plain(it.ja), it.en)); say = '<button type="button" class="say" data-say="' + (sayTexts.length - 1) + '" aria-label="' + T('読み上げ', 'Read aloud') + '">' + SPK + '</button>'; }
+            if (it.say) { sayTexts.push({ text: T(plain(it.sj || it.ja), it.se || it.en), key: it.key }); say = '<button type="button" class="say" data-say="' + (sayTexts.length - 1) + '" aria-label="' + T('読み上げ', 'Read aloud') + '">' + SPK + '</button>'; }
             h += '<div class="grow' + (n ? ' cont' : '') + fr + '"><div class="chr">' + CAT + '</div><div class="gcol"><span class="nm">レジュメル</span><div class="gw"><div class="gb">' + L(it.ja, it.en) + say + '</div></div></div></div>';
             n++;
         });
@@ -169,7 +169,8 @@
         g: function () {
             var qs = P.questions(D.persona.mode), i = tmp.qi || 0, q = qs[i], g = [];
             if (i === 0) g.push(B('{直感|ちょっかん}で{答|こた}えてね。いちばん{近|ちか}いものを{選|えら}んで！', 'Answer by instinct. Pick the one closest to you.'));
-            g.push(B('<b>Q' + (i + 1) + '/' + qs.length + '</b>　' + q.ja, 'Q' + (i + 1) + '/' + qs.length + '  ' + q.en, 1));
+            var qb = B('<b>Q' + (i + 1) + '/' + qs.length + '</b>　' + q.ja, 'Q' + (i + 1) + '/' + qs.length + '  ' + q.en, 1, q.ja, q.en);
+            qb.key = 'q' + q.id; g.push(qb);
             return g;
         },
         go: function (v) {
@@ -355,8 +356,10 @@
         } };
     N.eduOut = ymNode(5, function () {
         var st = tmp.state;
-        return B(st === '卒業見込' ? '{卒業|そつぎょう}する{予定|よてい}の{年月|ねんげつ}は？' : (st === '卒業' ? '{卒業|そつぎょう}した{年月|ねんげつ}は？' : 'やめた{年月|ねんげつ}は？'),
+        var eb = B(st === '卒業見込' ? '{卒業|そつぎょう}する{予定|よてい}の{年月|ねんげつ}は？' : (st === '卒業' ? '{卒業|そつぎょう}した{年月|ねんげつ}は？' : 'やめた{年月|ねんげつ}は？'),
             st === '卒業見込' ? 'When will you graduate?' : (st === '卒業' ? 'When did you graduate?' : 'When did you leave?'), 1);
+        eb.key = 'eduOut_' + (st === '卒業見込' ? 'plan' : (st === '卒業' ? 'grad' : 'left'));
+        return eb;
     }, '', 'oy', 'om', function () {
         tmp.full = !addRows('edu', [{ y: tmp.iy, m: tmp.im, t: tmp.school, k: '入学' }, { y: tmp.oy, m: tmp.om, t: tmp.school, k: tmp.state }]);
         return 'eduMore';
@@ -460,7 +463,7 @@
         }
         h += '<div class="sub">' + (trail.length ? '<button type="button" class="lk" data-act="back">' + BACK + T('戻る', 'Back') + '</button>' : '<span></span>') +
             (n.opt && n.kind !== 'choice' && n.kind !== 'scale' ? '<button type="button" class="lk" data-act="skip">' + T('スキップ', 'Skip') + '</button>' : '') +
-            '<button type="button" class="lk" data-act="normal">' + T('ふつうの画面で入力', 'Use the normal form') + '</button></div>';
+            '<button type="button" class="lk" data-act="exit">' + T('一覧へ', 'List') + '</button></div>';
         return h;
     }
     function render() {
@@ -516,20 +519,33 @@
         if (!trail.length) return;
         var e = trail.pop(); restore(e.snap); schedule(); enter(e.id);
     }
-    function speak(text) {
+    // 読み上げ：用意した音声ファイル（audio/ja/キー.mp3・audio/en/キー.mp3）があればそれを再生し、なければ端末の音声で読む
+    var audio = null;
+    function stopSpeech() {
+        try { if (audio) { audio.pause(); audio = null; } if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+    }
+    function synth(text) {
         if (!window.speechSynthesis) return;
         try {
-            window.speechSynthesis.cancel();
             var u = new SpeechSynthesisUtterance(text);
             u.lang = I.lang() === 'en' ? 'en-US' : 'ja-JP';
             window.speechSynthesis.speak(u);
         } catch (e) {}
     }
+    function speak(item) {
+        if (!item) return;
+        stopSpeech();
+        if (typeof Audio === 'undefined' || !item.key) { synth(item.text); return; }
+        var a = new Audio('audio/' + (I.lang() === 'en' ? 'en' : 'ja') + '/' + item.key + '.mp3');
+        audio = a;
+        a.addEventListener('error', function () { if (audio === a) { audio = null; synth(item.text); } });
+        var p = a.play(); if (p && p.catch) p.catch(function () {});
+    }
 
     /* ---------- イベント ---------- */
     $('cChat').addEventListener('click', function (e) {
         var b = e.target.closest('button.say'); if (!b) return;
-        speak(sayTexts[+b.getAttribute('data-say')] || '');
+        speak(sayTexts[+b.getAttribute('data-say')]);
     });
     $('cDock').addEventListener('click', function (e) {
         var b = e.target.closest('button'); if (!b) return;
@@ -540,7 +556,7 @@
         if (act === 'send') { var val = collect(); return submit(val, labelOf(n, val)); }
         if (act === 'skip') { var empty = n.kind === 'ym' ? { y: '', m: '' } : (n.kind === 'date3' ? { y: '', m: '', d: '' } : ''); return submit(empty, labelOf(n, empty), true); }
         if (act === 'back') return back();
-        if (act === 'normal') return leave('resume.html#' + rid);
+        if (act === 'exit') return leave('resume.html');
     });
     $('cDock').addEventListener('input', function (e) {
         var el = e.target, nm = el.getAttribute && el.getAttribute('data-norm');
@@ -552,12 +568,6 @@
         e.preventDefault();
         var g = $('cDock').querySelector('[data-act="send"]'); if (g) g.click();
     });
-    $('cFuri').addEventListener('click', function () {
-        var off = document.documentElement.classList.toggle('furigana-off');
-        try { localStorage.setItem('resume_furigana', off ? 'off' : 'on'); } catch (x) {}
-        this.setAttribute('aria-pressed', String(!off));
-    });
-    $('cFuri').setAttribute('aria-pressed', String(!document.documentElement.classList.contains('furigana-off')));
     I.onChange(function () { if (D) { var keep = $('cIn') ? $('cIn').value : null; render(); if (keep != null && $('cIn')) { $('cIn').value = keep; updCount(); } } });
     window.addEventListener('beforeunload', function (e) { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
     document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden' && dirty) saveNow().catch(function () {}); });

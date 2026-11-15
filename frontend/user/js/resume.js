@@ -295,7 +295,7 @@
         list.forEach(function (r) {
             h += '<li class="rs-item"><div class="rs-item-main"><strong>' + esc(r.title) + '</strong><small>' + L('{更新|こうしん}', 'Updated') + '：' + esc(when(r.updatedAt)) + '</small></div><div class="rs-acts">' +
                 (expired ? '' : '<button type="button" class="btn" data-act="chat" data-id="' + esc(r.resumeId) + '">' + L('{会話|かいわ}で{作|つく}る', 'Make by chat') + '</button>') +
-                '<button type="button" class="btn btn-secondary" data-act="open" data-id="' + esc(r.resumeId) + '">' + (expired ? L('{見|み}る', 'View') : L('{入力|にゅうりょく}する', 'Edit')) + '</button>' +
+                '<button type="button" class="btn btn-secondary" data-act="open" data-id="' + esc(r.resumeId) + '">' + (expired ? L('{見|み}る', 'View') : L('{確認|かくにん}・{修正|しゅうせい}', 'Check / edit')) + '</button>' +
                 (expired ? '' : '<button type="button" class="btn btn-secondary" data-act="copy" data-id="' + esc(r.resumeId) + '"' + (list.length >= max ? ' disabled' : '') + '>' + L('コピー', 'Copy') + '</button>' +
                     '<button type="button" class="btn btn-secondary" data-act="del" data-id="' + esc(r.resumeId) + '">' + L('{削除|さくじょ}', 'Delete') + '</button>') + '</div></li>';
         });
@@ -317,7 +317,7 @@
         $('viewList').hidden = true;
         var v = $('viewEdit'), h = '';
         var st = STEPS[step];
-        h += '<div class="rs-top"><button type="button" class="rs-link" id="rsToList">‹ ' + L('{一覧|いちらん}へ{戻|もど}る', 'Back to the list') + '</button>' + (expired ? '' : '<button type="button" class="rs-link" id="rsChat">' + L('{会話|かいわ}で{入力|にゅうりょく}する', 'Fill in by chat') + '</button>') + '<span class="rs-status" id="rsStatus" role="status" aria-live="polite"></span></div>';
+        h += '<div class="rs-top"><button type="button" class="rs-link" id="rsToList">‹ ' + L('{一覧|いちらん}へ{戻|もど}る', 'Back to the list') + '</button>' + '<span class="rs-status" id="rsStatus" role="status" aria-live="polite"></span></div>';
         if (expired) h += expiredNote();
         h += F(L('{履歴書|りれきしょ}の{名前|なまえ}（{自分|じぶん}だけが{見|み}ます）', 'Resume name (only you can see it)'), 'title', { max: 40, cls: 'rs-title' });
         h += '<ol class="rs-steps" aria-label="' + T('ステップ', 'Steps') + '">';
@@ -480,7 +480,6 @@
     ev.addEventListener('click', function (e) {
         var b = e.target.closest('button'); if (!b) return;
         if (b.id === 'rsToList' || b.id === 'rsDone') return toList();
-        if (b.id === 'rsChat') { box.clear(); return window.RLoading.run(function () { return flush(); }, { text: T('保存しています', 'Saving'), onSuccess: function (res) { show(res, function () { dirty = false; location.href = 'chat.html#' + cur.resumeId; }); }, onError: netFail }); }
         if (b.hasAttribute('data-go')) return goStep(+b.getAttribute('data-go'));
         if (expired) return;
         if (b.hasAttribute('data-addpair')) { var kp = b.getAttribute('data-addpair'); if (rowsFree(kp) >= 2) { cur.data[kp].push({ y: '', m: '', t: '', k: kp === 'edu' ? '入学' : '入社' }, { y: '', m: '', t: '', k: kp === 'edu' ? '卒業' : '退社' }); schedule(); renderEditor(); } }
