@@ -5,7 +5,7 @@
  */
 
 // \u6599\u91d1\uff08\u7a0e\u8fbc\u30fb1\u5e74\u9593\u3002\u66f4\u65b0\u3082\u540c\u3058\u6599\u91d1\uff09
-const PRICE = 1100;
+const PRICE = 990;
 const PLAN_CODE = 'STD';
 // \u304a\u652f\u6255\u3044\u65b9\u6cd5\u306e\u540d\u524d
 const PAYMENT_METHODS = { bank_transfer: '\u9280\u884c\u632f\u8fbc' };
@@ -297,7 +297,7 @@ function cleanupTestApply() {
 }
 
 
-/** \u91d1\u984d\u3092\u300c\u00a51,100\u300d\u306e\u5f62\u306b\u3059\u308b */
+/** \u91d1\u984d\u3092\u300c\u00a5990\u300d\u306e\u5f62\u306b\u3059\u308b */
 function yen_(n) {
   return '\u00a5' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

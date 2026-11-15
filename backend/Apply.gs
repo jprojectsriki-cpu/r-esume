@@ -5,7 +5,7 @@
  */
 
 // 料金（税込・1年間。更新も同じ料金）
-const PRICE = 1100;
+const PRICE = 990;
 const PLAN_CODE = 'STD';
 // お支払い方法の名前
 const PAYMENT_METHODS = { bank_transfer: '銀行振込' };
@@ -297,7 +297,7 @@ function cleanupTestApply() {
 }
 
 
-/** 金額を「¥1,100」の形にする */
+/** 金額を「¥990」の形にする */
 function yen_(n) {
   return '¥' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
