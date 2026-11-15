@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title data-en="Resumes | R-ESUME">履歴書 | R-ESUME</title>
+<link href="img/favicon.png" rel="icon" type="image/png"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="css/loading.css?v=20261115c" rel="stylesheet"/>
+<link href="css/lp.css?v=20261115c" rel="stylesheet"/>
+<link href="css/auth.css?v=20261115c" rel="stylesheet"/>
+<link href="css/resume.css?v=20261116a" rel="stylesheet"/>
+<script src="js/i18n.js?v=20261116a"></script>
+<script>
+        document.documentElement.classList.add('js');
+        try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
+    </script>
+</head>
+<body>
+<script src="js/loading.js?v=20261115c"></script>
+<canvas aria-hidden="true" id="bg3d"></canvas>
+<header class="site-header">
+<div class="header-inner">
+<a aria-label="R-ESUME トップへ" class="brand" data-aria-en="Go to the top of R-ESUME" href="index.html"><span class="brand-mark"><img alt="" height="28" src="img/logo.png" width="24"/></span><span class="brand-name">R-ESUME</span></a>
+<div class="header-tools" data-skip="">
+<div aria-label="言語 / Language" class="lang-switch" data-aria-en="Language" role="group">
+<button aria-pressed="true" class="lang-opt" data-set-lang="ja" type="button">日本語</button>
+<button aria-pressed="false" class="lang-opt" data-set-lang="en" type="button">English</button>
+</div>
+<button aria-pressed="true" class="furi-btn" id="furiBtn" type="button"><span>ふりがな ON</span></button>
+</div>
+</div>
+</header>
+<main class="auth-main rs-main">
+<div class="auth-card rs-card">
+<div class="auth-badge" aria-hidden="true"><img src="img/logo.png" alt="" width="28" height="33"></div>
+<p class="form-msg" id="rsMsg" role="status" aria-live="polite"></p>
+<div id="viewList" hidden></div>
+<div id="viewEdit" hidden></div>
+</div>
+</main>
+
+<dialog id="dlgNew" class="confirm">
+    <form method="dialog" id="newForm">
+        <h2><span data-l="ja" lang="ja">あたらしい<ruby>履歴書<rt>りれきしょ</rt></ruby></span><span data-l="en" lang="en">New resume</span></h2>
+        <p><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby>の<ruby>名前<rt>なまえ</rt></ruby>を<ruby>決<rt>き</rt></ruby>めます。<ruby>会社<rt>かいしゃ</rt></ruby>ごとに<ruby>作<rt>つく</rt></ruby>り<ruby>分<rt>わ</rt></ruby>けるときは、<ruby>会社名<rt>かいしゃめい</rt></ruby>などにすると<ruby>便利<rt>べんり</rt></ruby>です。</span><span data-l="en" lang="en">Choose a name for the resume. If you make one for each company, the company name is handy.</span></p>
+        <div class="rs-f"><label for="newTitle"><span data-l="ja" lang="ja"><ruby>名前<rt>なまえ</rt></ruby></span><span data-l="en" lang="en">Name</span></label><input id="newTitle" maxlength="40" type="text"></div>
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-secondary" id="newNo"><span data-l="ja" lang="ja"><ruby>戻<rt>もど</rt></ruby>る</span><span data-l="en" lang="en">Back</span></button>
+            <button type="submit" class="btn"><span data-l="ja" lang="ja"><ruby>作<rt>つく</rt></ruby>る</span><span data-l="en" lang="en">Create</span></button>
+        </div>
+    </form>
+</dialog>
+
+<dialog id="dlgDel" class="confirm">
+    <form method="dialog" id="delForm">
+        <h2><span data-l="ja" lang="ja"><ruby>削除<rt>さくじょ</rt></ruby>しますか？</span><span data-l="en" lang="en">Delete this resume?</span></h2>
+        <p><strong id="delName"></strong></p>
+        <p><span data-l="ja" lang="ja"><ruby>削除<rt>さくじょ</rt></ruby>すると、<ruby>元<rt>もと</rt></ruby>に<ruby>戻<rt>もど</rt></ruby>せません。</span><span data-l="en" lang="en">This cannot be undone.</span></p>
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-secondary" id="delNo"><span data-l="ja" lang="ja"><ruby>戻<rt>もど</rt></ruby>る</span><span data-l="en" lang="en">Back</span></button>
+            <button type="submit" class="btn"><span data-l="ja" lang="ja"><ruby>削除<rt>さくじょ</rt></ruby>する</span><span data-l="en" lang="en">Delete</span></button>
+        </div>
+    </form>
+</dialog>
+
+<footer class="auth-foot">
+<div class="container">
+<p><span data-l="ja" lang="ja"><a href="index.html">トップページ</a>　© 2026 R-ESUME</span><span data-l="en" lang="en">ReicherRick. All rights reserved.</span></p>
+</div>
+</footer>
+<script src="js/config.js?v=20261115c"></script>
+<script src="js/common.js?v=20261115c"></script>
+<script src="js/bg3d.js?v=20261115c"></script>
+<script src="js/resume.js?v=20261116a"></script>
+</body>
+</html>

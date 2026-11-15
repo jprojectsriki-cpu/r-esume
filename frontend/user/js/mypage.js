@@ -24,7 +24,6 @@
         $('myName').textContent = user.name;
         $('myRole').innerHTML = isAdmin ? T(rb('管理者', 'かんりしゃ'), 'Administrator') : T(rb('受講生', 'じゅこうせい'), 'Student');
         $('adminLink').hidden = !isAdmin;
-        $('mySoon').hidden = isAdmin;
         var lim = $('myLimit');
         var validUntil = ren && ren.validUntil ? ren.validUntil : user.validUntil;
         var expired = ren ? ren.expired : user.expired;

@@ -83,6 +83,16 @@ function doPost(e) {
         return json_(adminCancel_(req.token, String(req.applicationId || ''), req.reason));
       case 'adminSetUser':
         return json_(adminSetUser_(req.token, String(req.userId || ''), String(req.status || '')));
+      case 'resumeList':
+        return json_(resumeList_(req.token));
+      case 'resumeGet':
+        return json_(resumeGet_(req.token, String(req.resumeId || '')));
+      case 'resumeCreate':
+        return json_(resumeCreate_(req.token, req.title, String(req.copyFrom || '')));
+      case 'resumeSave':
+        return json_(resumeSave_(req.token, String(req.resumeId || ''), req.title, req.data));
+      case 'resumeDelete':
+        return json_(resumeDelete_(req.token, String(req.resumeId || '')));
       default:
         return json_({ ok: false, message: '\u4e0d\u660e\u306a\u64cd\u4f5c\u3067\u3059\u3002' });
     }

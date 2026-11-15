@@ -36,6 +36,11 @@
         'ただいまメールの送信が集中しています。しばらくしてからもう一度お試しください。': 'We are sending many emails right now. Please try again in a little while.',
         'ただいま混み合っています。少し待ってから、もう一度お試しください。': 'It is busy right now. Please wait a little and try again.',
         'アカウントが見つかりません。': 'Your account was not found.',
+        '履歴書が見つかりません。': 'The resume was not found.',
+        '保存する内容が正しくありません。': 'The content to save is not valid.',
+        '入力が多すぎて保存できません。文章を短くしてください。': 'There is too much text to save. Please shorten your text.',
+        '利用期間が終わっているため、履歴書の作成・編集・印刷はできません。更新するとまた使えます。': 'Your period of use has ended, so you cannot create, edit or print resumes. Renew to use them again.',
+        '履歴書は3通まで作れます。いらない履歴書を削除してから、作ってください。': 'You can have up to 3 resumes. Please delete one you do not need, then create a new one.',
         'このアカウントは、更新のお申し込みができません。': 'This account cannot apply for renewal.',
         'いまは、更新のお申し込みはできません。利用期限の30日前から、お申し込みできます。': 'You cannot apply for renewal right now. You can apply from 30 days before your expiry date.'
     };

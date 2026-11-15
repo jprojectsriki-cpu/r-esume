@@ -13,7 +13,7 @@
 <link href="css/loading.css?v=20261115c" rel="stylesheet"/>
 <link href="css/lp.css?v=20261115c" rel="stylesheet"/>
 <link href="css/auth.css?v=20261115c" rel="stylesheet"/>
-<script src="js/i18n.js?v=20261115c"></script>
+<script src="js/i18n.js?v=20261116a"></script>
 <script>
         document.documentElement.classList.add('js');
         try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
@@ -47,7 +47,7 @@
                 <button type="button" class="btn btn-lg btn-block" id="renewBtn" hidden><span data-l="ja" lang="ja"><ruby>利用期間<rt>りようきかん</rt></ruby>を<ruby>更新<rt>こうしん</rt></ruby>する</span><span data-l="en" lang="en">Renew your period of use</span></button>
                 <p class="form-msg" id="renewMsg" role="status" aria-live="polite"></p>
             </div>
-<p class="my-soon" id="mySoon"><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby>の<ruby>入力<rt>にゅうりょく</rt></ruby>は、<ruby>次<rt>つぎ</rt></ruby>のステップで<ruby>公開<rt>こうかい</rt></ruby>します。</span><span data-l="en" lang="en">The resume editor will open soon.</span></p>
+<a class="btn btn-lg btn-block" id="resumeLink" href="resume.html" style="margin-top:16px"><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby>を<ruby>作<rt>つく</rt></ruby>る・<ruby>見<rt>み</rt></ruby>る</span><span data-l="en" lang="en">Create / view resumes</span></a>
 <a class="btn btn-lg btn-block" id="adminLink" href="admin.html" hidden style="margin-top:16px"><span data-l="ja" lang="ja">管理画面を開く</span><span data-l="en" lang="en">Open the admin screen</span></a>
             <button class="btn btn-secondary btn-block" id="logoutBtn" style="margin-top:20px" type="button"><span data-l="ja" lang="ja">ログアウト</span><span data-l="en" lang="en">Log out</span></button>
 </div>
@@ -78,6 +78,6 @@
 <script src="js/config.js?v=20261115c"></script>
 <script src="js/common.js?v=20261115c"></script>
 <script src="js/bg3d.js?v=20261115c"></script>
-<script src="js/mypage.js?v=20261115d"></script>
+<script src="js/mypage.js?v=20261116a"></script>
 </body>
 </html>
