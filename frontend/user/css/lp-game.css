@@ -61,3 +61,25 @@ dialog::backdrop { background: rgba(14,42,87,.7); }
 .dlg-body .field input { border: 3px solid var(--g-ink); border-radius: 0; font-weight: 700; }
 .dlg-body .field input:focus { outline: 3px solid var(--g-blue); background: #FFF3B0; }
 .pay-mini { border-radius: 0; border-left: 8px solid var(--g-yellow); }
+
+/* 質問の最後の1つも、同じ太さの罫線にする */
+.faq .qa:last-child { border-bottom: 3px solid var(--g-ink); }
+
+/* 申し込みフォーム・規約などのダイアログ：ホーム・ログインと同じ見た目にそろえる */
+.dlg-head { background: var(--g-ink); border-bottom: 4px solid var(--g-yellow); color: #fff; }
+.dlg-head h2 { color: #fff; font-size: 20px; letter-spacing: .03em; }
+.dlg-close { color: var(--g-ink); box-shadow: 3px 3px 0 #fff; transform: skewX(-8deg); }
+.dlg-close:hover { background: #fff; }
+.dlg-body { background: #fff; padding: 22px 20px 26px; }
+.pay-mini { background: var(--tint); border: 3px solid var(--g-ink); border-left: 10px solid var(--g-yellow); font-weight: 700; line-height: 1.8; }
+.dlg-body .field label { font-weight: 900; color: var(--g-ink); }
+.dlg-body .field input { min-height: 52px; background: #fff; }
+.dlg-body .hint { color: var(--g-ink); font-size: 14px; border-left: 5px solid var(--g-blue); padding-left: 8px; margin-top: 6px; }
+.dlg-body .form-msg.is-error { padding: 10px 12px; border: 3px solid var(--error); border-left-width: 10px; background: #fff; font-weight: 700; }
+.dlg-body .form-msg.is-ok { padding: 10px 12px; border: 3px solid var(--success); border-left-width: 10px; background: #fff; font-weight: 700; }
+.dlg-body .form-msg:empty { padding: 0; border: 0; }
+.dlg-body .btn-lg { margin-top: 6px; }
+.dlg-body dt { color: var(--g-ink); font-weight: 900; }
+.dlg-body dd { border-bottom: 2px dashed var(--g-ink); }
+.legal-sec h3 { font-family: var(--g-font); font-weight: 400; font-size: 18px; margin-top: 22px; padding-left: 10px; border-left: 8px solid var(--g-yellow); }
+.legal-date { font-weight: 700; }
