@@ -300,7 +300,7 @@
                     '<button type="button" class="btn btn-secondary" data-act="del" data-id="' + esc(r.resumeId) + '">' + L('{削除|さくじょ}', 'Delete') + '</button>') + '</div></li>';
         });
         h += '</ul>';
-        if (!expired) h += '<button type="button" class="btn btn-lg btn-block" id="rsNew"' + (list.length >= max ? ' disabled' : '') + '>' + L('＋ あたらしい{履歴書|りれきしょ}をつくる', '+ Create a new resume') + '</button>' +
+        if (!expired) h += '<button type="button" class="btn btn-lg btn-block" id="rsNew"' + (list.length >= max ? ' disabled' : '') + '>' + L('＋ {新|あたら}しい{履歴書|りれきしょ}を{作|つく}る', '+ Create a new resume') + '</button>' +
             (list.length >= max ? '<p class="rs-hint">' + L('{履歴書|りれきしょ}は' + max + '通までです。{削除|さくじょ}すると、また{作|つく}れます。', 'You can have up to ' + max + ' resumes. Delete one to create another.') + '</p>' : '');
         h += '<a class="btn btn-secondary btn-block rs-back" href="mypage.html">' + L('マイページへ{戻|もど}る', 'Back to My page') + '</a>';
         v.innerHTML = h; v.hidden = false;
@@ -414,7 +414,7 @@
             });
         }, {
             text: T('つくっています', 'Creating'),
-            onSuccess: function (res) { show(res, function () { if (copyFrom) { renderList(); box.set('コピーしました。', 'Copied.', 'ok'); } else openResume(res.resumeId); }); },
+            onSuccess: function (res) { show(res, function () { if (copyFrom) { renderList(); box.set('コピーしました。', 'Copied.', 'ok'); } else location.href = 'chat.html#' + res.resumeId; }); },
             onError: netFail
         });
     }
@@ -433,12 +433,10 @@
     }
 
     /* ---------- イベント ---------- */
-    var dlgNew = $('dlgNew'), dlgDel = $('dlgDel'), delId = '';
+    var dlgDel = $('dlgDel'), delId = '';
     $('viewList').addEventListener('click', function (e) {
         var b = e.target.closest('button'); if (!b || b.disabled) return;
-        if (b.id === 'rsNew') {
-            $('newTitle').value = T('履歴書', 'Resume') + (list.length + 1); dlgNew.showModal(); $('newTitle').select(); return;
-        }
+        if (b.id === 'rsNew') { createResume(T('履歴書', 'Resume') + (list.length + 1), ''); return; }
         var id = b.getAttribute('data-id'), act = b.getAttribute('data-act');
         if (act === 'open') openResume(id);
         else if (act === 'chat') { location.href = 'chat.html#' + id; }
@@ -452,8 +450,6 @@
             dlgDel.showModal();
         }
     });
-    $('newNo').addEventListener('click', function () { dlgNew.close(); });
-    $('newForm').addEventListener('submit', function (e) { e.preventDefault(); dlgNew.close(); createResume($('newTitle').value.trim() || T('履歴書', 'Resume'), ''); });
     $('delNo').addEventListener('click', function () { dlgDel.close(); });
     $('delForm').addEventListener('submit', function (e) { e.preventDefault(); dlgDel.close(); deleteResume(delId); });
 
