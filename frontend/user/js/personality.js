@@ -108,7 +108,7 @@
     function pc(v) { return Math.max(5, Math.min(100, Math.round(50 + v * 100))); }
     var axes = {};
     keys.forEach(function (k) { axes[k] = pc(dev[k]); });
-    if (!keys.length || hi - lo < 0.2) {
+    if (!keys.length) {   // 答えがまったく無いときだけ（差が小さくても、かならず結果を出す）
       keys.forEach(function (k) { axes[k] = 50; });
       return { axes: axes, topAxes: [], industries: [], topIndustries: [], flat: true };
     }
