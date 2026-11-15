@@ -76,3 +76,11 @@ body.admin { background: #E6EBF2; }
 .toast:not(:empty) { padding: 10px 14px; border: 3px solid var(--g-ink); border-left-width: 10px; background: #fff; }
 .q-lead { padding: 10px 14px; background: #fff; border-left: 8px solid var(--g-blue); font-weight: 700; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* スマホ幅：ヘッダーを2段にして、ボタンを横幅に収める */
+@media (max-width: 560px) {
+  .header-inner { flex-wrap: wrap; padding: 6px 12px; gap: 6px 10px; }
+  .header-actions { margin-left: 0 !important; width: 100%; display: flex; gap: 8px; }
+  .header-actions .btn { flex: 1 1 0; min-width: 0; padding: 0 8px; }
+  .admin-tag { margin-left: auto; }
+}
