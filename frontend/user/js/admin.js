@@ -13,7 +13,7 @@
     }
     function yen(n) { return '¥' + Number(n).toLocaleString('ja-JP'); }
 
-    var data = { applications: [], users: [], quals: [] }, tab = 'apps', appFilter = 'wait', userFilter = 'all';
+    var data = { applications: [], users: [], quals: [] }, query = '', tab = 'apps', appFilter = 'wait', userFilter = 'all';
 
     /* ---- 状態の表示 ---- */
     function appState(a) {
@@ -52,15 +52,39 @@
         Array.prototype.forEach.call(el.querySelectorAll('.chip'), function (b) { b.addEventListener('click', function () { onPick(b.getAttribute('data-f')); }); });
     }
 
+    function hit(parts) { if (!query) return true; return parts.join(' ').toLowerCase().indexOf(query) >= 0; }
+    function renderStats() {
+        var apps = data.applications, users = data.users;
+        var wait = apps.filter(function (a) { return a.status === 'awaiting_payment' || a.status === 'paid'; }).length;
+        var over = apps.filter(function (a) { return a.overdue; }).length;
+        var act = users.filter(function (u) { return u.status === 'active' && !u.expired; }).length;
+        var exp = users.filter(function (u) { return u.status === 'active' && u.expired; }).length;
+        var sus = users.filter(function (u) { return u.status === 'suspended'; }).length;
+        var tiles = [
+            ['入金待ち', wait, 'apps', 'wait', wait > 0], ['支払期限超過', over, 'apps', 'wait', over > 0],
+            ['利用中', act, 'users', 'active', false], ['期限切れ', exp, 'users', 'expired', false], ['利用停止中', sus, 'users', 'suspended', sus > 0]
+        ];
+        $('stats').innerHTML = tiles.map(function (t, i) {
+            return '<button type="button" class="stat' + (t[4] ? ' is-alert' : '') + '" data-stat="' + i + '"><span class="stat-n">' + t[1] + '</span><span class="stat-t">' + t[0] + '</span></button>';
+        }).join('');
+        Array.prototype.forEach.call($('stats').querySelectorAll('.stat'), function (b) {
+            b.addEventListener('click', function () {
+                var t = tiles[+b.getAttribute('data-stat')];
+                if (t[2] === 'apps') appFilter = t[3]; else userFilter = t[3];
+                setTab(t[2]); render();
+            });
+        });
+    }
     function render() {
         renderQuals();
+        renderStats();
         var apps = data.applications, users = data.users;
         $('cntApps').textContent = apps.filter(function (a) { return a.status === 'awaiting_payment' || a.status === 'paid'; }).length;
         $('cntUsers').textContent = users.length;
 
         chips($('appChips'), APP_FILTERS, apps, appFilter, function (f) { appFilter = f; render(); });
         var af = APP_FILTERS.filter(function (d) { return d[0] === appFilter; })[0][2];
-        var shownApps = apps.filter(af);
+        var shownApps = apps.filter(af).filter(function (a) { return hit([a.name, a.email, a.applicationId]); });
         $('appList').innerHTML = shownApps.map(function (a) {
             var st = appState(a), canIssue = a.status === 'awaiting_payment' || a.status === 'paid' || a.status === 'expired';
             var canCancel = a.status === 'awaiting_payment' || a.status === 'paid' || a.status === 'expired';
@@ -79,7 +103,7 @@
 
         chips($('userChips'), USER_FILTERS, users, userFilter, function (f) { userFilter = f; render(); });
         var uf = USER_FILTERS.filter(function (d) { return d[0] === userFilter; })[0][2];
-        var shownUsers = users.filter(uf);
+        var shownUsers = users.filter(uf).filter(function (u) { return hit([u.name, u.email, u.userId]); });
         $('userList').innerHTML = shownUsers.map(function (u) {
             var st = userState(u);
             var btn = u.status === 'suspended'
@@ -96,7 +120,8 @@
     function renderQuals() {
         var list = quals || [], groups = [], idx = {};
         list.forEach(function (q) { if (idx[q.label] == null) { idx[q.label] = groups.length; groups.push({ label: q.label, items: [] }); } groups[idx[q.label]].items.push(q); });
-        $('cntQuals').textContent = list.length || '';
+        var all = list; list = list.filter(function (q) { return hit([q.label, q.name]); });
+        $('cntQuals').textContent = all.length || '';
         $('qualEmpty').hidden = list.length > 0;
         $('qualList').innerHTML = groups.map(function (g) {
             return '<div class="acard"><div class="acard-top"><span class="badge s-wait">' + esc(g.label) + '</span></div>' + g.items.map(function (q) {
@@ -107,6 +132,7 @@
         }).join('');
         $('qLabels').innerHTML = groups.map(function (g) { return '<option value="' + esc(g.label) + '">'; }).join('');
     }
+    $('adminSearch').addEventListener('input', function () { query = this.value.trim().toLowerCase(); render(); });
     function setTab(t) {
         tab = t;
         $('paneApps').hidden = t !== 'apps'; $('paneUsers').hidden = t !== 'users'; $('paneQuals').hidden = t !== 'quals';
