@@ -5,7 +5,7 @@
 (function () {
     'use strict';
     var KEY = 'resume_lang', root = document.documentElement, subs = [];
-    function read() { try { return localStorage.getItem(KEY) === 'en' ? 'en' : 'ja'; } catch (e) { return 'ja'; } }
+    function read() { try { localStorage.removeItem(KEY); } catch (e) {} return 'ja'; }   // 日本語のみ。英語の文章データは残してある
     var cur = read();
     root.setAttribute('data-lang', cur);
     root.setAttribute('lang', cur);
