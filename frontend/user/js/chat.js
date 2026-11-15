@@ -439,7 +439,11 @@
         return { ja: v, en: v };
     }
     function enter(id) {
-        nid = id; curG = N[id].g(); softKey = '';
+        nid = id; softKey = '';
+        D.chatAt = id;                                   // 続きから作れるように、いまの質問の場所を残す
+        var keep = {}; Object.keys(tmp).forEach(function (k) { if (k !== 'res') keep[k] = tmp[k]; });
+        D.chatTmp = keep;
+        curG = N[id].g();
         render();
     }
     function dockHtml() {
@@ -578,6 +582,7 @@
         if (res.ok === false) return fail(res);
         if (res.expired) { location.replace('resume.html#' + rid); return; }
         title = res.resume.title; D = fixData(res.resume.data);
-        enter('work');
+        tmp = (D.chatTmp && typeof D.chatTmp === 'object') ? D.chatTmp : {};
+        enter(D.chatAt && N[D.chatAt] ? D.chatAt : 'work');
     }).catch(function () { netFail(); }));
 })();

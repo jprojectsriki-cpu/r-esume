@@ -294,8 +294,7 @@
         h += '<ul class="rs-list">';
         list.forEach(function (r) {
             h += '<li class="rs-item"><div class="rs-item-main"><strong>' + esc(r.title) + '</strong><small>' + L('{更新|こうしん}', 'Updated') + '：' + esc(when(r.updatedAt)) + '</small></div><div class="rs-acts">' +
-                (expired ? '' : '<button type="button" class="btn" data-act="chat" data-id="' + esc(r.resumeId) + '">' + L('{会話|かいわ}で{作|つく}る', 'Make by chat') + '</button>') +
-                '<button type="button" class="btn btn-secondary" data-act="open" data-id="' + esc(r.resumeId) + '">' + (expired ? L('{見|み}る', 'View') : L('{確認|かくにん}・{修正|しゅうせい}', 'Check / edit')) + '</button>' +
+                '<button type="button" class="btn" data-act="open" data-id="' + esc(r.resumeId) + '">' + (expired ? L('{見|み}る', 'View') : L('{確認|かくにん}・{修正|しゅうせい}', 'Check / edit')) + '</button>' +
                 (expired ? '' : '<button type="button" class="btn btn-secondary" data-act="copy" data-id="' + esc(r.resumeId) + '"' + (list.length >= max ? ' disabled' : '') + '>' + L('コピー', 'Copy') + '</button>' +
                     '<button type="button" class="btn btn-secondary" data-act="del" data-id="' + esc(r.resumeId) + '">' + L('{削除|さくじょ}', 'Delete') + '</button>') + '</div></li>';
         });
@@ -433,13 +432,15 @@
     }
 
     /* ---------- イベント ---------- */
-    var dlgDel = $('dlgDel'), delId = '';
+    var dlgDel = $('dlgDel'), dlgOpen = $('dlgOpen'), delId = '', openId = '';
+    $('openChat').addEventListener('click', function () { dlgOpen.close(); location.href = 'chat.html#' + openId; });
+    $('openForm').addEventListener('click', function () { dlgOpen.close(); openResume(openId); });
+    $('openNo').addEventListener('click', function () { dlgOpen.close(); });
     $('viewList').addEventListener('click', function (e) {
         var b = e.target.closest('button'); if (!b || b.disabled) return;
         if (b.id === 'rsNew') { createResume(T('履歴書', 'Resume') + (list.length + 1), ''); return; }
         var id = b.getAttribute('data-id'), act = b.getAttribute('data-act');
-        if (act === 'open') openResume(id);
-        else if (act === 'chat') { location.href = 'chat.html#' + id; }
+        if (act === 'open') { if (expired) openResume(id); else { openId = id; dlgOpen.showModal(); } }
         else if (act === 'copy') {
             var src = list.filter(function (x) { return x.resumeId === id; })[0];
             createResume(((src && src.title) || '履歴書') + T('のコピー', ' (copy)'), id);
