@@ -84,3 +84,20 @@ body.admin { background: #E6EBF2; }
   .header-actions .btn { flex: 1 1 0; min-width: 0; padding: 0 8px; }
   .admin-tag { margin-left: auto; }
 }
+
+/* 詳細・履歴書・お知らせ */
+.confirm.wide { width: min(640px, calc(100% - 24px)); max-height: calc(100dvh - 24px); overflow: auto; }
+.confirm.wide h2 { font-family: var(--g-font); font-weight: 400; word-break: break-all; }
+.d-sub { margin: 0 0 10px; color: var(--ink-2); word-break: break-all; }
+.d-list { display: grid; grid-template-columns: 8.5em 1fr; gap: 6px 10px; margin: 0 0 8px; }
+.d-list dt { font-weight: 900; font-size: 14px; }
+.d-list dd { margin: 0; word-break: break-all; }
+.d-h { margin: 18px 0 6px; padding-left: 10px; border-left: 8px solid var(--g-yellow); font-size: 17px; }
+.d-text { margin: 0; white-space: pre-wrap; word-break: break-all; background: var(--surface); padding: 10px 12px; }
+.d-tbl { width: 100%; border-collapse: collapse; font-size: 15px; }
+.d-tbl td { border: 2px solid var(--g-ink); padding: 4px 8px; vertical-align: top; }
+.d-tbl td:nth-child(1) { width: 4.5em; } .d-tbl td:nth-child(2) { width: 3em; }
+.d-note { margin: 8px 0 0; font-size: 13px; color: var(--ink-2); }
+.n-check { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 900; }
+.n-check input { width: 24px; height: 24px; }
+#nBody { width: 100%; padding: 8px 12px; font: inherit; border: 3px solid var(--g-ink); border-radius: 0; }

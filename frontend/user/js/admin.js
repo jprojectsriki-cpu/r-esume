@@ -13,7 +13,7 @@
     }
     function yen(n) { return '¥' + Number(n).toLocaleString('ja-JP'); }
 
-    var data = { applications: [], users: [], quals: [] }, query = '', tab = 'apps', appFilter = 'wait', userFilter = 'all';
+    var data = { applications: [], users: [], quals: [], notices: [] }, query = '', tab = 'apps', appFilter = 'wait', userFilter = 'all';
 
     /* ---- 状態の表示 ---- */
     function appState(a) {
@@ -77,6 +77,7 @@
     }
     function render() {
         renderQuals();
+        renderNotices();
         renderStats();
         var apps = data.applications, users = data.users;
         $('cntApps').textContent = apps.filter(function (a) { return a.status === 'awaiting_payment' || a.status === 'paid'; }).length;
@@ -112,11 +113,22 @@
             return '<article class="acard"><div class="acard-top"><span class="badge ' + st.c + '">' + esc(st.t) + '</span></div>' +
                 '<div class="acard-name">' + esc(u.name) + '</div><div class="acard-mail">' + esc(u.email) + '</div>' +
                 '<div class="acard-meta"><span>利用期限：' + (u.validUntil ? jst(u.validUntil, true).split(' ')[0] : '―') + '</span><span>最終ログイン：' + jst(u.lastLoginAt, true) + '</span></div>' +
-                '<div class="acard-actions">' + (u.status === 'pending' ? '' : btn) + '</div></article>';
+                '<div class="acard-actions"><button type="button" class="btn btn-secondary" data-act="udetail" data-id="' + esc(u.userId) + '">詳細</button>' + (u.status === 'pending' ? '' : btn) + '</div></article>';
         }).join('');
         $('userEmpty').hidden = shownUsers.length > 0;
     }
 
+    function renderNotices() {
+        var list = (notices || []).filter(function (n) { return hit([n.title, n.body]); });
+        $('cntNotices').textContent = (notices || []).length || '';
+        $('noticeEmpty').hidden = list.length > 0;
+        $('noticeList').innerHTML = list.map(function (n) {
+            return '<article class="acard"><div class="acard-top"><span class="badge ' + (n.visible ? 's-ok' : 's-off') + '">' + (n.visible ? '表示中' : '非表示') + '</span><span class="acard-id">' + jst(n.createdAt, true) + '</span></div>' +
+                '<div class="acard-name">' + esc(n.title) + '</div><p class="acard-note">' + esc(n.body) + '</p>' +
+                '<div class="acard-actions"><button type="button" class="btn btn-secondary" data-act="nedit" data-id="' + esc(n.noticeId) + '">編集</button>' +
+                '<button type="button" class="btn btn-danger" data-act="ndel" data-id="' + esc(n.noticeId) + '">削除</button></div></article>';
+        }).join('');
+    }
     function renderQuals() {
         var list = quals || [], groups = [], idx = {};
         list.forEach(function (q) { if (idx[q.label] == null) { idx[q.label] = groups.length; groups.push({ label: q.label, items: [] }); } groups[idx[q.label]].items.push(q); });
@@ -135,7 +147,7 @@
     $('adminSearch').addEventListener('input', function () { query = this.value.trim().toLowerCase(); render(); });
     function setTab(t) {
         tab = t;
-        $('paneApps').hidden = t !== 'apps'; $('paneUsers').hidden = t !== 'users'; $('paneQuals').hidden = t !== 'quals';
+        $('paneApps').hidden = t !== 'apps'; $('paneUsers').hidden = t !== 'users'; $('paneQuals').hidden = t !== 'quals'; $('paneNotices').hidden = t !== 'notices';
         Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (b) {
             var on = b.getAttribute('data-tab') === t; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', String(on));
         });
@@ -156,12 +168,14 @@
             return res;
         });
     }
-    var quals = [];
+    var quals = [], notices = [];
     function load() {
         return call({ action: 'adminList' }).then(function (res) {
             if (res && res.ok) {
                 data = res; data.quals = quals; $('loadError').hidden = true;
-                return call({ action: 'qualList' }).then(function (q) { if (q && q.ok) quals = q.quals; data.quals = quals; render(); });
+                return call({ action: 'qualList' }).then(function (q) { if (q && q.ok) quals = q.quals; data.quals = quals; })
+                    .then(function () { return call({ action: 'adminNoticeList' }); })
+                    .then(function (n) { if (n && n.ok) notices = n.notices; render(); });
             }
             $('loadError').textContent = (res && res.message) || '読み込めませんでした。'; $('loadError').hidden = false;
         }).catch(function () { $('loadError').textContent = '通信できませんでした。時間をおいて「更新」を押してください。'; $('loadError').hidden = false; });
@@ -210,6 +224,79 @@
         });
     });
 
+    /* ---- お知らせの追加・編集 ---- */
+    var nd = $('dlgNotice'), nEditId = '';
+    function openNotice(n) {
+        nEditId = n ? n.noticeId : '';
+        $('nTitleH').textContent = n ? 'お知らせを編集' : 'お知らせを追加';
+        $('nTitle').value = n ? n.title : ''; $('nBody').value = n ? n.body : ''; $('nVisible').checked = n ? n.visible : true;
+        $('nMsg').textContent = ''; nd.showModal();
+    }
+    $('nAdd').addEventListener('click', function () { openNotice(null); });
+    $('nNo').addEventListener('click', function () { nd.close(); });
+    $('noticeForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var body = { action: 'adminNoticeSave', notice: { noticeId: nEditId, title: $('nTitle').value.trim(), body: $('nBody').value.trim(), visible: $('nVisible').checked } };
+        if (!body.notice.title || !body.notice.body) { $('nMsg').textContent = 'タイトルと本文を入れてください。'; return; }
+        nd.close(); toast('');
+        window.RLoading.run(function () {
+            return call(body).then(function (res) { if (res && res.ok) return load().then(function () { return res; }); return res; });
+        }, {
+            text: '保存しています',
+            onSuccess: function (res) { if (res && res.ok) toast('お知らせを保存しました。', 'ok'); else toast((res && res.message) || '保存できませんでした。', 'error'); },
+            onError: function () { toast('通信できませんでした。「更新」で状態を確かめてから、もう一度お試しください。', 'error'); }
+        });
+    });
+
+    /* ---- 受講生の詳細・履歴書を読む（読むだけ） ---- */
+    var ud = $('dlgUser'), rv = $('dlgResume');
+    function ymd(iso) { return iso ? jst(iso, true).split(' ')[0] : '―'; }
+    var APP_JA = { awaiting_payment: '入金待ち', paid: '入金済み', issued: '発行済み', expired: '期限切れ', cancelled: 'キャンセル' };
+    function showUser(res) {
+        var u = res.user;
+        var h = '<h2>' + esc(u.name) + '</h2><p class="d-sub">' + esc(u.email) + '</p>' +
+            '<dl class="d-list"><dt>状態</dt><dd>' + esc(userState({ status: u.status, expired: u.validUntil && new Date(u.validUntil) < new Date() }).t) + '</dd>' +
+            '<dt>利用期限</dt><dd>' + ymd(u.validUntil) + '</dd><dt>アカウント発行</dt><dd>' + ymd(u.activatedAt) + '</dd><dt>最終ログイン</dt><dd>' + jst(u.lastLoginAt, true) + '</dd></dl>' +
+            '<h3 class="d-h">履歴書（' + res.resumes.length + '/3）</h3>';
+        h += res.resumes.length ? res.resumes.map(function (r) {
+            return '<div class="q-row"><div class="q-main"><span class="acard-name">' + esc(r.title) + '</span><span class="acard-meta">更新：' + jst(r.updatedAt, true) + '</span></div>' +
+                '<button type="button" class="btn btn-secondary" data-act="rview" data-id="' + esc(r.resumeId) + '">読む</button></div>';
+        }).join('') + '<p class="d-note">「読む」を押すと、閲覧の記録が残ります（ViewLog シート）。</p>' : '<p class="empty">履歴書は、まだありません。</p>';
+        h += '<h3 class="d-h">申込の履歴</h3>' + (res.applications.length ? res.applications.map(function (a) {
+            return '<div class="q-row"><div class="q-main"><span class="acard-name">' + esc(a.applicationId) + '</span><span class="acard-meta">' + yen(a.amount) + '　' + esc(APP_JA[a.status] || a.status) + '　申込：' + ymd(a.createdAt) + (a.issuedAt ? '　発行：' + ymd(a.issuedAt) : '') + '</span></div></div>';
+        }).join('') : '<p class="empty">申込は、ありません。</p>');
+        $('udBody').innerHTML = h; ud.showModal();
+    }
+    var RV_HEAD = [['name', '氏名'], ['nameFuri', 'ふりがな'], ['gender', '性別'], ['zip', '郵便番号'], ['addr', '住所'], ['addrFuri', '住所のふりがな'], ['phone', '電話'], ['email', 'メール'],
+        ['nationality', '国籍'], ['status', '在留資格'], ['statusExp', '在留期限']];
+    var RV_SKIP = { era: 1, showForeign: 1, chatAt: 1, chatTmp: 1, persona: 1, altOn: 1, bY: 1, bM: 1, bD: 1, edu: 1, work: 1, lic: 1, motive: 1, special: 1, wish: 1, altZip: 1, altAddr: 1, altPhone: 1, altEmail: 1 };
+    function rvRows(title, rows) {
+        if (!rows || !rows.length) return '';
+        return '<h3 class="d-h">' + title + '</h3><table class="d-tbl"><tbody>' + rows.map(function (r) {
+            return '<tr><td>' + esc(r.y || '') + '</td><td>' + esc(r.m || '') + '</td><td>' + esc(r.t || '') + ' ' + esc(r.k || '') + '</td></tr>';
+        }).join('') + '</tbody></table>';
+    }
+    function showResume(res) {
+        var r = res.resume, d = r.data || {};
+        var h = '<h2>' + esc(r.title) + '</h2><p class="d-sub">' + esc(r.ownerName) + 'さん　更新：' + jst(r.updatedAt, true) + '（読むだけ）</p><dl class="d-list">';
+        if (d.bY) h += '<dt>生年月日</dt><dd>' + esc(d.bY) + '年' + esc(d.bM || '') + '月' + esc(d.bD || '') + '日</dd>';
+        RV_HEAD.forEach(function (k) { if (d[k[0]]) h += '<dt>' + k[1] + '</dt><dd>' + esc(d[k[0]]) + '</dd>'; });
+        if (d.altOn) h += '<dt>連絡先（別）</dt><dd>' + esc([d.altZip, d.altAddr, d.altPhone, d.altEmail].filter(Boolean).join('　')) + '</dd>';
+        Object.keys(d).forEach(function (k) {
+            if (RV_SKIP[k] || RV_HEAD.some(function (x) { return x[0] === k; })) return;
+            if (d[k] === '' || d[k] == null || typeof d[k] === 'object') return;
+            h += '<dt>' + esc(k) + '</dt><dd>' + esc(d[k]) + '</dd>';
+        });
+        h += '</dl>' + rvRows('学歴・職歴', (d.edu || []).concat(d.work || [])) + rvRows('免許・資格', d.lic);
+        if (d.motive) h += '<h3 class="d-h">志望の動機</h3><p class="d-text">' + esc(d.motive) + '</p>';
+        if (d.special) h += '<h3 class="d-h">特技・アピール</h3><p class="d-text">' + esc(d.special) + '</p>';
+        if (d.wish) h += '<h3 class="d-h">本人希望</h3><p class="d-text">' + esc(d.wish) + '</p>';
+        if (d.persona && d.persona.industry) h += '<h3 class="d-h">性格診断</h3><p class="d-text">強み：' + esc((d.persona.top || []).join('・')) + '　業種：' + esc(d.persona.industry) + '</p>';
+        $('rvBody').innerHTML = h; rv.showModal();
+    }
+    $('udClose').addEventListener('click', function () { ud.close(); });
+    $('rvClose').addEventListener('click', function () { rv.close(); });
+
     /* ---- 資格の追加・編集 ---- */
     var qd = $('dlgQual'), qEditId = '';
     function openQual(q) {
@@ -239,6 +326,22 @@
         var b = e.target.closest ? e.target.closest('[data-act]') : null;
         if (!b) return;
         var act = b.getAttribute('data-act'), id = b.getAttribute('data-id');
+        if (act === 'nedit') { var n1 = notices.filter(function (x) { return x.noticeId === id; })[0]; if (n1) openNotice(n1); return; }
+        if (act === 'ndel') {
+            var n2 = notices.filter(function (x) { return x.noticeId === id; })[0]; if (!n2) return;
+            ask({ title: 'このお知らせを削除しますか？', body: n2.title + '\n\n取り消しはできません。残しておきたいときは、「編集」で「表示する」を外してください。', yes: '削除する', danger: true, body2: { action: 'adminNoticeDelete', noticeId: id }, done: 'お知らせを削除しました。' });
+            return;
+        }
+        if (act === 'udetail' || act === 'rview') {
+            var body = act === 'udetail' ? { action: 'adminUserDetail', userId: id } : { action: 'adminResumeView', resumeId: id };
+            toast('');
+            window.RLoading.run(function () { return call(body); }, {
+                text: '読み込んでいます',
+                onSuccess: function (res) { if (res && res.ok) { if (act === 'udetail') showUser(res); else showResume(res); } else toast((res && res.message) || '読み込めませんでした。', 'error'); },
+                onError: function () { toast('通信できませんでした。時間をおいて、もう一度お試しください。', 'error'); }
+            });
+            return;
+        }
         if (act === 'qedit') { var q1 = quals.filter(function (x) { return x.qualId === id; })[0]; if (q1) openQual(q1); return; }
         if (act === 'qdel') {
             var q2 = quals.filter(function (x) { return x.qualId === id; })[0]; if (!q2) return;

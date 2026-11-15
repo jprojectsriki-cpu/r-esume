@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/loading.css?v=20261115c">
     <link rel="stylesheet" href="css/lp.css?v=20261115c">
     <link rel="stylesheet" href="css/game.css?v=20261116b">
-    <link rel="stylesheet" href="css/admin.css?v=20261116d">
+    <link rel="stylesheet" href="css/admin.css?v=20261116e">
     <script>document.documentElement.classList.add('js');</script>
 </head>
 <body class="admin">
@@ -40,6 +40,7 @@
             <button type="button" role="tab" class="tab is-on" id="tabApps" aria-selected="true" data-tab="apps">申込 <span class="count" id="cntApps"></span></button>
             <button type="button" role="tab" class="tab" id="tabUsers" aria-selected="false" data-tab="users">受講生 <span class="count" id="cntUsers"></span></button>
             <button type="button" role="tab" class="tab" id="tabQuals" aria-selected="false" data-tab="quals">資格 <span class="count" id="cntQuals"></span></button>
+            <button type="button" role="tab" class="tab" id="tabNotices" aria-selected="false" data-tab="notices">お知らせ <span class="count" id="cntNotices"></span></button>
         </div>
 
         <p class="toast" id="toast" role="status" aria-live="polite"></p>
@@ -61,6 +62,13 @@
             <button type="button" class="btn" id="qAdd">＋ 資格を追加</button>
             <div class="cards" id="qualList" style="margin-top:14px"></div>
             <p class="empty" id="qualEmpty" hidden>資格は、まだ登録されていません。</p>
+        </section>
+
+        <section id="paneNotices" hidden>
+            <p class="q-lead">受講生のホームの上に、新しい順に最大3件まで表示されます（「表示する」にしたものだけ）。</p>
+            <button type="button" class="btn" id="nAdd">＋ お知らせを追加</button>
+            <div class="cards" id="noticeList" style="margin-top:14px"></div>
+            <p class="empty" id="noticeEmpty" hidden>お知らせは、まだありません。</p>
         </section>
 
         <p class="form-msg is-error" id="loadError" hidden></p>
@@ -107,8 +115,38 @@
     </form>
 </dialog>
 
+<dialog id="dlgNotice" class="confirm">
+    <form method="dialog" id="noticeForm" novalidate>
+        <h2 id="nTitleH">お知らせを追加</h2>
+        <div class="field">
+            <label for="nTitle">タイトル（40文字まで）</label>
+            <input type="text" id="nTitle" maxlength="40" autocomplete="off">
+        </div>
+        <div class="field">
+            <label for="nBody">本文（300文字まで）</label>
+            <textarea id="nBody" rows="5" maxlength="300"></textarea>
+        </div>
+        <label class="n-check"><input type="checkbox" id="nVisible" checked> 受講生に表示する</label>
+        <p class="form-msg is-error" id="nMsg" role="alert"></p>
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-secondary" id="nNo">戻る</button>
+            <button type="submit" class="btn">保存する</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog id="dlgUser" class="confirm wide">
+    <div id="udBody"></div>
+    <div class="confirm-actions"><button type="button" class="btn btn-secondary" id="udClose">閉じる</button></div>
+</dialog>
+
+<dialog id="dlgResume" class="confirm wide">
+    <div id="rvBody"></div>
+    <div class="confirm-actions"><button type="button" class="btn btn-secondary" id="rvClose">閉じる</button></div>
+</dialog>
+
 <script src="js/config.js?v=20261115c"></script>
 <script src="js/common.js?v=20261115c"></script>
-<script src="js/admin.js?v=20261116c"></script>
+<script src="js/admin.js?v=20261116d"></script>
 </body>
 </html>

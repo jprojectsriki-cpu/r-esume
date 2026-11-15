@@ -99,6 +99,18 @@ function doPost(e) {
         return json_(adminQualSave_(req.token, req.qual));
       case 'adminQualDelete':
         return json_(adminQualDelete_(req.token, String(req.qualId || '')));
+      case 'adminUserDetail':
+        return json_(adminUserDetail_(req.token, String(req.userId || '')));
+      case 'adminResumeView':
+        return json_(adminResumeView_(req.token, String(req.resumeId || '')));
+      case 'noticeList':
+        return json_(noticeList_(req.token));
+      case 'adminNoticeList':
+        return json_(adminNoticeList_(req.token));
+      case 'adminNoticeSave':
+        return json_(adminNoticeSave_(req.token, req.notice));
+      case 'adminNoticeDelete':
+        return json_(adminNoticeDelete_(req.token, String(req.noticeId || '')));
       default:
         return json_({ ok: false, message: '\u4e0d\u660e\u306a\u64cd\u4f5c\u3067\u3059\u3002' });
     }

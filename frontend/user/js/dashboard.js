@@ -68,8 +68,19 @@
             if (res && res.ok && res.resumes) cnt = res.resumes.length + '/' + (res.max || 3);
         }).catch(function () {});
     }
+    function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function loadNotices() {
+        return A.api({ action: 'noticeList', token: s.token }).then(function (res) {
+            var box = $('notices');
+            if (!res || !res.ok || !res.notices || !res.notices.length) { box.hidden = true; return; }
+            box.innerHTML = '<h2 class="notices-h">お知らせ</h2>' + res.notices.map(function (n) {
+                return '<article class="notice-card"><p class="notice-date">' + esc(ymd(n.createdAt)) + '</p><h3>' + esc(n.title) + '</h3><p class="notice-body">' + esc(n.body) + '</p></article>';
+            }).join('');
+            box.hidden = false;
+        }).catch(function () {});
+    }
     window.RLoading.hold(A.api({ action: 'me', token: s.token }).then(function (res) {
-        if (res && res.ok) { user = res.user; return loadRenewal().then(loadCount).then(render); }
+        if (res && res.ok) { user = res.user; return loadRenewal().then(loadCount).then(loadNotices).then(render); }
         return kick(res);
     }).catch(function () {
         $('myError').hidden = false;
