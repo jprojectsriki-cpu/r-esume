@@ -31,10 +31,12 @@
         else if (expired) { lim.innerHTML = T(rb('利用', 'りよう') + rb('期限', 'きげん') + 'が' + rb('過', 'す') + 'ぎています（' + ymd(validUntil) + 'まで）。', 'Your access has expired (it ended on ' + ymd(validUntil) + ').'); }
         else { lim.innerHTML = T(rb('利用', 'りよう') + rb('期限', 'きげん') + '：' + ymd(validUntil) + 'まで', 'Valid until: ' + ymd(validUntil)); }
         renderRenew();
-        var ty = $('myType'), top1 = persona && persona.suggest && persona.suggest[0], ind = null;
+        var TYPE_NAMES = { P: 'おしゃべり', H: 'てきぱき', D: 'きっちり', T: 'なかま思い', C: 'チャレンジ', S: 'じっくり', L: 'ことば好き' };
+        var ty = $('myType'), top1 = persona && persona.suggest && persona.suggest[0], ax = persona && persona.top && persona.top[0], ind = null;
         if (top1 && window.RPersonality) window.RPersonality.INDUSTRIES.forEach(function (x) { if (x.id === top1) ind = x; });
-        ty.hidden = !ind || isAdmin;
-        if (ind) ty.innerHTML = T('<span class="my-type-k">おすすめ</span>' + ind.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>') + 'タイプ', 'Recommended: ' + ind.en);
+        ty.hidden = !TYPE_NAMES[ax] || isAdmin;
+        if (TYPE_NAMES[ax]) ty.innerHTML = '<span class="my-type-k">タイプ</span>' + TYPE_NAMES[ax] + 'タイプ'
+            + (ind ? '<span class="my-type-s">おすすめ：' + ind.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1') + '</span>' : '');
         var pt = $('personaTag'); pt.textContent = persona && persona.top ? '診断ずみ' : '未診断'; pt.hidden = isAdmin;
         var sc = $('stageCount'); sc.textContent = cnt ? cnt + '枚' : ''; sc.hidden = !cnt || isAdmin;
         $('myBody').hidden = false;

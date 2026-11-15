@@ -111,3 +111,4 @@ a.stage:focus-visible { outline: 3px solid var(--g-yellow); outline-offset: 4px;
 
 .my-type { margin: 6px 0 10px; font-weight: 900; font-size: 18px; color: var(--g-navy, #0E2A57); }
 .my-type-k { display: inline-block; margin-right: 10px; padding: 1px 10px; background: var(--g-ink, #14243A); color: var(--g-yellow, #FFD43B); font-size: 14px; transform: skewX(-8deg); }
+.my-type-s { display: block; margin-top: 4px; font-size: 15px; font-weight: 700; color: #3F4D63; }
