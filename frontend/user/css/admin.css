@@ -101,3 +101,21 @@ body.admin { background: #E6EBF2; }
 .n-check { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 900; }
 .n-check input { width: 24px; height: 24px; }
 #nBody { width: 100%; padding: 8px 12px; font: inherit; border: 3px solid var(--g-ink); border-radius: 0; }
+
+/* 売上のグラフ（1つの系列＝1色。目盛り・格子は目立たせない） */
+.stat.is-static { cursor: default; } .stat.is-static:hover { background: #fff; }
+.chart { margin: 0 0 18px; padding: 12px 14px 8px; background: #fff; border: 3px solid var(--g-ink); box-shadow: 5px 5px 0 var(--g-blue); }
+.chart figcaption { font-weight: 900; margin-bottom: 4px; }
+.chart-box { position: relative; }
+.chart-box svg { display: block; width: 100%; height: auto; }
+.ch-grid { stroke: #D5E1EE; stroke-width: 1; }
+.ch-ax { font-size: 11px; fill: #4A5C73; }
+.ch-val { font-size: 12px; font-weight: 900; fill: var(--g-ink); }
+.ch-bar { fill: #2160AD; rx: 3; }
+.ch-bar.is-now { fill: #0E2A57; }
+.ch-bar:focus { outline: none; stroke: var(--g-yellow); stroke-width: 3; }
+.ch-hit { fill: transparent; cursor: pointer; }
+.ch-hit:hover + text { }
+.ch-tip { position: absolute; z-index: 60; display: none; padding: 6px 10px; background: var(--g-ink); color: #fff; font-size: 14px; font-weight: 700; border-left: 6px solid var(--g-yellow); pointer-events: none; white-space: nowrap; }
+.chart-tbl { margin: 0 0 12px; } .chart-tbl summary { min-height: 44px; display: flex; align-items: center; font-weight: 900; cursor: pointer; }
+.d-tbl th { border: 2px solid var(--g-ink); padding: 4px 8px; background: var(--tint); text-align: left; }

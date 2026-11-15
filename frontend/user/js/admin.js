@@ -78,6 +78,7 @@
     function render() {
         renderQuals();
         renderNotices();
+        renderSales();
         renderStats();
         var apps = data.applications, users = data.users;
         $('cntApps').textContent = apps.filter(function (a) { return a.status === 'awaiting_payment' || a.status === 'paid'; }).length;
@@ -118,6 +119,66 @@
         $('userEmpty').hidden = shownUsers.length > 0;
     }
 
+    /* ---- 売上のグラフ ---- */
+    function jstMonth(iso) { if (!iso) return ''; var j = new Date(new Date(iso).getTime() + 9 * 3600 * 1000); return j.getUTCFullYear() + '-' + (j.getUTCMonth() < 9 ? '0' : '') + (j.getUTCMonth() + 1); }
+    function niceMax(v) { if (v <= 0) return 1; var p = Math.pow(10, Math.floor(Math.log(v) / Math.LN10)), n = v / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
+    var tipEl = null;
+    function tip(text, x, y, box) {
+        if (!tipEl) { tipEl = document.createElement('div'); tipEl.className = 'ch-tip'; document.body.appendChild(tipEl); }
+        if (text == null) { tipEl.style.display = 'none'; return; }
+        tipEl.textContent = text; tipEl.style.display = 'block';
+        var r = box.getBoundingClientRect();
+        tipEl.style.left = Math.max(8, Math.min(window.innerWidth - tipEl.offsetWidth - 8, r.left + x - tipEl.offsetWidth / 2 + window.pageXOffset)) + 'px';
+        tipEl.style.top = (r.top + y - tipEl.offsetHeight - 8 + window.pageYOffset) + 'px';
+    }
+    function bars(box, vals, labels, fmt, unit) {
+        var W = 600, H = 230, L = 52, R = 10, T = 14, B = 30, max = niceMax(Math.max.apply(null, vals.concat([0])));
+        var pw = W - L - R, ph = H - T - B, bw = pw / vals.length, g = '';
+        for (var k = 0; k <= 4; k++) {
+            var y = T + ph - ph * k / 4;
+            g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '" class="ch-grid"/><text x="' + (L - 6) + '" y="' + (y + 4) + '" text-anchor="end" class="ch-ax">' + fmt(max * k / 4) + '</text>';
+        }
+        var maxI = vals.indexOf(Math.max.apply(null, vals));
+        vals.forEach(function (v, i) {
+            var hh = ph * v / max, x = L + bw * i + bw * 0.2, w = bw * 0.6, y = T + ph - hh;
+            g += '<rect class="ch-bar' + (i === vals.length - 1 ? ' is-now' : '') + '" tabindex="0" data-i="' + i + '" x="' + x + '" y="' + (v ? y : T + ph - 1) + '" width="' + w + '" height="' + (v ? hh : 1) + '"/>';
+            g += '<rect class="ch-hit" data-i="' + i + '" x="' + (L + bw * i) + '" y="' + T + '" width="' + bw + '" height="' + ph + '"/>';
+            g += '<text x="' + (L + bw * i + bw / 2) + '" y="' + (H - 10) + '" text-anchor="middle" class="ch-ax">' + labels[i] + '</text>';
+            if (v && (i === maxI || i === vals.length - 1)) g += '<text x="' + (L + bw * i + bw / 2) + '" y="' + (y - 5) + '" text-anchor="middle" class="ch-val">' + fmt(v) + '</text>';
+        });
+        box.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="月別のグラフ。数字は下の表でも見られます">' + g + '</svg>';
+        var svg = box.firstChild;
+        function show(i, el) { var b = el.getBoundingClientRect(), r = box.getBoundingClientRect(); tip(labels[i] + '：' + fmt(vals[i]) + unit, b.left - r.left + b.width / 2, b.top - r.top, box); }
+        Array.prototype.forEach.call(svg.querySelectorAll('.ch-hit,.ch-bar'), function (el) {
+            var i = +el.getAttribute('data-i'), bar = svg.querySelectorAll('.ch-bar')[i];
+            el.addEventListener('mouseenter', function () { show(i, bar); });
+            el.addEventListener('mouseleave', function () { tip(null); });
+            el.addEventListener('focus', function () { show(i, bar); });
+            el.addEventListener('blur', function () { tip(null); });
+            el.addEventListener('click', function () { show(i, bar); });
+        });
+    }
+    function renderSales() {
+        var apps = data.applications || [], now = new Date(Date.now() + 9 * 3600 * 1000), months = [], idx = {};
+        for (var k = 11; k >= 0; k--) {
+            var d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - k, 1));
+            var key = d.getUTCFullYear() + '-' + (d.getUTCMonth() < 9 ? '0' : '') + (d.getUTCMonth() + 1);
+            idx[key] = months.length; months.push({ key: key, label: (d.getUTCMonth() + 1) + '月' });
+        }
+        var rev = months.map(function () { return 0; }), cnt = months.map(function () { return 0; }), total = 0, issued = 0;
+        apps.forEach(function (a) {
+            var ck = idx[jstMonth(a.createdAt)]; if (ck != null) cnt[ck]++;
+            if (a.status === 'issued') { issued++; total += Number(a.amount) || 0; var ik = idx[jstMonth(a.issuedAt)]; if (ik != null) rev[ik] += Number(a.amount) || 0; }
+        });
+        var rate = apps.length ? Math.round(issued * 100 / apps.length) : 0;
+        var tiles = [['累計の売上', yen(total)], ['今月の売上', yen(rev[rev.length - 1])], ['累計の申込数', apps.length + '件'], ['申込から発行まで', rate + '%']];
+        $('salesStats').innerHTML = tiles.map(function (t) { return '<div class="stat is-static"><span class="stat-n">' + t[1] + '</span><span class="stat-t">' + t[0] + '</span></div>'; }).join('');
+        var labels = months.map(function (m) { return m.label; });
+        bars($('chRev'), rev, labels, function (v) { return yen(Math.round(v)); }, '');
+        bars($('chCnt'), cnt, labels, function (v) { return String(Math.round(v)); }, '件');
+        $('salesTbl').innerHTML = '<table class="d-tbl"><thead><tr><th>月</th><th>売上</th><th>申込数</th></tr></thead><tbody>' + months.map(function (m, i) { return '<tr><td>' + m.key + '</td><td>' + yen(rev[i]) + '</td><td>' + cnt[i] + '件</td></tr>'; }).join('') + '</tbody></table>';
+    }
+
     function renderNotices() {
         var list = (notices || []).filter(function (n) { return hit([n.title, n.body]); });
         $('cntNotices').textContent = (notices || []).length || '';
@@ -147,7 +208,7 @@
     $('adminSearch').addEventListener('input', function () { query = this.value.trim().toLowerCase(); render(); });
     function setTab(t) {
         tab = t;
-        $('paneApps').hidden = t !== 'apps'; $('paneUsers').hidden = t !== 'users'; $('paneQuals').hidden = t !== 'quals'; $('paneNotices').hidden = t !== 'notices';
+        $('paneApps').hidden = t !== 'apps'; $('paneUsers').hidden = t !== 'users'; $('paneQuals').hidden = t !== 'quals'; $('paneNotices').hidden = t !== 'notices'; $('paneSales').hidden = t !== 'sales';
         Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (b) {
             var on = b.getAttribute('data-tab') === t; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', String(on));
         });

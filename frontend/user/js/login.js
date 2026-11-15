@@ -14,7 +14,7 @@
     var s = A.load();
     if (s && s.token && A.ready() && window.RLoading) {
         window.RLoading.hold(A.api({ action: 'me', token: s.token }).then(function (res) {
-            if (res && res.ok) { location.replace('dashboard.html'); return new Promise(function () {}); }
+            if (res && res.ok) { location.replace(res.user && res.user.role === 'admin' ? 'admin.html' : 'dashboard.html'); return new Promise(function () {}); }
             A.clear();
         }).catch(function () {}));
     }
@@ -47,7 +47,7 @@
                     A.save(res.token, res.user);
                     form.reset();
                     window.RLoading.show(T('ログインできました', 'Logged in'));   // 次のページが開くまで、ローディングを残す
-                    location.href = 'dashboard.html';
+                    location.href = res.user && res.user.role === 'admin' ? 'admin.html' : 'dashboard.html';
                     return;
                 }
                 if (res && res.message) box.fromServer(res.message, 'error'); else box.set('ログインできませんでした。', 'We could not log you in.', 'error');

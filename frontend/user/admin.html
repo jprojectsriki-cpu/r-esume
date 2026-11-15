@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/loading.css?v=20261115c">
     <link rel="stylesheet" href="css/lp.css?v=20261115c">
     <link rel="stylesheet" href="css/game.css?v=20261116b">
-    <link rel="stylesheet" href="css/admin.css?v=20261116e">
+    <link rel="stylesheet" href="css/admin.css?v=20261116f">
     <script>document.documentElement.classList.add('js');</script>
 </head>
 <body class="admin">
@@ -41,6 +41,7 @@
             <button type="button" role="tab" class="tab" id="tabUsers" aria-selected="false" data-tab="users">受講生 <span class="count" id="cntUsers"></span></button>
             <button type="button" role="tab" class="tab" id="tabQuals" aria-selected="false" data-tab="quals">資格 <span class="count" id="cntQuals"></span></button>
             <button type="button" role="tab" class="tab" id="tabNotices" aria-selected="false" data-tab="notices">お知らせ <span class="count" id="cntNotices"></span></button>
+            <button type="button" role="tab" class="tab" id="tabSales" aria-selected="false" data-tab="sales">売上</button>
         </div>
 
         <p class="toast" id="toast" role="status" aria-live="polite"></p>
@@ -69,6 +70,14 @@
             <button type="button" class="btn" id="nAdd">＋ お知らせを追加</button>
             <div class="cards" id="noticeList" style="margin-top:14px"></div>
             <p class="empty" id="noticeEmpty" hidden>お知らせは、まだありません。</p>
+        </section>
+
+        <section id="paneSales" hidden>
+            <div class="stats" id="salesStats"></div>
+            <figure class="chart"><figcaption>月別の売上（入金を確認して発行した月）</figcaption><div class="chart-box" id="chRev"></div></figure>
+            <figure class="chart"><figcaption>月別の申込数（申込があった月）</figcaption><div class="chart-box" id="chCnt"></div></figure>
+            <details class="chart-tbl"><summary>数字を表で見る</summary><div id="salesTbl"></div></details>
+            <p class="d-note">売上は、入金を確認して発行したものだけを数えます（入金待ち・キャンセル・期限切れは含みません）。直近12か月（日本時間）です。</p>
         </section>
 
         <p class="form-msg is-error" id="loadError" hidden></p>
@@ -147,6 +156,6 @@
 
 <script src="js/config.js?v=20261115c"></script>
 <script src="js/common.js?v=20261115c"></script>
-<script src="js/admin.js?v=20261116d"></script>
+<script src="js/admin.js?v=20261116e"></script>
 </body>
 </html>
