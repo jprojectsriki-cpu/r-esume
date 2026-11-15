@@ -13,7 +13,7 @@
     }
     function yen(n) { return '¥' + Number(n).toLocaleString('ja-JP'); }
 
-    var data = { applications: [], users: [] }, tab = 'apps', appFilter = 'wait', userFilter = 'all';
+    var data = { applications: [], users: [], quals: [] }, tab = 'apps', appFilter = 'wait', userFilter = 'all';
 
     /* ---- 状態の表示 ---- */
     function appState(a) {
@@ -53,6 +53,7 @@
     }
 
     function render() {
+        renderQuals();
         var apps = data.applications, users = data.users;
         $('cntApps').textContent = apps.filter(function (a) { return a.status === 'awaiting_payment' || a.status === 'paid'; }).length;
         $('cntUsers').textContent = users.length;
@@ -92,9 +93,23 @@
         $('userEmpty').hidden = shownUsers.length > 0;
     }
 
+    function renderQuals() {
+        var list = quals || [], groups = [], idx = {};
+        list.forEach(function (q) { if (idx[q.label] == null) { idx[q.label] = groups.length; groups.push({ label: q.label, items: [] }); } groups[idx[q.label]].items.push(q); });
+        $('cntQuals').textContent = list.length || '';
+        $('qualEmpty').hidden = list.length > 0;
+        $('qualList').innerHTML = groups.map(function (g) {
+            return '<div class="acard"><div class="acard-top"><span class="badge s-wait">' + esc(g.label) + '</span></div>' + g.items.map(function (q) {
+                return '<div class="q-row"><div class="q-main"><span class="acard-name">' + esc(q.name) + '</span><span class="acard-meta">' + (q.rank != null ? '順位 ' + q.rank : '順位なし') + '</span></div>' +
+                    '<div class="acard-actions"><button type="button" class="btn btn-secondary" data-act="qedit" data-id="' + esc(q.qualId) + '">編集</button>' +
+                    '<button type="button" class="btn btn-danger" data-act="qdel" data-id="' + esc(q.qualId) + '">削除</button></div></div>';
+            }).join('') + '</div>';
+        }).join('');
+        $('qLabels').innerHTML = groups.map(function (g) { return '<option value="' + esc(g.label) + '">'; }).join('');
+    }
     function setTab(t) {
         tab = t;
-        $('paneApps').hidden = t !== 'apps'; $('paneUsers').hidden = t !== 'users';
+        $('paneApps').hidden = t !== 'apps'; $('paneUsers').hidden = t !== 'users'; $('paneQuals').hidden = t !== 'quals';
         Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (b) {
             var on = b.getAttribute('data-tab') === t; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', String(on));
         });
@@ -115,9 +130,13 @@
             return res;
         });
     }
+    var quals = [];
     function load() {
         return call({ action: 'adminList' }).then(function (res) {
-            if (res && res.ok) { data = res; $('loadError').hidden = true; render(); return; }
+            if (res && res.ok) {
+                data = res; data.quals = quals; $('loadError').hidden = true;
+                return call({ action: 'qualList' }).then(function (q) { if (q && q.ok) quals = q.quals; data.quals = quals; render(); });
+            }
             $('loadError').textContent = (res && res.message) || '読み込めませんでした。'; $('loadError').hidden = false;
         }).catch(function () { $('loadError').textContent = '通信できませんでした。時間をおいて「更新」を押してください。'; $('loadError').hidden = false; });
     }
@@ -165,10 +184,41 @@
         });
     });
 
+    /* ---- 資格の追加・編集 ---- */
+    var qd = $('dlgQual'), qEditId = '';
+    function openQual(q) {
+        qEditId = q ? q.qualId : '';
+        $('qTitle').textContent = q ? '資格を編集' : '資格を追加';
+        $('qLabel').value = q ? q.label : ''; $('qName').value = q ? q.name : ''; $('qRank').value = q && q.rank != null ? q.rank : '';
+        $('qMsg').textContent = ''; qd.showModal();
+    }
+    $('qAdd').addEventListener('click', function () { openQual(null); });
+    $('qNo').addEventListener('click', function () { qd.close(); });
+    $('qRank').addEventListener('input', function () { this.value = this.value.replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); }).replace(/[^0-9]/g, ''); });
+    $('qualForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var body = { action: 'adminQualSave', qual: { qualId: qEditId, label: $('qLabel').value.trim(), name: $('qName').value.trim(), rank: $('qRank').value.trim() } };
+        if (!body.qual.label || !body.qual.name) { $('qMsg').textContent = 'ラベルと、履歴書に載る名前を入れてください。'; return; }
+        qd.close(); toast('');
+        window.RLoading.run(function () {
+            return call(body).then(function (res) { if (res && res.ok) return load().then(function () { return res; }); return res; });
+        }, {
+            text: '保存しています',
+            onSuccess: function (res) { if (res && res.ok) toast('資格を保存しました。', 'ok'); else toast((res && res.message) || '保存できませんでした。', 'error'); },
+            onError: function () { toast('通信できませんでした。「更新」で状態を確かめてから、もう一度お試しください。', 'error'); }
+        });
+    });
+
     document.addEventListener('click', function (e) {
         var b = e.target.closest ? e.target.closest('[data-act]') : null;
         if (!b) return;
         var act = b.getAttribute('data-act'), id = b.getAttribute('data-id');
+        if (act === 'qedit') { var q1 = quals.filter(function (x) { return x.qualId === id; })[0]; if (q1) openQual(q1); return; }
+        if (act === 'qdel') {
+            var q2 = quals.filter(function (x) { return x.qualId === id; })[0]; if (!q2) return;
+            ask({ title: 'この資格を削除しますか？', body: q2.name + '\n\n一覧から消えます。すでに受講生の履歴書に入っている資格は、そのまま残ります。', yes: '削除する', danger: true, body2: { action: 'adminQualDelete', qualId: id }, done: '資格を削除しました。' });
+            return;
+        }
         if (act === 'issue' || act === 'cancel') {
             var a = data.applications.filter(function (x) { return x.applicationId === id; })[0]; if (!a) return;
             var who = a.name + '（' + a.email + '）\n申込番号：' + a.applicationId + '\n金額：' + yen(a.amount);

@@ -66,6 +66,32 @@
 
     /* ---------- 通信・保存 ---------- */
     function kick(res) { A.clear(); A.flash((res && res.message) || 'もう一度ログインしてください。'); location.replace('login.html'); return new Promise(function () {}); }
+    var quals = [];
+    function qualById(id) { return quals.filter(function (q) { return q.qualId === id; })[0]; }
+    function qualGroups() {
+        var gs = [], ix = {};
+        quals.forEach(function (q) { if (ix[q.label] == null) { ix[q.label] = gs.length; gs.push({ label: q.label, items: [] }); } gs[ix[q.label]].items.push(q); });
+        gs.forEach(function (g) { g.items = g.items.map(function (q, i) { return { q: q, i: i }; }).sort(function (a, b) { return ((b.q.rank == null ? -1 : b.q.rank) - (a.q.rank == null ? -1 : a.q.rank)) || (a.i - b.i); }).map(function (x) { return x.q; }); });
+        return gs;
+    }
+    // 同じラベルの中で複数に✔したら、順位が高いほうだけ有効（低いほうは、高いほうの名前を返す）
+    function pickOff(ids) {
+        var top = {}, off = {};
+        ids.forEach(function (id) { var q = qualById(id); if (q && q.rank != null && (!top[q.label] || q.rank > top[q.label].rank)) top[q.label] = q; });
+        ids.forEach(function (id) { var q = qualById(id); if (q && q.rank != null && top[q.label].rank > q.rank) off[id] = top[q.label].name; });
+        return off;
+    }
+    function validPick(ids) { var off = pickOff(ids); return ids.filter(function (id) { return !off[id]; }); }
+    function licAdded(q) { return D.lic.some(function (r) { return r.t === q.name; }); }
+    function esc1(t) { return String(t).replace(/[{}|]/g, ''); }
+    function nextLic() {
+        var q = tmp.queue || [];
+        if (rowsFull('lic')) { if (q.length) tmp.full = true; tmp.queue = []; return 'licMore'; }
+        var id = q.shift(); tmp.queue = q;
+        if (id === 'other') { tmp.lname = ''; return 'licName'; }
+        var c = qualById(id); tmp.lname = c ? c.name : '';
+        return 'licIn';
+    }
     function api(body) { body.token = s.token; return A.api(body); }
     function fail(res) {
         if (res && res.reason) return kick(res);
@@ -388,17 +414,22 @@
     });
     N.workMore = moreNode('work', 'workName', startLic, 'ほかにもありますか？', 'Is there another one?', 'ある（もう{1|ひと}つ{入力|にゅうりょく}）', 'Yes (add another)', 'ない（{資格|しかく}へ）', 'No (go to qualifications)');
     // 資格
-    N.licHave = haveNode('lic', 'licName', function () { return 'motive'; }, '{免許|めんきょ}・{資格|しかく}', 'Qualifications');
+    N.licHave = haveNode('lic', 'licPick', function () { return 'motive'; }, '{免許|めんきょ}・{資格|しかく}', 'Qualifications');
     N.licAsk = { stage: 5, kind: 'choice',
         g: function () { return [B('{持|も}っている{資格|しかく}や{免許|めんきょ}は、ありますか？（JLPTなど）', 'Do you have any qualifications or licenses (such as the JLPT)?', 1)]; },
         opts: function () { return [{ k: 'y', ja: 'ある', en: 'Yes' }, { k: 'n', ja: 'ない（{志望動機|しぼうどうき}へ）', en: 'No (go to motivation)' }]; },
-        go: function (k) { return k === 'y' ? 'licName' : 'motive'; } };
+        go: function (k) { return k === 'y' ? 'licPick' : 'motive'; } };
+    N.licPick = { stage: 5, kind: 'pick',
+        val: { get: function () { return tmp.picked || []; }, set: function (v) { tmp.picked = v; } },
+        g: function () { return [B('{持|も}っている{資格|しかく}や{免許|めんきょ}を、✔で{選|えら}んでね。いくつでも{大丈夫|だいじょうぶ}！', 'Tick the qualifications and licenses you have. You can choose as many as you like.', 1), { hint: { ja: '{同|おな}じ{種類|しゅるい}で{複数|ふくすう}✔したら、{高|たか}いほうだけが{有効|ゆうこう}になります。{一覧|いちらん}にないときは「その{他|ほか}」へ。', en: 'If you tick several in the same group, only the highest one counts. Use "Other" if it is not on the list.' } }]; },
+        go: function (v) { v = v || []; tmp.picked = []; if (!v.length) return 'motive'; tmp.queue = v.slice(); return nextLic(); } };
     N.licName = textNode(5, '{資格|しかく}や{免許|めんきょ}の{名前|なまえ}は？', 'What is the name of the qualification or license?', 'lname', '日本語能力試験 N2 合格', 'licIn');
     N.licIn = ymNode(5, '{取|と}った{年月|ねんげつ}は？', 'When did you get it?', 'iy', 'im', function () {
         tmp.full = !addRows('lic', [{ y: tmp.iy, m: tmp.im, t: tmp.lname }]);
-        return 'licMore';
+        return (tmp.queue && tmp.queue.length) ? nextLic() : 'licMore';
     });
-    N.licMore = moreNode('lic', 'licName', function () { return 'motive'; }, 'ほかにもありますか？', 'Is there another one?', 'ある（もう{1|ひと}つ{入力|にゅうりょく}）', 'Yes (add another)', 'ない（{志望動機|しぼうどうき}へ）', 'No (go to motivation)');
+    N.licIn.g = function () { return [B('「' + esc1(tmp.lname) + '」', '"' + esc1(tmp.lname) + '"'), B('{取|と}った{年月|ねんげつ}は？', 'When did you get it?', 1)]; };
+    N.licMore = moreNode('lic', 'licPick', function () { return 'motive'; }, 'ほかにもありますか？', 'Is there another one?', 'ある（もう{1|ひと}つ{入力|にゅうりょく}）', 'Yes (add another)', 'ない（{志望動機|しぼうどうき}へ）', 'No (go to motivation)');
 
     // 志望動機など
     function topNames() {
@@ -432,6 +463,7 @@
     function labelOf(n, val, o) {
         if (o) return { ja: o.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1'), en: o.en };
         if (n.kind === 'scale') return { ja: val + '（' + SCALE_JA[val] + '）', en: val + ' (' + SCALE_EN[val] + ')' };
+        if (n.kind === 'pick') { var nm = (val || []).map(function (id) { var c = qualById(id); return id === 'other' ? 'その他' : (c ? c.name : ''); }).join('、'); return nm ? { ja: nm, en: nm } : { ja: 'なし', en: 'None' }; }
         if (n.kind === 'ym') return val.y ? fmtYM(val) : { ja: 'スキップ', en: 'Skip' };
         if (n.kind === 'date3') return val.y ? { ja: val.y + '年' + (+val.m) + '月' + (+val.d) + '日', en: val.y + '-' + val.m + '-' + val.d } : { ja: 'スキップ', en: 'Skip' };
         var v = String(val || '');
@@ -459,6 +491,19 @@
             h += '<div class="sc">';
             [5, 4, 3, 2, 1].forEach(function (v) { h += '<button type="button" data-v="' + v + '"' + (v === 5 ? ' class="a"' : (v === 4 ? ' class="b"' : '')) + ' aria-label="' + v + ' ' + T(SCALE_JA[v], SCALE_EN[v]) + '">' + v + '</button>'; });
             h += '</div><div class="scl"><span>' + L('そう{思|おも}う', 'Agree') + '</span><span>' + L('そう{思|おも}わない', 'Disagree') + '</span></div>';
+        } else if (n.kind === 'pick') {
+            var pk = tmp.picked || [], off = pickOff(pk);
+            h += '<div class="pk" id="cPick">';
+            qualGroups().forEach(function (g) {
+                h += '<p class="pkh">' + esc(g.label) + '</p>';
+                g.items.forEach(function (q) {
+                    var added = licAdded(q), on = pk.indexOf(q.qualId) >= 0 && !added, o = off[q.qualId];
+                    h += '<label class="pki' + (o && on ? ' off' : '') + (added ? ' dis' : '') + '"><input type="checkbox" data-q="' + esc(q.qualId) + '"' + (on ? ' checked' : '') + (added ? ' disabled' : '') + '><span class="pkt">' + esc(q.name) + '</span>' +
+                        (added ? '<em>入力済み</em>' : (o && on ? '<em>' + esc(o) + 'が有効です</em>' : '')) + '</label>';
+                });
+            });
+            h += '<p class="pkh">その他</p><label class="pki"><input type="checkbox" data-q="other"' + (pk.indexOf('other') >= 0 ? ' checked' : '') + '><span class="pkt">その他（自分で入力）</span></label></div>' +
+                '<div class="inp"><button type="button" class="go" data-act="send" style="flex:1">' + T('送る', 'Send') + '</button></div>';
         } else {
             var v0 = n.val.get(), go = '<button type="button" class="go" data-act="send">' + T('送る', 'Send') + '</button>';
             if (n.kind === 'text') h += '<div class="inp"><label class="f"><span class="sr">' + esc(q) + '</span><input id="cIn" type="text" maxlength="' + (n.max || 100) + '"' + (n.im ? ' inputmode="' + n.im + '"' : '') + (n.ac ? ' autocomplete="' + n.ac + '"' : ' autocomplete="off"') + (n.ph ? ' placeholder="' + esc(n.ph) + '"' : '') + ' value="' + esc(v0) + '"' + (n.norm ? ' data-norm="' + n.norm + '"' : '') + '></label>' + go + '</div>';
@@ -497,6 +542,7 @@
     function collect() {
         var n = N[nid];
         if (n.kind === 'text' || n.kind === 'long') return $('cIn').value.trim();
+        if (n.kind === 'pick') return validPick(tmp.picked || []);
         if (n.kind === 'ym') return { y: $('cY').value.trim(), m: $('cM').value.trim() };
         if (n.kind === 'date3') return { y: $('cY').value.trim(), m: $('cM').value.trim(), d: $('cD').value.trim() };
         return '';
@@ -568,6 +614,14 @@
         if (nm) { var nv = normOf(el.value, nm); if (nv !== el.value) el.value = nv; }
         if (el.id === 'cIn') updCount();
     });
+    $('cDock').addEventListener('change', function (e) {
+        var el = e.target; if (!el.getAttribute || !el.hasAttribute('data-q')) return;
+        var ids = []; Array.prototype.forEach.call($('cDock').querySelectorAll('input[data-q]:checked'), function (x) { ids.push(x.getAttribute('data-q')); });
+        tmp.picked = ids;
+        var pk = $('cPick'), sc = pk ? pk.scrollTop : 0;
+        $('cDock').innerHTML = dockHtml();
+        var p2 = $('cPick'); if (p2) p2.scrollTop = sc;
+    });
     $('cDock').addEventListener('keydown', function (e) {
         if (e.key !== 'Enter' || e.isComposing || e.target.tagName !== 'INPUT') return;
         e.preventDefault();
@@ -584,6 +638,8 @@
         if (res.expired) { location.replace('resume.html#' + rid); return; }
         title = res.resume.title; D = fixData(res.resume.data);
         tmp = (D.chatTmp && typeof D.chatTmp === 'object') ? D.chatTmp : {};
-        enter(D.chatAt && N[D.chatAt] ? D.chatAt : 'work');
+        return api({ action: 'qualList' }).then(function (q) { quals = q && q.ok && q.quals ? q.quals : []; }).catch(function () { quals = []; }).then(function () {
+            enter(D.chatAt && N[D.chatAt] ? D.chatAt : 'work');
+        });
     }).catch(function () { netFail(); }));
 })();

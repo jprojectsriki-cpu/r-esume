@@ -95,3 +95,14 @@
  .f.ym input{width:3.6em;font-size:18px}.f.ym input.s2{width:2.4em}
  .inp:has(.d3) .go, .inp:has(.ym) .go{flex:1 1 100%}
 }
+/* 資格の✔一覧 */
+.pk{max-height:34dvh;overflow:auto;margin-bottom:10px;padding:4px 2px 4px 0;-webkit-overflow-scrolling:touch}
+.pkh{margin:10px 0 4px;padding:2px 10px;display:inline-block;background:#FFD43B;color:#14243A;font-weight:900;font-size:14px;transform:skewX(-8deg)}
+.pki{display:flex;align-items:center;gap:12px;min-height:52px;margin:4px 0;padding:6px 16px;background:#fff;color:#14243A;font-weight:900;font-size:17px;line-height:1.5;cursor:pointer;clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+.pki input{flex:none;width:26px;height:26px;accent-color:#2160AD}
+.pki:focus-within{background:#FFF3B0}
+.pkt{flex:1;min-width:0}
+.pki em{flex:none;font-style:normal;font-size:13px;color:#14243A;background:#FFD43B;padding:1px 8px}
+.pki.off,.pki.dis{background:#C9D2DE;color:#4A5C73}
+.pki.off .pkt{text-decoration:line-through}
+.pki.dis{cursor:default}

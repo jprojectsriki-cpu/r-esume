@@ -93,6 +93,12 @@ function doPost(e) {
         return json_(resumeSave_(req.token, String(req.resumeId || ''), req.title, req.data));
       case 'resumeDelete':
         return json_(resumeDelete_(req.token, String(req.resumeId || '')));
+      case 'qualList':
+        return json_(qualList_(req.token));
+      case 'adminQualSave':
+        return json_(adminQualSave_(req.token, req.qual));
+      case 'adminQualDelete':
+        return json_(adminQualDelete_(req.token, String(req.qualId || '')));
       default:
         return json_({ ok: false, message: '不明な操作です。' });
     }

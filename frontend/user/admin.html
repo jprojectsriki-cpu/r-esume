@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/loading.css?v=20261115c">
     <link rel="stylesheet" href="css/lp.css?v=20261115c">
-    <link rel="stylesheet" href="css/admin.css?v=20261115c">
+    <link rel="stylesheet" href="css/admin.css?v=20261116b">
     <script>document.documentElement.classList.add('js');</script>
 </head>
 <body class="admin">
@@ -33,6 +33,7 @@
         <div class="admin-tabs" role="tablist" aria-label="表示の切り替え">
             <button type="button" role="tab" class="tab is-on" id="tabApps" aria-selected="true" data-tab="apps">申込 <span class="count" id="cntApps"></span></button>
             <button type="button" role="tab" class="tab" id="tabUsers" aria-selected="false" data-tab="users">受講生 <span class="count" id="cntUsers"></span></button>
+            <button type="button" role="tab" class="tab" id="tabQuals" aria-selected="false" data-tab="quals">資格 <span class="count" id="cntQuals"></span></button>
         </div>
 
         <p class="toast" id="toast" role="status" aria-live="polite"></p>
@@ -47,6 +48,13 @@
             <div class="chips" id="userChips" role="group" aria-label="受講生のしぼりこみ"></div>
             <div class="cards" id="userList"></div>
             <p class="empty" id="userEmpty" hidden>該当する受講生は、いません。</p>
+        </section>
+
+        <section id="paneQuals" hidden>
+            <p class="q-lead">会話で、受講生が✔して選ぶ資格の一覧です。「ラベル」ごとにまとまって表示されます。同じラベルの中で複数に✔されたときは、「順位」が大きいほうだけが有効になります（N4とN2なら、N2だけ）。</p>
+            <button type="button" class="btn" id="qAdd">＋ 資格を追加</button>
+            <div class="cards" id="qualList" style="margin-top:14px"></div>
+            <p class="empty" id="qualEmpty" hidden>資格は、まだ登録されていません。</p>
         </section>
 
         <p class="form-msg is-error" id="loadError" hidden></p>
@@ -68,8 +76,33 @@
     </form>
 </dialog>
 
+<dialog id="dlgQual" class="confirm">
+    <form method="dialog" id="qualForm" novalidate>
+        <h2 id="qTitle">資格を追加</h2>
+        <div class="field">
+            <label for="qLabel">ラベル（選ぶときの見出し）</label>
+            <input type="text" id="qLabel" maxlength="30" list="qLabels" placeholder="例：ワープロ、Excel、簿記、運転免許" autocomplete="off">
+            <datalist id="qLabels"></datalist>
+        </div>
+        <div class="field">
+            <label for="qName">履歴書に載る名前</label>
+            <input type="text" id="qName" maxlength="30" placeholder="例：日本語能力試験 N2 合格" autocomplete="off">
+        </div>
+        <div class="field">
+            <label for="qRank">順位（任意・1〜99）</label>
+            <input type="text" id="qRank" inputmode="numeric" maxlength="2" placeholder="例：N2なら4。N1なら5" autocomplete="off">
+            <p class="hint">同じラベルの中で、数字が大きいほど上です。空にすると、ほかの資格と競合しません。</p>
+        </div>
+        <p class="form-msg is-error" id="qMsg" role="alert"></p>
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-secondary" id="qNo">戻る</button>
+            <button type="submit" class="btn" id="qYes">保存する</button>
+        </div>
+    </form>
+</dialog>
+
 <script src="js/config.js?v=20261115c"></script>
 <script src="js/common.js?v=20261115c"></script>
-<script src="js/admin.js?v=20261115c"></script>
+<script src="js/admin.js?v=20261116b"></script>
 </body>
 </html>

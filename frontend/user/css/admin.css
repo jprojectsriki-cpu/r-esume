@@ -40,3 +40,7 @@ body.admin { background: var(--surface); }
 .confirm-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
 [hidden] { display: none !important; }
 @media (min-width: 768px) { .cards { grid-template-columns: 1fr 1fr; } .admin-main { padding-top: 28px; } }
+
+.q-lead { margin: 0 0 12px; font-size: 15px; line-height: 1.8; }
+.q-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.q-main { display: grid; gap: 2px; min-width: 0; }
