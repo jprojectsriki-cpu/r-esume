@@ -242,7 +242,24 @@
         go: function (v) {
             var qs = P.questions(D.persona.mode), i = tmp.qi || 0;
             D.persona.answers[qs[i].id] = +v; tmp.qi = i + 1;
-            return tmp.qi < qs.length ? 'q' : 'pResult';
+            return nextQ(qs);
+        } };
+    function nextQ(qs) { return tmp.qi < qs.length ? (qs[tmp.qi].pair ? 'qc' : 'q') : 'pResult'; }
+    // 「どちらが近い？」の2択（かならず強みに差が出る）
+    N.qc = { stage: 1, kind: 'choice',
+        g: function () {
+            var qs = P.questions(D.persona.mode), i = tmp.qi || 0, q = qs[i];
+            var qb = B('<b>Q' + (i + 1) + '/' + qs.length + '</b>　' + q.ja, 'Q' + (i + 1) + '/' + qs.length + '  ' + q.en, 1, q.ja, q.en);
+            qb.key = 'q' + q.id; return [qb];
+        },
+        opts: function () {
+            var qs = P.questions(D.persona.mode), q = qs[tmp.qi || 0];
+            return q.pair.map(function (o) { return { k: o.axis, ja: o.ja, en: o.en }; });
+        },
+        go: function (k) {
+            var qs = P.questions(D.persona.mode), i = tmp.qi || 0;
+            D.persona.answers[qs[i].id] = k; tmp.qi = i + 1;
+            return nextQ(qs);
         } };
     function strengthCard(r) {
         function mk(en) {
@@ -256,12 +273,17 @@
     }
     // 性格診断（別の画面）：はじめ → 質問 → 結果
     N.pStart = { stage: 1, kind: 'choice',
-        g: function () { return [B('はじめまして！わたしは{案内役|あんないやく}のレジュメル。あなたの{強|つよ}みと、{合|あ}いそうな{仕事|しごと}を{探|さが}そう！', 'Nice to meet you! I am Rejumeru. Let us find your strengths and the jobs that may suit you!'), B('16{個|こ}の{質問|しつもん}に、{直感|ちょっかん}で{答|こた}えてね。3{分|ぷん}くらいです。', 'Answer 16 questions by instinct. It takes about 3 minutes.', 1)]; },
+        g: function () { return [B('はじめまして！わたしは{案内役|あんないやく}のレジュメル。あなたの{強|つよ}みと、{合|あ}いそうな{仕事|しごと}を{探|さが}そう！', 'Nice to meet you! I am Rejumeru. Let us find your strengths and the jobs that may suit you!'), B('24{個|こ}の{質問|しつもん}に、{直感|ちょっかん}で{答|こた}えてね。5{分|ふん}くらいです。', 'Answer 24 questions by instinct. It takes about 5 minutes.', 1)]; },
         opts: function () { return [{ k: 'start', ja: 'はじめる', en: 'Start' }]; },
         go: function () { D.persona = { mode: 'full', answers: {} }; tmp.qi = 0; return 'q'; } };
     N.pResult = { stage: 1, kind: 'choice',
         g: function () {
             var r = P.score(D.persona.answers, D.persona.mode);
+            if (r.flat) {   // 答えに差が出なかった：おすすめは出さず、保存もしない
+                tmp.res = r; D.persona = { mode: D.persona.mode, answers: {} };
+                return [B('あれ？{答|こた}えに{差|さ}が{出|で}なかったよ。どれも{同|おな}じくらいの{強|つよ}さになってしまったので、おすすめを{出|だ}せません。', 'Your answers showed no difference, so I cannot give a recommendation.'),
+                    B('{直感|ちょっかん}で、「そう{思|おも}う」と「{思|おも}わない」を{使|つか}い{分|わ}けてみてね。もう{一度|いちど}やってみよう！', 'Try using both Agree and Disagree. Let us try again!', 1)];
+            }
             D.persona.axes = r.axes;
             D.persona.top = r.topAxes.map(function (a) { return a.key; });
             D.persona.suggest = r.topIndustries.map(function (x) { return x.id; });
@@ -270,7 +292,10 @@
             return [{ banner: { ja: '{診断|しんだん}クリア！', en: 'Done!' } }, { card: strengthCard(r) },
                 B('{合|あ}いそうな{仕事|しごと}は、「' + esc1(names) + '」！（これは{目安|めやす}です）{履歴書|りれきしょ}づくりで、{業種|ぎょうしゅ}を{選|えら}ぶときに{使|つか}われます。', 'These jobs may suit you. This is only a guide, and it is used when you choose an industry for your resume.', 1)];
         },
-        opts: function () { return [{ k: 'home', ja: 'ホームへ', en: 'Back to home' }, { k: 'again', ja: 'もう{一度|いちど}{診断|しんだん}する', en: 'Take it again' }]; },
+        opts: function () {
+            var again = { k: 'again', ja: 'もう{一度|いちど}{診断|しんだん}する', en: 'Take it again' }, home = { k: 'home', ja: 'ホームへ', en: 'Back to home' };
+            return tmp.res && tmp.res.flat ? [again, home] : [home, again];
+        },
         go: function (k) {
             if (k === 'again') { D.persona = { mode: 'full', answers: {} }; tmp.qi = 0; return 'q'; }
             return { nav: 'dashboard.html' };
