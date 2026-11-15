@@ -73,6 +73,17 @@ function resetPassword_(rawToken, rawPassword) {
   return { ok: true };
 }
 
+/** \u30ea\u30f3\u30af\u304c\u307e\u3060\u4f7f\u3048\u308b\u304b\u3092\u78ba\u304b\u3081\u308b\uff08\u30c8\u30fc\u30af\u30f3\u306f\u6d88\u3055\u306a\u3044\uff09\u3002\u753b\u9762\u3092\u958b\u3044\u305f\u3068\u304d\u306b\u547c\u3076 */
+function resetCheckToken_(rawToken) {
+  const token = String(rawToken || '');
+  const invalid = { ok: false, message: '\u3053\u306e\u30ea\u30f3\u30af\u306f\u3001\u671f\u9650\u304c\u5207\u308c\u3066\u3044\u308b\u304b\u3001\u3059\u3067\u306b\u4f7f\u308f\u308c\u3066\u3044\u307e\u3059\u3002\u3082\u3046\u4e00\u5ea6\u3001\u30d1\u30b9\u30ef\u30fc\u30c9\u518d\u8a2d\u5b9a\u306e\u30e1\u30fc\u30eb\u3092\u9001\u3063\u3066\u304f\u3060\u3055\u3044\u3002' };
+  const userId = token ? CacheService.getScriptCache().get('reset_' + token) : null;
+  if (!userId) return invalid;
+  const user = readUsersAll_().filter(function (u) { return u.userId === userId; })[0];
+  if (!user || user.status !== 'active') return invalid;
+  return { ok: true };
+}
+
 function sendResetMail_(name, email, token) {
   const url = RESET_PAGE_URL + '?token=' + token;
   MailApp.sendEmail({
@@ -128,4 +139,25 @@ function sendResetDoneMail_(name, email) {
       'R-ESUME\uff5c\u7559\u5b66\u751f\u5411\u3051\u81ea\u52d5\u5c65\u6b74\u66f8\u4f5c\u6210\u30b7\u30b9\u30c6\u30e0'
     ].join('\n')
   });
+}
+
+/**
+ * \u3010\u78ba\u8a8d\u7528\u3011\u30e1\u30fc\u30eb\u304c\u5c4a\u304b\u306a\u3044\u3068\u304d\u306e\u539f\u56e0\u3057\u3089\u3079
+ * \u7ba1\u7406\u8005\u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\uff08\u30b9\u30af\u30ea\u30d7\u30c8 \u30d7\u30ed\u30d1\u30c6\u30a3 ADMIN_EMAIL\uff09\u5b9b\u3066\u306b\u3001\u78ba\u8a8d\u7528\u306e\u30e1\u30fc\u30eb\u30921\u901a\u9001\u308b
+ * \u5b9f\u884c\u3057\u305f\u3042\u3068\u3001\u300c\u5b9f\u884c\u30ed\u30b0\u300d\u3092\u898b\u308b
+ */
+function diagnoseForgot() {
+  const email = String(PropertiesService.getScriptProperties().getProperty('ADMIN_EMAIL') || '').trim().toLowerCase();
+  Logger.log('1. ADMIN_EMAIL\uff1a' + (email ? '\u8a2d\u5b9a\u3042\u308a' : '\u8a2d\u5b9a\u306a\u3057'));
+  Logger.log('2. 1\u65e5\u306b\u9001\u308c\u308b\u30e1\u30fc\u30eb\u306e\u6b8b\u308a\uff1a' + MailApp.getRemainingDailyQuota() + ' \u901a');
+  const user = email ? findUserByEmail_(email) : null;
+  Logger.log('3. \u30e6\u30fc\u30b6\u30fc\u304c\u898b\u3064\u304b\u3063\u305f\uff1a' + (user ? '\u306f\u3044\uff08status = ' + user.status + '\uff09' : '\u3044\u3044\u3048'));
+  try {
+    sendResetMail_('\u78ba\u8a8d\u7528', email, 'TEST');
+    Logger.log('4. \u78ba\u8a8d\u7528\u306e\u30e1\u30fc\u30eb\u3092\u9001\u308a\u307e\u3057\u305f\uff08\u30ea\u30f3\u30af\u306e\u4e2d\u8eab\u306f\u898b\u672c\u3067\u3059\u3002\u4f7f\u3048\u307e\u305b\u3093\uff09\u3002\u53d7\u4fe1\u7bb1\u3068\u8ff7\u60d1\u30e1\u30fc\u30eb\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044');
+  } catch (err) {
+    Logger.log('4. \u30e1\u30fc\u30eb\u306e\u9001\u4fe1\u306b\u5931\u6557\uff1a' + err);
+  }
+  const rl = CacheService.getScriptCache().get('resetmail_' + email);
+  Logger.log('5. \u3053\u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u3078\u306e\u3001\u3053\u306e1\u6642\u9593\u306e\u518d\u8a2d\u5b9a\u306e\u56de\u6570\uff1a' + (rl || 0) + ' / ' + RESET_LIMIT_PER_EMAIL);
 }

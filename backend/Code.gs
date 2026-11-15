@@ -67,6 +67,8 @@ function doPost(e) {
         return json_(checkSession_(req.token));
       case 'forgot':
         return json_(forgotPassword_(req.email));
+      case 'resetCheck':
+        return json_(resetCheckToken_(req.token));
       case 'reset':
         return json_(resetPassword_(req.token, req.password));
       case 'adminList':

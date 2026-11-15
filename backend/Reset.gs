@@ -73,6 +73,17 @@ function resetPassword_(rawToken, rawPassword) {
   return { ok: true };
 }
 
+/** リンクがまだ使えるかを確かめる（トークンは消さない）。画面を開いたときに呼ぶ */
+function resetCheckToken_(rawToken) {
+  const token = String(rawToken || '');
+  const invalid = { ok: false, message: 'このリンクは、期限が切れているか、すでに使われています。もう一度、パスワード再設定のメールを送ってください。' };
+  const userId = token ? CacheService.getScriptCache().get('reset_' + token) : null;
+  if (!userId) return invalid;
+  const user = readUsersAll_().filter(function (u) { return u.userId === userId; })[0];
+  if (!user || user.status !== 'active') return invalid;
+  return { ok: true };
+}
+
 function sendResetMail_(name, email, token) {
   const url = RESET_PAGE_URL + '?token=' + token;
   MailApp.sendEmail({
@@ -128,4 +139,25 @@ function sendResetDoneMail_(name, email) {
       'R-ESUME｜留学生向け自動履歴書作成システム'
     ].join('\n')
   });
+}
+
+/**
+ * 【確認用】メールが届かないときの原因しらべ
+ * 管理者のメールアドレス（スクリプト プロパティ ADMIN_EMAIL）宛てに、確認用のメールを1通送る
+ * 実行したあと、「実行ログ」を見る
+ */
+function diagnoseForgot() {
+  const email = String(PropertiesService.getScriptProperties().getProperty('ADMIN_EMAIL') || '').trim().toLowerCase();
+  Logger.log('1. ADMIN_EMAIL：' + (email ? '設定あり' : '設定なし'));
+  Logger.log('2. 1日に送れるメールの残り：' + MailApp.getRemainingDailyQuota() + ' 通');
+  const user = email ? findUserByEmail_(email) : null;
+  Logger.log('3. ユーザーが見つかった：' + (user ? 'はい（status = ' + user.status + '）' : 'いいえ'));
+  try {
+    sendResetMail_('確認用', email, 'TEST');
+    Logger.log('4. 確認用のメールを送りました（リンクの中身は見本です。使えません）。受信箱と迷惑メールを確認してください');
+  } catch (err) {
+    Logger.log('4. メールの送信に失敗：' + err);
+  }
+  const rl = CacheService.getScriptCache().get('resetmail_' + email);
+  Logger.log('5. このメールアドレスへの、この1時間の再設定の回数：' + (rl || 0) + ' / ' + RESET_LIMIT_PER_EMAIL);
 }

@@ -13,7 +13,17 @@
         form.hidden = true;
         box.set('このリンクは' + rb('使', 'つか') + 'えません。もう' + rb('一度', 'いちど') + '、メールを' + rb('送', 'おく') + 'ってください。', 'This link cannot be used. Please send the email again.', 'error');
     }
-    if (!token) noLink();
+    if (!token) { noLink(); }
+    else if (A.ready()) {
+        // 画面を開いたとき、リンクがまだ使えるか確かめる（確かめが終わるまで、ローディングを消さない）
+        window.RLoading.hold(A.api({ action: 'resetCheck', token: token }).then(function (res) {
+            if (res && res.ok === false) {
+                form.hidden = true;
+                document.getElementById('resetBack').hidden = false;
+                box.fromServer(res.message || '', 'error');
+            }
+        }).catch(function () {}));
+    }
 
     function syncEye() {
         var show = pw.type === 'text';
