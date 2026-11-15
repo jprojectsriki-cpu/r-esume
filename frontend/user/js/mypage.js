@@ -42,8 +42,8 @@
             text = T('更新のお' + rb('申', 'もう') + 'し' + rb('込', 'こ') + 'みを' + rb('受', 'う') + 'け' + rb('付', 'つ') + 'けています（' + rb('申込', 'もうしこみ') + rb('番号', 'ばんごう') + '：' + ren.open.applicationId + '）。' + rb('受付', 'うけつけ') + 'メールの' + rb('口座', 'こうざ') + 'に、¥' + Number(ren.amount).toLocaleString('ja-JP') + 'を、' + ymd(ren.open.expiresAt) + 'までに' + rb('振', 'ふ') + 'り' + rb('込', 'こ') + 'んでください。',
                 'We have received your renewal application (No. ' + ren.open.applicationId + '). Please transfer ¥' + Number(ren.amount).toLocaleString('en-US') + ' to the account in the confirmation email by ' + ymd(ren.open.expiresAt) + '.');
         } else if (ren.canRenew && ren.expired) {
-            text = T(rb('利用', 'りよう') + rb('期間', 'きかん') + 'が' + rb('終', 'お') + 'わっています。' + rb('履歴書', 'りれきしょ') + 'の' + rb('作成', 'さくせい') + '・' + rb('編集', 'へんしゅう') + '・' + rb('印刷', 'いんさつ') + 'は、' + rb('更新', 'こうしん') + 'するとまた' + rb('使', 'つか') + 'えます。',
-                'Your period of use has ended. You can create, edit and print your resume again after you renew.');
+            text = T(rb('利用', 'りよう') + rb('期間', 'きかん') + 'が' + rb('終', 'お') + 'わっています。' + rb('履歴書', 'りれきしょ') + 'の' + rb('作成', 'さくせい') + '・' + rb('編集', 'へんしゅう') + '・' + rb('印刷', 'いんさつ') + 'をする' + rb('場合', 'ばあい') + 'は' + rb('更新', 'こうしん') + 'をしてください。',
+                'Your period of use has ended. To create, edit or print your resume, please renew.');
         } else if (ren.canRenew) {
             text = T(rb('利用', 'りよう') + rb('期限', 'きげん') + 'が' + rb('近', 'ちか') + 'づいています。いまから' + rb('更新', 'こうしん') + 'できます。',
                 'Your period of use ends soon. You can renew now.');
