@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title data-en="Make a resume by chat | R-ESUME">会話で履歴書を作る | R-ESUME</title>
+<link href="img/favicon.png" rel="icon" type="image/png"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&amp;family=Noto+Sans+JP:wght@500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="css/loading.css?v=20261115c" rel="stylesheet"/>
+<link href="css/chat.css?v=20261116a" rel="stylesheet"/>
+<script src="js/i18n.js?v=20261116a"></script>
+<script>
+        document.documentElement.classList.add('js');
+        try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
+        if (!window.speechSynthesis) document.documentElement.classList.add('no-tts');
+    </script>
+</head>
+<body>
+<script src="js/loading.js?v=20261115c"></script>
+<div class="app">
+<div class="bg1" aria-hidden="true"></div><div class="bg2" aria-hidden="true"></div><div class="bg3" aria-hidden="true"></div>
+<header class="hud">
+<span class="stg" id="cStg">STAGE 1</span>
+<span class="seg" id="cSeg" aria-hidden="true"></span>
+<span class="cnt" id="cCnt">1/6</span>
+<span class="tg" role="group" aria-label="言語 / Language / ふりがな" data-aria-en="Language and furigana">
+<button type="button" data-set-lang="ja" aria-pressed="true" aria-label="日本語">日</button>
+<button type="button" data-set-lang="en" aria-pressed="false" aria-label="English">EN</button>
+<button type="button" id="cFuri" aria-pressed="true" aria-label="ふりがな">あ</button>
+</span>
+</header>
+<p class="form-msg" id="cMsg" role="status" aria-live="polite"></p>
+<main class="chat" id="cChat" aria-live="polite"></main>
+<div class="dockw"><div class="dock" id="cDock"></div></div>
+</div>
+<script src="js/config.js?v=20261115c"></script>
+<script src="js/common.js?v=20261115c"></script>
+<script src="js/personality.js?v=20261116a"></script>
+<script src="js/chat.js?v=20261116a"></script>
+</body>
+</html>
