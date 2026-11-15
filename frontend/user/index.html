@@ -10,9 +10,11 @@
 <link href="img/favicon.png" rel="icon" type="image/png"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&amp;family=Dela+Gothic+One&amp;display=swap" rel="stylesheet"/>
 <link href="css/loading.css?v=20261115c" rel="stylesheet"/>
 <link href="css/lp.css?v=20261115c" rel="stylesheet"/>
+<link href="css/game.css?v=20261116b" rel="stylesheet"/>
+<link href="css/lp-game.css?v=20261116a" rel="stylesheet"/>
 <script src="js/i18n.js?v=20261116b"></script>
 <script>
         document.documentElement.classList.add('js');
@@ -71,8 +73,8 @@
 <section class="hero">
 <div class="container hero-grid">
 <div data-reveal="left">
-<h1><span data-l="ja" lang="ja">スマホで<ruby>作<rt>つく</rt></ruby>る、<br/><span class="hl"><ruby>日本<rt>にほん</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby></span>。</span><span data-l="en" lang="en">Make a <span class="hl">Japanese resume</span><br/>on your phone.</span></h1>
-<p class="hero-lead"><span data-l="ja" lang="ja"><ruby>写真<rt>しゃしん</rt></ruby>を<ruby>撮<rt>と</rt></ruby>って、<ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えるだけ。<ruby>志望動機<rt>しぼうどうき</rt></ruby>と<ruby>自己<rt>じこ</rt></ruby>PRも<ruby>自動<rt>じどう</rt></ruby>で<ruby>作<rt>つく</rt></ruby>れます。</span><span data-l="en" lang="en">Take a photo and answer a few questions. Your motivation and self-PR are written for you.</span></p>
+<h1><span data-l="ja" lang="ja">スマホで<ruby>作<rt>つく</rt></ruby>る、<br/><span class="hl"><ruby>日本<rt>にほん</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby></span>。</span></h1>
+<p class="hero-lead"><span data-l="ja" lang="ja"><ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えるだけで、<ruby>履歴書<rt>りれきしょ</rt></ruby>ができます。<ruby>職務経歴書<rt>しょくむけいれきしょ</rt></ruby>・メール・<ruby>面接練習<rt>めんせつれんしゅう</rt></ruby>まで、ステージをクリアして<ruby>面接<rt>めんせつ</rt></ruby>に<ruby>勝<rt>か</rt></ruby>とう。</span></p>
 
 <div class="hero-cta">
 <button class="btn btn-lg" data-open="dlgApply" type="button"><span><span data-l="ja" lang="ja"><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む｜¥990</span><span data-l="en" lang="en">Apply | ¥990</span></span></button>
@@ -115,31 +117,18 @@
 <section class="section" id="features">
 <div class="container section-grid">
 <div class="section-head" data-reveal="left">
-<h2><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby>に<ruby>必要<rt>ひつよう</rt></ruby>なことが、<br/>スマホだけでできます</span><span data-l="en" lang="en">Everything for your resume, on your phone</span></h2>
+<h2><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby>から<ruby>面接<rt>めんせつ</rt></ruby>まで、5つのステージ</span></h2>
 
 </div>
 <div>
-<article class="feature" data-reveal="right" style="--d:0.00s">
-<svg aria-hidden="true" class="icon"><use href="#i-steps"></use></svg>
-<h3><span data-l="ja" lang="ja">1つずつ<ruby>入力<rt>にゅうりょく</rt></ruby></span><span data-l="en" lang="en">Step-by-step input</span></h3>
-<p><span data-l="ja" lang="ja"><ruby>名前<rt>なまえ</rt></ruby>・<ruby>住所<rt>じゅうしょ</rt></ruby>・<ruby>学歴<rt>がくれき</rt></ruby>などを、1ページに1つずつ<ruby>入力<rt>にゅうりょく</rt></ruby>します。<ruby>入力<rt>にゅうりょく</rt></ruby>した<ruby>内容<rt>ないよう</rt></ruby>は<ruby>自動<rt>じどう</rt></ruby>で<ruby>保存<rt>ほぞん</rt></ruby>されるので、あとから<ruby>続<rt>つづ</rt></ruby>きができます。</span><span data-l="en" lang="en">Enter your name, address, education and more, one item per page. Your answers are saved automatically, so you can continue later.</span></p>
-</article>
-<article class="feature" data-reveal="up" style="--d:0.08s">
-<svg aria-hidden="true" class="icon"><use href="#i-camera"></use></svg>
-<h3><span data-l="ja" lang="ja"><ruby>証明写真<rt>しょうめいしゃしん</rt></ruby></span><span data-l="en" lang="en">ID photo</span></h3>
-<p><span data-l="ja" lang="ja">その<ruby>場<rt>ば</rt></ruby>でカメラで<ruby>撮<rt>と</rt></ruby>るか、<ruby>持<rt>も</rt></ruby>っている<ruby>写真<rt>しゃしん</rt></ruby>を<ruby>選<rt>えら</rt></ruby>びます。<ruby>履歴書<rt>りれきしょ</rt></ruby>の<ruby>枠<rt>わく</rt></ruby>の<ruby>大<rt>おお</rt></ruby>きさに<ruby>合<rt>あ</rt></ruby>わせて、<ruby>位置<rt>いち</rt></ruby>を<ruby>調整<rt>ちょうせい</rt></ruby>できます。</span><span data-l="en" lang="en">Take a photo with your camera on the spot, or choose a photo you already have. You can adjust its position to fit the frame on the resume.</span></p>
-</article>
-<article class="feature" data-reveal="left" style="--d:0.16s">
-<svg aria-hidden="true" class="icon"><use href="#i-sparkles"></use></svg>
-<h3><span data-l="ja" lang="ja"><ruby>志望動機<rt>しぼうどうき</rt></ruby>・<ruby>自己<rt>じこ</rt></ruby>PR</span><span data-l="en" lang="en">Motivation and self-PR</span></h3>
-<p><span data-l="ja" lang="ja"><ruby>性格<rt>せいかく</rt></ruby>や<ruby>志望<rt>しぼう</rt></ruby>する<ruby>業種<rt>ぎょうしゅ</rt></ruby>を<ruby>選<rt>えら</rt></ruby>ぶと、<ruby>文章<rt>ぶんしょう</rt></ruby>ができあがります。ほかの<ruby>人<rt>ひと</rt></ruby>と<ruby>同<rt>おな</rt></ruby>じ<ruby>文章<rt>ぶんしょう</rt></ruby>にならないように<ruby>作<rt>つく</rt></ruby>られ、あとから<ruby>自由<rt>じゆう</rt></ruby>に<ruby>書<rt>か</rt></ruby>き<ruby>直<rt>なお</rt></ruby>せます。</span><span data-l="en" lang="en">Choose your personality and the industry you want to work in, and your text is written for you. It is made so that it does not match other people's texts, and you can rewrite it freely.</span></p>
-</article>
-<article class="feature" data-reveal="down" style="--d:0.24s">
-<svg aria-hidden="true" class="icon"><use href="#i-printer"></use></svg>
-<h3><span data-l="ja" lang="ja"><ruby>印刷<rt>いんさつ</rt></ruby>・PDF</span><span data-l="en" lang="en">Print or save as PDF</span></h3>
-<p><span data-l="ja" lang="ja"><ruby>厚生労働省<rt>こうせいろうどうしょう</rt></ruby>の<ruby>履歴書<rt>りれきしょ</rt></ruby><ruby>様式例<rt>ようしきれい</rt></ruby>に<ruby>沿<rt>そ</rt></ruby>った、A4の<ruby>履歴書<rt>りれきしょ</rt></ruby>になります。<ruby>国籍<rt>こくせき</rt></ruby>・<ruby>在留資格<rt>ざいりゅうしかく</rt></ruby>・<ruby>日本語<rt>にほんご</rt></ruby><ruby>能力<rt>のうりょく</rt></ruby>も<ruby>入<rt>い</rt></ruby>れられます。</span><span data-l="en" lang="en">You get an A4 resume that follows the sample format of the Ministry of Health, Labour and Welfare. You can also add your nationality, residence status and Japanese ability.</span></p>
-</article>
-<!-- TODO: お客様の声・実績の数字は、本物ができてから、ここに入れる（いまは作らない） -->
+<ol class="stages">
+<li><div class="stage is-open"><span class="stage-no">1</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby><ruby>作成<rt>さくせい</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>会話<rt>かいわ</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えるだけで、<ruby>厚生労働省<rt>こうせいろうどうしょう</rt></ruby>の<ruby>様式例<rt>ようしきれい</rt></ruby>に<ruby>沿<rt>そ</rt></ruby>った<ruby>履歴書<rt>りれきしょ</rt></ruby>ができます。<ruby>志望動機<rt>しぼうどうき</rt></ruby>も<ruby>一緒<rt>いっしょ</rt></ruby>に<ruby>作<rt>つく</rt></ruby>れます。<ruby>証明写真<rt>しょうめいしゃしん</rt></ruby>と<ruby>印刷<rt>いんさつ</rt></ruby>・PDFは、あとから<ruby>追加<rt>ついか</rt></ruby>します。</span></span><span class="stage-tag"><span data-l="ja" lang="ja"><ruby>今<rt>いま</rt></ruby>すぐ<ruby>使<rt>つか</rt></ruby>えます</span></span></span></div></li>
+<li><div class="stage is-soon"><span class="stage-no">2</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>職務経歴書<rt>しょくむけいれきしょ</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>仕事<rt>しごと</rt></ruby>の<ruby>経験<rt>けいけん</rt></ruby>を、<ruby>書類<rt>しょるい</rt></ruby>にまとめます。</span></span><span class="stage-tag"><span data-l="ja" lang="ja"><ruby>準備中<rt>じゅんびちゅう</rt></ruby></span></span></span></div></li>
+<li><div class="stage is-soon"><span class="stage-no">3</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>想定<rt>そうてい</rt></ruby>メール</span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>企業<rt>きぎょう</rt></ruby>に<ruby>送<rt>おく</rt></ruby>るメールの<ruby>書<rt>か</rt></ruby>き<ruby>方<rt>かた</rt></ruby>を<ruby>練習<rt>れんしゅう</rt></ruby>します。</span></span><span class="stage-tag"><span data-l="ja" lang="ja"><ruby>準備中<rt>じゅんびちゅう</rt></ruby></span></span></span></div></li>
+<li><div class="stage is-soon"><span class="stage-no">4</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>面接練習<rt>めんせつれんしゅう</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>面接官<rt>めんせつかん</rt></ruby>の<ruby>質問<rt>しつもん</rt></ruby>に、4つの<ruby>選<rt>えら</rt></ruby>びから<ruby>答<rt>こた</rt></ruby>えます。<ruby>音声<rt>おんせい</rt></ruby>つきです。</span></span><span class="stage-tag"><span data-l="ja" lang="ja"><ruby>準備中<rt>じゅんびちゅう</rt></ruby></span></span></span></div></li>
+<li><div class="stage is-soon"><span class="stage-no">5</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja">エントリー<ruby>管理<rt>かんり</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>応募<rt>おうぼ</rt></ruby>した<ruby>会社<rt>かいしゃ</rt></ruby>を<ruby>記録<rt>きろく</rt></ruby>します。</span></span><span class="stage-tag"><span data-l="ja" lang="ja"><ruby>準備中<rt>じゅんびちゅう</rt></ruby></span></span></span></div></li>
+</ol>
+<p class="stage-note"><span data-l="ja" lang="ja"><ruby>準備中<rt>じゅんびちゅう</rt></ruby>の<ruby>機能<rt>きのう</rt></ruby>は、できあがったものから、<ruby>順番<rt>じゅんばん</rt></ruby>に<ruby>追加<rt>ついか</rt></ruby>します。<ruby>料金<rt>りょうきん</rt></ruby>は<ruby>変<rt>か</rt></ruby>わりません。</span></p>
 </div>
 </div>
 </section>
