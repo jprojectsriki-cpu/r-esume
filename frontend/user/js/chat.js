@@ -125,7 +125,7 @@
     }
 
     /* ---------- 吹き出しの部品 ---------- */
-    function B(ja, en, say, spj, spe) { return { ja: ja, en: en, say: !!say, key: say ? nid : '', sj: spj, se: spe }; }
+    function B(ja, en, say, spj, spe) { return { ja: ja, en: en, say: !!say, key: say ? nid : '', sj: spj, se: spe, keys: null }; }
     var CAT = '<svg width="76" height="92" viewBox="0 0 80 96" aria-hidden="true"><g stroke="#EAF2FB" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M20 96Q20 72 40 70Q60 72 60 96Z" fill="#111827"/><path d="M13 36L17 5L39 21Z" fill="#111827"/><path d="M67 36L63 5L41 21Z" fill="#111827"/><ellipse cx="40" cy="45" rx="30" ry="26" fill="#111827"/><path d="M40 72L25 65V81Z" fill="#D7263D"/><path d="M40 72L55 65V81Z" fill="#D7263D"/><rect x="36" y="68" width="8" height="8" rx="2" fill="#FFD43B"/><path d="M58 15L73 2L78 8L63 21Z" fill="#FFD43B" stroke="#14243A"/><path d="M58 15L63 21L56 22Z" fill="#14243A" stroke="#14243A" stroke-width="1"/></g><path d="M20 12L24 22L32 17Z" fill="#FFD43B"/><path d="M60 12L56 22L48 17Z" fill="#FFD43B"/><ellipse cx="27" cy="43" rx="8" ry="10" fill="#FFD43B"/><ellipse cx="53" cy="43" rx="8" ry="10" fill="#FFD43B"/><ellipse cx="27" cy="43" rx="2.6" ry="8" fill="#111827"/><ellipse cx="53" cy="43" rx="2.6" ry="8" fill="#111827"/><circle cx="30" cy="38" r="2" fill="#fff"/><circle cx="56" cy="38" r="2" fill="#fff"/><path d="M36 54H44L40 59Z" fill="#FFD43B"/><g stroke="#EAF2FB" stroke-width="2" stroke-linecap="round" fill="none"><path d="M40 59Q35 65 30 62M40 59Q45 65 50 62"/><path d="M15 52L2 49M15 58L2 61M65 52L78 49M65 58L78 61"/></g></svg>';
     var SPK = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14243A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
     var BACK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
@@ -138,7 +138,7 @@
             if (it.card) { h += '<div class="card' + fr + '">' + T(fu(it.card.ja), it.card.en) + '</div>'; return; }
             if (it.hint) { h += '<p class="hint' + fr + '">' + L(it.hint.ja, it.hint.en) + '</p>'; return; }
             var say = '';
-            if (it.say) { sayTexts.push({ text: T(plain(it.sj || it.ja), it.se || it.en), key: it.key }); say = '<button type="button" class="say" data-say="' + (sayTexts.length - 1) + '" aria-label="' + T('読み上げ', 'Read aloud') + '">' + SPK + '</button>'; }
+            if (it.say) { sayTexts.push({ text: T(plain(it.sj || it.ja), it.se || it.en), key: it.key, keys: it.keys }); say = '<button type="button" class="say" data-say="' + (sayTexts.length - 1) + '" aria-label="' + T('読み上げ', 'Read aloud') + '">' + SPK + '</button>'; }
             h += '<div class="grow' + (n ? ' cont' : '') + fr + '"><div class="chr">' + CAT + '</div><div class="gcol"><span class="nm">レジュメル</span><div class="gw"><div class="gb">' + L(it.ja, it.en) + say + '</div></div></div></div>';
             n++;
         });
@@ -250,7 +250,7 @@
         g: function () {
             var qs = P.questions(D.persona.mode), i = tmp.qi || 0, q = qs[i];
             var qb = B('<b>Q' + (i + 1) + '/' + qs.length + '</b>　' + q.ja, 'Q' + (i + 1) + '/' + qs.length + '  ' + q.en, 1, q.ja, q.en);
-            qb.key = 'q' + q.id; return [qb];
+            qb.key = 'qpair'; return [qb];          // 「どちらが…」は1つの音声を共通で使う
         },
         opts: function () {
             var qs = P.questions(D.persona.mode), q = qs[tmp.qi || 0];
@@ -273,7 +273,7 @@
     }
     // 性格診断（別の画面）：はじめ → 質問 → 結果
     N.pStart = { stage: 1, kind: 'choice',
-        g: function () { return [B('はじめまして！わたしは{案内役|あんないやく}のレジュメル。あなたの{強|つよ}みと、{合|あ}いそうな{仕事|しごと}を{探|さが}そう！', 'Nice to meet you! I am Rejumeru. Let us find your strengths and the jobs that may suit you!'), B('24{個|こ}の{質問|しつもん}に、{直感|ちょっかん}で{答|こた}えてね。5{分|ふん}くらいです。', 'Answer 24 questions by instinct. It takes about 5 minutes.', 1)]; },
+        g: function () { return [B('はじめまして！わたしは{案内役|あんないやく}のレジュメル。あなたの{強|つよ}みと、{合|あ}いそうな{仕事|しごと}を{探|さが}そう！', 'Nice to meet you! I am Rejumeru. Let us find your strengths and the jobs that may suit you!'), B('24{個|こ}の{質問|しつもん}に、{直感|ちょっかん}で{答|こた}えてね。', 'Answer 24 questions by instinct. It takes about 5 minutes.', 1)]; },
         opts: function () { return [{ k: 'start', ja: 'はじめる', en: 'Start' }]; },
         go: function () { D.persona = { mode: 'full', answers: {} }; tmp.qi = 0; return 'q'; } };
     N.pResult = { stage: 1, kind: 'choice',
@@ -290,7 +290,12 @@
             tmp.res = r;
             var names = r.topIndustries.map(function (x) { return x.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1'); }).join('・');
             return [{ banner: { ja: '{診断|しんだん}クリア！', en: 'Done!' } }, { card: strengthCard(r) },
-                B('{合|あ}いそうな{仕事|しごと}は、「' + esc1(names) + '」！（これは{目安|めやす}です）{履歴書|りれきしょ}づくりで、{業種|ぎょうしゅ}を{選|えら}ぶときに{使|つか}われます。', 'These jobs may suit you. This is only a guide, and it is used when you choose an industry for your resume.', 1)];
+                (function () {
+                    var b = B('{合|あ}いそうな{仕事|しごと}は、「' + esc1(names) + '」！（これは{目安|めやす}です）{履歴書|りれきしょ}づくりで、{業種|ぎょうしゅ}を{選|えら}ぶときに{使|つか}われます。', 'These jobs may suit you. This is only a guide, and it is used when you choose an industry for your resume.', 1);
+                    // 音声は「前半＋業種名×3＋後半」の部品をつないで流す（業種名は ind_<id>.mp3）
+                    b.keys = ['pResultA'].concat(r.topIndustries.map(function (x) { return 'ind_' + x.id; }), ['pResultB']);
+                    return b;
+                })()];
         },
         opts: function () {
             var again = { k: 'again', ja: 'もう{一度|いちど}{診断|しんだん}する', en: 'Take it again' }, home = { k: 'home', ja: 'ホームへ', en: 'Back to home' };
@@ -650,10 +655,18 @@
         if (!item) return;
         stopSpeech();
         if (typeof Audio === 'undefined' || !item.key) { synth(item.text); return; }
-        var a = new Audio('audio/' + (I.lang() === 'en' ? 'en' : 'ja') + '/' + item.key + '.mp3');
-        audio = a;
-        a.addEventListener('error', function () { if (audio === a) { audio = null; synth(item.text); } });
-        var p = a.play(); if (p && p.catch) p.catch(function () {});
+        var lang = I.lang() === 'en' ? 'en' : 'ja', list = item.keys && item.keys.length ? item.keys : [item.key], pos = 0, dead = false;
+        function next() {
+            if (dead) return;
+            if (pos >= list.length) { audio = null; return; }
+            var a = new Audio('audio/' + lang + '/' + list[pos++] + '.mp3');
+            audio = a;
+            // 1つでも音声ファイルが無ければ、文章まるごとを端末の音声で読む
+            a.addEventListener('error', function () { if (audio === a && !dead) { dead = true; audio = null; synth(item.text); } });
+            a.addEventListener('ended', function () { if (audio === a) next(); });
+            var p = a.play(); if (p && p.catch) p.catch(function () {});
+        }
+        next();
     }
 
     /* ---------- イベント ---------- */
