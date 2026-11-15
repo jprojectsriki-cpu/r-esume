@@ -88,3 +88,10 @@
 .fresh{animation:pop .22s ease-out}
 @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.fresh{animation:none}}
+@media (max-width:480px){
+ .inp:has(.d3), .inp:has(.ym){flex-wrap:wrap}
+ .inp:has(.d3) .f, .inp:has(.ym) .f{flex:1 1 100%;padding:0 22px 0 18px;gap:4px;justify-content:center}
+ .f.d3 input{width:3.6em;font-size:18px}.f.d3 input.s2{width:2.4em}
+ .f.ym input{width:3.6em;font-size:18px}.f.ym input.s2{width:2.4em}
+ .inp:has(.d3) .go, .inp:has(.ym) .go{flex:1 1 100%}
+}

@@ -50,10 +50,11 @@
     function rowsFree(key) { return key === 'lic' ? LIM.lic - D.lic.length : LIM.rows - D.edu.length - D.work.length; }
     function rowsFull(key) { return rowsFree(key) <= 0; }
     function addRows(key, rows) {
-        if (rowsFree(key) < rows.length) return false;
-        rows.forEach(function (r) { D[key].push(r); });
-        D[key] = sortRows(D[key]);
-        return true;
+        var ok = rowsFree(key) >= rows.length;
+        if (ok) { rows.forEach(function (r) { D[key].push(r); }); D[key] = sortRows(D[key]); }
+        // 1行ぶんを入れ終えたら、次の入力に前の答えが残らないように、一時の入力を消す
+        ['iy', 'im', 'oy', 'om', 'school', 'company', 'state', 'lname'].forEach(function (k) { delete tmp[k]; });
+        return ok;
     }
     function zen2han(v) { return String(v).replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); }).replace(/[‐－―−ー]/g, '-'); }
     function normOf(v, kind) {
