@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title data-en="New password | R-ESUME">新しいパスワード | R-ESUME</title>
+<link href="img/favicon.png" rel="icon" type="image/png"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="css/loading.css?v=20261114q" rel="stylesheet"/>
+<link href="css/lp.css?v=20261114q" rel="stylesheet"/>
+<link href="css/auth.css?v=20261114q" rel="stylesheet"/>
+<script src="js/i18n.js?v=20261114q"></script>
+<script>
+        document.documentElement.classList.add('js');
+        try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
+    </script>
+</head>
+<body>
+<script src="js/loading.js?v=20261114q"></script>
+<canvas aria-hidden="true" id="bg3d"></canvas>
+<header class="site-header">
+<div class="header-inner">
+<a aria-label="R-ESUME トップへ" class="brand" data-aria-en="Go to the top of R-ESUME" href="index.html"><span class="brand-mark"><img alt="" height="28" src="img/logo.png" width="24"/></span><span class="brand-name">R-ESUME</span></a>
+<div class="header-tools" data-skip="">
+<div aria-label="言語 / Language" class="lang-switch" data-aria-en="Language" role="group">
+<button aria-pressed="true" class="lang-opt" data-set-lang="ja" type="button">日本語</button>
+<button aria-pressed="false" class="lang-opt" data-set-lang="en" type="button">English</button>
+</div>
+<button aria-pressed="true" class="furi-btn" id="furiBtn" type="button"><span>ふりがな ON</span></button>
+</div>
+</div>
+</header>
+<main class="auth-main">
+    <div class="auth-card">
+        <div class="auth-badge" aria-hidden="true"><img src="img/logo.png" alt="" width="28" height="33"></div>
+        <h1><span data-l="ja" lang="ja"><ruby>新<rt>あたら</rt></ruby>しいパスワードを決める</span><span data-l="en" lang="en">Set a new password</span></h1>
+        <form id="resetForm" novalidate>
+            <div class="field">
+                <label for="rsPass"><span data-l="ja" lang="ja"><ruby>新<rt>あたら</rt></ruby>しいパスワード</span><span data-l="en" lang="en">New password</span></label>
+                <div class="pw-row">
+                    <input type="password" id="rsPass" name="password" maxlength="64" autocomplete="new-password" required>
+                    <button type="button" class="pw-toggle" id="pwToggle" aria-pressed="false" aria-controls="rsPass"><span data-l="ja" lang="ja">表示</span><span data-l="en" lang="en">Show</span></button>
+                </div>
+                <p class="hint"><span data-l="ja" lang="ja">8〜64<ruby>文字<rt>もじ</rt></ruby>で<ruby>入力<rt>にゅうりょく</rt></ruby>してください。</span><span data-l="en" lang="en">Enter 8–64 characters.</span></p>
+            </div>
+            <div class="field">
+                <label for="rsPass2"><span data-l="ja" lang="ja">もう<ruby>一度<rt>いちど</rt></ruby><ruby>入力<rt>にゅうりょく</rt></ruby>（<ruby>確認<rt>かくにん</rt></ruby>）</span><span data-l="en" lang="en">Enter it again (confirm)</span></label>
+                <input type="password" id="rsPass2" name="password2" maxlength="64" autocomplete="new-password" required>
+            </div>
+            <p class="form-msg" id="resetMsg" role="status" aria-live="polite"></p>
+            <button type="submit" class="btn btn-lg btn-block" id="resetBtn"><span data-l="ja" lang="ja">パスワードを<ruby>変<rt>か</rt></ruby>える</span><span data-l="en" lang="en">Change password</span></button>
+        </form>
+        <div id="resetDone" hidden>
+            <p class="form-msg is-ok" id="resetDoneMsg"><span data-l="ja" lang="ja">パスワードを<ruby>変<rt>か</rt></ruby>えました。<ruby>新<rt>あたら</rt></ruby>しいパスワードでログインしてください。</span><span data-l="en" lang="en">Your password was changed. Please log in with your new password.</span></p>
+            <a class="btn btn-lg btn-block" href="login.html" style="margin-top:16px"><span data-l="ja" lang="ja">ログインへ</span><span data-l="en" lang="en">Go to log in</span></a>
+        </div>
+        <p class="auth-sub" id="resetBack"><a href="forgot.html"><span data-l="ja" lang="ja">リンクが<ruby>使<rt>つか</rt></ruby>えないときは、もう<ruby>一度<rt>いちど</rt></ruby>メールを<ruby>送<rt>おく</rt></ruby>る</span><span data-l="en" lang="en">If the link does not work, send the email again</span></a></p>
+    </div>
+</main>
+<footer class="auth-foot">
+<div class="container">
+<p><span data-l="ja" lang="ja"><a href="index.html">トップページ</a>　© 2026 R-ESUME</span><span data-l="en" lang="en">ReicherRick. All rights reserved.</span></p>
+</div>
+</footer>
+<script src="js/config.js?v=20261114q"></script>
+<script src="js/common.js?v=20261114q"></script>
+<script src="js/bg3d.js?v=20261114q"></script>
+<script src="js/reset.js?v=20261115a"></script>
+</body>
+</html>

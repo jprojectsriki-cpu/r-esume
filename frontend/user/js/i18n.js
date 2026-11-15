@@ -31,7 +31,10 @@
         'リクエストの形式が正しくありません。': 'The request format is not correct.',
         '不明な操作です。': 'Unknown operation.',
         'サーバーでエラーが発生しました。時間をおいてもう一度お試しください。': 'A server error occurred. Please try again in a little while.',
-        'もう一度ログインしてください。': 'Please log in again.'
+        'もう一度ログインしてください。': 'Please log in again.',
+        'このリンクは、期限が切れているか、すでに使われています。もう一度、パスワード再設定のメールを送ってください。': 'This link has expired or has already been used. Please send the password reset email again.',
+        'ただいまメールの送信が集中しています。しばらくしてからもう一度お試しください。': 'We are sending many emails right now. Please try again in a little while.',
+        'ただいま混み合っています。少し待ってから、もう一度お試しください。': 'It is busy right now. Please wait a little and try again.'
     };
     function server(text) {
         if (!text) return '';
