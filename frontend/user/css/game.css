@@ -108,3 +108,6 @@ a.stage:focus-visible { outline: 3px solid var(--g-yellow); outline-offset: 4px;
 .header-tools { display: flex; align-items: center; gap: 8px; }
 .header-logout { min-height: 44px; padding: 0 14px; font-size: 14px; box-shadow: 3px 3px 0 var(--g-yellow); }
 @media (max-width: 420px) { .site-header .brand-name { font-size: 17px; } .header-inner { gap: 8px; padding: 6px 12px; } .header-logout, .header-tools .furi-btn { padding: 0 8px; font-size: 13px; } }
+
+.my-type { margin: 6px 0 10px; font-weight: 900; font-size: 18px; color: var(--g-navy, #0E2A57); }
+.my-type-k { display: inline-block; margin-right: 10px; padding: 1px 10px; background: var(--g-ink, #14243A); color: var(--g-yellow, #FFD43B); font-size: 14px; transform: skewX(-8deg); }
