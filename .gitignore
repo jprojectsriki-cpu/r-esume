@@ -20,3 +20,5 @@ npm-debug.log*
 *.log
 *.tmp
 frontend/user/index.legal.html
+
+01_A4_format.xlsx

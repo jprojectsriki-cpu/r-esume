@@ -105,6 +105,38 @@
         return '';
     }
 
+    /* ---------- 入力ミスの警告（止めない） ---------- */
+    function warns() {
+        var d = cur.data, w = [], nowY = new Date().getFullYear();
+        var names = { edu: ['学歴', 'Education'], work: ['職歴', 'Work history'], lic: ['免許・資格', 'Qualifications'] };
+        ['edu', 'work', 'lic'].forEach(function (k) {
+            var prev = 0, unsorted = false, nm = names[k];
+            d[k].forEach(function (r, i) {
+                var has = (r.t || '').trim() || r.k;
+                if (!has && !r.y && !r.m) return;
+                var pos = T(nm[0] + 'の' + (i + 1) + '行目', nm[1] + ', row ' + (i + 1));
+                if (!r.y && r.k !== '現在に至る') w.push(T(pos + '：年が入っていません。', pos + ': the year is empty.'));
+                if (r.y && (+r.y < 1900 || +r.y > nowY + 6)) w.push(T(pos + '：年（' + r.y + '）がおかしいようです。', pos + ': the year (' + r.y + ') looks wrong.'));
+                if (r.m && (+r.m < 1 || +r.m > 12)) w.push(T(pos + '：月（' + r.m + '）がおかしいようです。', pos + ': the month (' + r.m + ') looks wrong.'));
+                if (!(r.t || '').trim() && r.y) w.push(T(pos + '：内容が入っていません。', pos + ': the text is empty.'));
+                if (/[〇○]{2}|XXX|ＸＸ/.test(r.t || '')) w.push(T(pos + '：「○○」のままになっていないか、確認してください。', pos + ': check that it does not still say “○○”.'));
+                if (r.y) { var v = (+r.y) * 100 + (+r.m || 0); if (v < prev) unsorted = true; prev = Math.max(prev, v); }
+            });
+            if (unsorted) w.push(T(nm[0] + 'が、古い順に並んでいません。「年月の順に並べる」を押すと、直せます。', nm[1] + ' is not in date order. Press “Sort by date” to fix it.'));
+        });
+        var by = +d.bY, first = 0;
+        d.edu.forEach(function (r) { if (r.k === '入学' && +r.y && (!first || +r.y < first)) first = +r.y; });
+        if (by && first && first - by < 5) w.push(T('生年月日と、学歴の年が合っていないようです。', 'Your date of birth and the years in your education do not seem to match.'));
+        if (d.statusExp && new Date(d.statusExp).getTime() < Date.now() - 86400000) w.push(T('在留期限が、過ぎています。', 'The expiry date of your stay has passed.'));
+        return w;
+    }
+    var CHECKS = [
+        ['{氏名|しめい}・{住所|じゅうしょ}・{電話|でんわ}・メールが、まちがっていない', 'My name, address, phone and email are correct'],
+        ['{学歴|がくれき}・{職歴|しょくれき}が、{古|ふる}い{順|じゅん}に{並|なら}んでいる', 'Education and work history are in date order'],
+        ['{志望動機|しぼうどうき}を、{声|こえ}に{出|だ}して{読|よ}んだ', 'I read my motivation aloud'],
+        ['{証明写真|しょうめいしゃしん}を{用意|ようい}した（{写真|しゃしん}の{機能|きのう}は、もうすぐ{使|つか}えます）', 'I have an ID photo ready (the photo feature will be available soon)']
+    ];
+
     /* ---------- 入力欄の部品 ---------- */
     function dis() { return expired ? ' disabled' : ''; }
     function F(label, key, o) {
@@ -135,6 +167,9 @@
     function opt(ja, en) { return function () { return T(plain(ja), en); }; }
 
     /* ---------- ステップの中身 ---------- */
+    var LIM = { rows: 19, lic: 6, motSpecial: 500, wish: 150 };
+    function rowsFree(key) { return key === 'lic' ? LIM.lic - cur.data.lic.length : LIM.rows - cur.data.edu.length - cur.data.work.length; }
+    function rowsFull(key) { return rowsFree(key) <= 0; }
     function rowEditor(key, kinds, ph, nameLabel) {
         var rows = cur.data[key], h = '';
         rows.forEach(function (r, i) {
@@ -142,7 +177,7 @@
                 '<div class="rs-f rs-sm"><label for="f_' + key + '.' + i + '.y">' + L('{年|ねん}（{西暦|せいれき}）', 'Year') + '</label><input id="f_' + key + '.' + i + '.y" data-k="' + key + '.' + i + '.y" data-norm="num" inputmode="numeric" maxlength="4" placeholder="2020" value="' + esc(r.y) + '"' + dis() + '></div>' +
                 '<div class="rs-f rs-sm"><label for="f_' + key + '.' + i + '.m">' + L('{月|つき}', 'Month') + '</label><input id="f_' + key + '.' + i + '.m" data-k="' + key + '.' + i + '.m" data-norm="num" inputmode="numeric" maxlength="2" placeholder="4" value="' + esc(r.m) + '"' + dis() + '></div>' +
                 (expired ? '' : '<button type="button" class="rs-del" data-del="' + key + '.' + i + '" aria-label="' + T('この行を削除', 'Delete this row') + '">' + L('{削除|さくじょ}', 'Delete') + '</button>') + '</div>' +
-                '<div class="rs-f"><label for="f_' + key + '.' + i + '.t">' + nameLabel + '</label><input id="f_' + key + '.' + i + '.t" data-k="' + key + '.' + i + '.t" maxlength="80" placeholder="' + esc(ph) + '" value="' + esc(r.t) + '"' + dis() + '></div>';
+                '<div class="rs-f"><label for="f_' + key + '.' + i + '.t">' + nameLabel + '</label><input id="f_' + key + '.' + i + '.t" data-k="' + key + '.' + i + '.t" maxlength="30" placeholder="' + esc(ph) + '" value="' + esc(r.t) + '"' + dis() + '></div>';
             if (kinds) {
                 h += '<div class="rs-f"><label for="f_' + key + '.' + i + '.k">' + L('{区分|くぶん}', 'Type') + '</label><select id="f_' + key + '.' + i + '.k" data-k="' + key + '.' + i + '.k"' + dis() + '>';
                 kinds.forEach(function (k) { h += '<option value="' + esc(k[0]) + '"' + (k[0] === (r.k || '') ? ' selected' : '') + '>' + esc(T(k[0] || '（なし）', k[1])) + '</option>'; });
@@ -150,8 +185,14 @@
             }
             h += '</div>';
         });
+        var full = rowsFull(key);
+        h += '<p class="rs-hint">' + (key === 'lic' ? L('{資格|しかく}は、' + LIM.lic + '{行|ぎょう}まで（いま' + rows.length + '{行|ぎょう}）。', 'Up to ' + LIM.lic + ' rows (now ' + rows.length + ').') :
+            L('{学歴|がくれき}と{職歴|しょくれき}は、{合|あ}わせて' + LIM.rows + '{行|ぎょう}まで（いま' + (cur.data.edu.length + cur.data.work.length) + '{行|ぎょう}）。', 'Education and work history: up to ' + LIM.rows + ' rows in total (now ' + (cur.data.edu.length + cur.data.work.length) + ').')) + '</p>';
         if (!expired) {
-            h += '<div class="rs-row-acts"><button type="button" class="btn btn-secondary" data-add="' + key + '">' + L('＋ {行|ぎょう}を{追加|ついか}', '+ Add a row') + '</button>' +
+            h += '<div class="rs-row-acts">' +
+                (full ? '<span class="rs-hint">' + L('{行|ぎょう}がいっぱいです。', 'The rows are full.') + '</span>' :
+                    '<button type="button" class="btn btn-secondary" data-add="' + key + '">' + L('＋ {行|ぎょう}を{追加|ついか}', '+ Add a row') + '</button>') +
+                (kinds && !full && rowsFree(key) >= 2 ? '<button type="button" class="btn btn-secondary" data-addpair="' + key + '">' + (key === 'edu' ? L('＋ {入学|にゅうがく}と{卒業|そつぎょう}の2{行|ぎょう}', '+ Enrolled and graduated (2 rows)') : L('＋ {入社|にゅうしゃ}と{退社|たいしゃ}の2{行|ぎょう}', '+ Joined and left (2 rows)')) + '</button>' : '') +
                 (rows.length > 1 ? '<button type="button" class="btn btn-secondary" data-sort="' + key + '">' + L('{年月|ねんげつ}の{順|じゅん}に{並|なら}べる', 'Sort by date') + '</button>' : '') + '</div>';
         }
         return h;
@@ -162,9 +203,10 @@
 
     var STEPS = [
         { ja: '{基本|きほん}の{情報|じょうほう}', en: 'Basic information', body: function () {
-            return F(L('{氏名|しめい}（ふりがな）', 'Name (reading)'), 'nameFuri', { max: 60, ac: 'off', hint: L('ひらがな、またはカタカナで{入力|にゅうりょく}します。', 'Write the reading in hiragana or katakana.') }) +
+            return '<p class="rs-note">' + L('{外国|がいこく}の{名前|なまえ}は、パスポートと{同|おな}じローマ字、またはカタカナで{書|か}きます。ふりがなは、カタカナで{大丈夫|だいじょうぶ}です。{例|れい}：RAM BAHADUR THAPA ／ ふりがな：ラム バハドゥル タパ', 'For a foreign name, write it in Roman letters as in your passport, or in katakana. The reading can be in katakana. Example: RAM BAHADUR THAPA / reading: ラム バハドゥル タパ') + '</p>' +
+                F(L('{氏名|しめい}（ふりがな）', 'Name (reading)'), 'nameFuri', { max: 60, ac: 'off', hint: L('ひらがな、またはカタカナで{入力|にゅうりょく}します。', 'Write the reading in hiragana or katakana.') }) +
                 F(L('{氏名|しめい}', 'Full name'), 'name', { max: 60, ac: 'name' }) +
-                S(L('{性別|せいべつ}', 'Gender'), 'gender', [['', opt('{書|か}かない', 'Leave blank')], ['男', opt('{男|おとこ}', 'Male')], ['女', opt('{女|おんな}', 'Female')], ['その他', opt('その{他|た}', 'Other')]], { opt: 1 }) +
+                S(L('{性別|せいべつ}', 'Gender'), 'gender', [['', opt('{選|えら}ばない', 'Leave blank')], ['男', opt('{男|おとこ}', 'Male')], ['女', opt('{女|おんな}', 'Female')]], { opt: 1 }) +
                 '<div class="rs-f"><span class="rs-lab">' + L('{生年月日|せいねんがっぴ}（{西暦|せいれき}）', 'Date of birth') + '</span><div class="rs-row3">' +
                 '<input aria-label="' + T('年', 'Year') + '" data-k="bY" data-norm="num" inputmode="numeric" maxlength="4" placeholder="2000" value="' + esc(cur.data.bY) + '"' + dis() + '><span>' + T('年', '/') + '</span>' +
                 '<input aria-label="' + T('月', 'Month') + '" data-k="bM" data-norm="num" inputmode="numeric" maxlength="2" placeholder="4" value="' + esc(cur.data.bM) + '"' + dis() + '><span>' + T('月', '/') + '</span>' +
@@ -191,6 +233,7 @@
                 F(L('{国籍|こくせき}', 'Nationality'), 'nationality', { max: 40, ph: T('例：ネパール', 'e.g. Nepal') }) +
                 F(L('{在留資格|ざいりゅうしかく}', 'Status of residence'), 'status', { max: 40, list: 'dlStatus', ph: T('例：留学', 'e.g. 留学 (Student)') }) +
                 '<datalist id="dlStatus">' + STATUS_LIST.map(function (x) { return '<option value="' + esc(x) + '">'; }).join('') + '</datalist>' +
+                S(L('{資格外活動許可|しかくがいかつどうきょか}', 'Permission to engage in other activities'), 'workPermit', [['', opt('{書|か}かない', 'Leave blank')], ['あり', opt('あり', 'Yes')], ['なし', opt('なし', 'No')]], { opt: 1, hint: L('アルバイトに{応募|おうぼ}するとき、よく{聞|き}かれます。', 'Often asked when applying for part-time jobs.') }) +
                 F(L('{在留期限|ざいりゅうきげん}', 'Expiry of stay'), 'statusExp', { type: 'date' }) +
                 S(L('{日本語|にほんご}の{能力|のうりょく}（JLPT）', 'Japanese ability (JLPT)'), 'jlpt', jl) +
                 F(L('{日本語|にほんご}について{補足|ほそく}', 'Notes on your Japanese'), 'jlptNote', { opt: 1, max: 80, ph: T('例：2026年7月 N2 合格', 'e.g. Passed N2 in July 2026') }) +
@@ -214,9 +257,11 @@
         } },
         { ja: '{志望|しぼう}{動機|どうき}など', en: 'Motivation and other notes', body: function () {
             return '<p class="rs-note">' + L('{自分|じぶん}の{言葉|ことば}で{書|か}きます。{志望動機|しぼうどうき}と{自己|じこ}PRの{自動作成|じどうさくせい}は、もうすぐ{使|つか}えるようになります。', 'Write in your own words. Automatic drafting of your motivation and self-PR will be available soon.') + '</p>' +
-                TA(L('{志望|しぼう}の{動機|どうき}', 'Reason for applying'), 'motive', { rows: 6, max: 1000 }) +
-                TA(L('{特技|とくぎ}・{好|す}きな{学科|がっか}・アピールポイント', 'Skills, favorite subjects, strengths'), 'special', { rows: 5, max: 600 }) +
-                TA(L('{本人希望|ほんにんきぼう}の{記入欄|きにゅうらん}', 'Requests'), 'wish', { rows: 3, max: 300, hint: L('{空|から}のときは「{貴社|きしゃ}の{規定|きてい}に{従|したが}います」と{印刷|いんさつ}します。', 'If empty, a standard sentence (“I will follow your company’s rules”) is printed.') });
+                '<p class="rs-note">' + L('{志望動機|しぼうどうき}と{特技|とくぎ}などは、{合計|ごうけい}' + LIM.motSpecial + '{字|じ}までです（{履歴書|りれきしょ}の{枠|わく}の{大|おお}きさです）。{本人希望|ほんにんきぼう}は' + LIM.wish + '{字|じ}までです。', 'Reason and skills together: up to ' + LIM.motSpecial + ' characters (the size of the box on the form). Requests: up to ' + LIM.wish + ' characters.') + '</p>' +
+                TA(L('{志望|しぼう}の{動機|どうき}', 'Reason for applying'), 'motive', { rows: 6, max: LIM.motSpecial }) +
+                TA(L('{特技|とくぎ}・{好|す}きな{学科|がっか}・アピールポイント', 'Skills, favorite subjects, strengths'), 'special', { rows: 5, max: LIM.motSpecial }) +
+                '<p class="rs-hint" id="rsMot"></p>' +
+                TA(L('{本人希望|ほんにんきぼう}の{記入欄|きにゅうらん}', 'Requests'), 'wish', { rows: 3, max: LIM.wish, hint: L('{空|から}のときは「{貴社|きしゃ}の{規定|きてい}に{従|したが}います」と{印刷|いんさつ}します。', 'If empty, a standard sentence (“I will follow your company’s rules”) is printed.') });
         } },
         { ja: '{確認|かくにん}', en: 'Check', body: function () {
             var d = cur.data, miss = [];
@@ -227,6 +272,13 @@
             return (miss.length ? '<div class="rs-warn"><p>' + L('まだ{入力|にゅうりょく}していない{項目|こうもく}があります。', 'Some items are still empty.') + '</p><ul>' + miss.join('') + '</ul></div>' : '<p class="rs-ok">' + L('{必要|ひつよう}な{項目|こうもく}は、すべて{入力|にゅうりょく}されています。', 'All the main items are filled in.') + '</p>') +
                 '<dl class="rs-sum"><dt>' + L('{氏名|しめい}', 'Name') + '</dt><dd>' + esc(d.name) + '</dd><dt>' + L('{生年月日|せいねんがっぴ}', 'Date of birth') + '</dt><dd>' + (d.bY ? esc(eraYear(d.bY, d.bM, d.era) + (d.bM || '') + (d.bM ? '月' : '') + (d.bD || '') + (d.bD ? '日' : '')) + (a != null ? T('（満' + a + '歳）', ' (age ' + a + ')') : '') : '') + '</dd>' +
                 '<dt>' + L('{現住所|げんじゅうしょ}', 'Address') + '</dt><dd>' + esc(d.addr) + '</dd><dt>' + L('{学歴|がくれき}・{職歴|しょくれき}・{資格|しかく}', 'Education / work / qualifications') + '</dt><dd>' + T(d.edu.length + '行・' + d.work.length + '行・' + d.lic.length + '行', d.edu.length + ' / ' + d.work.length + ' / ' + d.lic.length + ' rows') + '</dd></dl>' +
+                (function () {
+                    var ws = warns();
+                    return ws.length ? '<div class="rs-warn"><p>' + L('{確認|かくにん}してください（このまま{進|すす}むこともできます）。', 'Please check these (you can still continue as is).') + '</p><ul>' + ws.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' : '';
+                })() +
+                '<p class="rs-lab" style="margin-top:14px">' + L('{提出|ていしゅつ}する{前|まえ}のチェック', 'Before you submit') + '</p><div class="rs-checks">' +
+                CHECKS.map(function (c, i) { return C(L(c[0], c[1]), 'check.' + i, !!(d.check && d.check[i])); }).join('') + '</div>' +
+                '<p class="rs-note">' + L('{履歴書|りれきしょ}の{日付|ひづけ}は、{表示|ひょうじ}・{印刷|いんさつ}するたびに、{今日|きょう}の{日付|ひづけ}が{自動|じどう}で{入|はい}ります。', 'The date on your resume is filled in automatically with today’s date each time you view or print it.') + '</p>' +
                 '<p class="rs-note">' + L('{入力|にゅうりょく}した{内容|ないよう}は、{自動|じどう}で{保存|ほぞん}されています。{画面|がめん}でのプレビューと「{印刷|いんさつ}／PDFに{保存|ほぞん}」、{証明写真|しょうめいしゃしん}は、もうすぐ{使|つか}えるようになります。', 'Your input is saved automatically. The on-screen preview, “Print / Save as PDF”, and ID photo will be available soon.') + '</p>';
         } }
     ];
@@ -274,7 +326,12 @@
         h += '<div class="rs-nav">' + (step > 0 ? '<button type="button" class="btn btn-secondary" data-go="' + (step - 1) + '">' + L('{戻|もど}る', 'Back') + '</button>' : '<span></span>') +
             (step < STEPS.length - 1 ? '<button type="button" class="btn" data-go="' + (step + 1) + '">' + L('{次|つぎ}へ', 'Next') + '</button>' : '<button type="button" class="btn" id="rsDone">' + L('{一覧|いちらん}へ{戻|もど}る', 'Back to the list') + '</button>') + '</div>';
         v.innerHTML = h; v.hidden = false;
-        updateAge(); setStatus(dirty ? 'dirty' : (lastSaved ? 'saved' : ''));
+        updateAge(); updateMot(); setStatus(dirty ? 'dirty' : (lastSaved ? 'saved' : ''));
+    }
+    function updateMot() {
+        var el = $('rsMot'); if (!el) return;
+        var n = String(cur.data.motive || '').length + String(cur.data.special || '').length;
+        el.innerHTML = L('{合計|ごうけい}：' + n + ' / ' + LIM.motSpecial + '{字|じ}', 'Total: ' + n + ' / ' + LIM.motSpecial);
     }
     function updateAge() {
         var el = $('rsAge'); if (!el) return;
@@ -404,7 +461,12 @@
         var val = el.type === 'checkbox' ? el.checked : el.value;
         var n = el.getAttribute('data-norm');
         if (n && el.type !== 'checkbox') { var nv = norm(val, n); if (nv !== val) { var p = el.selectionStart; el.value = nv; try { el.setSelectionRange(p - 1, p - 1); } catch (x) {} } val = nv; }
+        if (k === 'motive' || k === 'special') {
+            var other = String(cur.data[k === 'motive' ? 'special' : 'motive'] || '').length;
+            if (val.length + other > LIM.motSpecial) { val = val.slice(0, Math.max(0, LIM.motSpecial - other)); el.value = val; }
+        }
         if (k === 'title') cur.title = val; else setPath(cur.data, k, val);
+        if (k === 'motive' || k === 'special') updateMot();
         if (k === 'bY' || k === 'bM' || k === 'bD') updateAge();
         if (/^(edu|work|lic)\./.test(k) && $('rsPv')) $('rsPv').innerHTML = pvFor(step);
         schedule();
@@ -418,7 +480,8 @@
         if (b.id === 'rsToList' || b.id === 'rsDone') return toList();
         if (b.hasAttribute('data-go')) return goStep(+b.getAttribute('data-go'));
         if (expired) return;
-        if (b.hasAttribute('data-add')) { var k = b.getAttribute('data-add'); cur.data[k].push(k === 'lic' ? { y: '', m: '', t: '' } : { y: '', m: '', t: '', k: '' }); schedule(); renderEditor(); }
+        if (b.hasAttribute('data-addpair')) { var kp = b.getAttribute('data-addpair'); if (rowsFree(kp) >= 2) { cur.data[kp].push({ y: '', m: '', t: '', k: kp === 'edu' ? '入学' : '入社' }, { y: '', m: '', t: '', k: kp === 'edu' ? '卒業' : '退社' }); schedule(); renderEditor(); } }
+        else if (b.hasAttribute('data-add')) { var k = b.getAttribute('data-add'); if (rowsFull(k)) return; cur.data[k].push(k === 'lic' ? { y: '', m: '', t: '' } : { y: '', m: '', t: '', k: '' }); schedule(); renderEditor(); }
         else if (b.hasAttribute('data-del')) { var p = b.getAttribute('data-del').split('.'); cur.data[p[0]].splice(+p[1], 1); schedule(); renderEditor(); }
         else if (b.hasAttribute('data-sort')) { var kk = b.getAttribute('data-sort'); cur.data[kk] = sortRows(cur.data[kk]); schedule(); renderEditor(); }
     });
