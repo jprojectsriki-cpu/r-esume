@@ -33,14 +33,14 @@
     { id: 14, axes: ['L'], ja: '外国と日本の文化の違いを、おもしろいと思う。', en: 'I find the differences between countries and Japan interesting.' },
     { id: 15, axes: ['S', 'P'], ja: '忙しいときも、あわてずに対応できる。', en: 'I can stay calm and respond even when busy.' },
     { id: 16, axes: ['C'], ja: '目標（数字など）があると、やる気が出る。', en: 'I get motivated when there is a target (such as a number).' }
-    ,{ id: 17, axes: [], pair: [{ axis: 'P', ja: 'お客さんや人と話す仕事', en: 'A job where I talk with customers and people' }, { axis: 'D', ja: 'パソコンや書類を、正確に進める仕事', en: 'A job where I handle computers and papers accurately' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
-    ,{ id: 18, axes: [], pair: [{ axis: 'H', ja: '体を動かして働く仕事', en: 'A job where I move my body' }, { axis: 'L', ja: 'ことばを使って、人を助ける仕事', en: 'A job where I help people with language' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
-    ,{ id: 19, axes: [], pair: [{ axis: 'T', ja: 'みんなで協力して進める仕事', en: 'A job where we work together' }, { axis: 'C', ja: '自分で新しい方法を試す仕事', en: 'A job where I try new ways myself' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
-    ,{ id: 20, axes: [], pair: [{ axis: 'S', ja: '毎日同じことを、落ち着いて続ける仕事', en: 'A job where I calmly repeat the same work' }, { axis: 'P', ja: '毎日いろいろな人に会う仕事', en: 'A job where I meet different people every day' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
-    ,{ id: 21, axes: [], pair: [{ axis: 'D', ja: '細かいところまで、確認する仕事', en: 'A job where I check small details' }, { axis: 'H', ja: 'ものを作ったり、運んだりする仕事', en: 'A job where I make or carry things' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
-    ,{ id: 22, axes: [], pair: [{ axis: 'C', ja: '目標をめざして、挑戦する仕事', en: 'A job where I aim for goals and take challenges' }, { axis: 'S', ja: '安定して、ゆっくり続けられる仕事', en: 'A stable job I can continue at my own pace' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
-    ,{ id: 23, axes: [], pair: [{ axis: 'L', ja: '外国の人や文化に関わる仕事', en: 'A job related to foreign people and cultures' }, { axis: 'T', ja: 'チームの仲間と、助け合う仕事', en: 'A job where teammates help each other' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
-    ,{ id: 24, axes: [], pair: [{ axis: 'P', ja: '人を笑顔にする仕事', en: 'A job that makes people smile' }, { axis: 'H', ja: '手を動かして、形に残る仕事', en: 'A job where my hands make something that remains' }], ja: 'どちらが、あなたに近いですか？', en: 'Which is closer to you?' }
+    ,{ id: 17, axes: [], pair: [{ axis: 'P', ja: 'お客さんや人と話す仕事', en: 'A job where I talk with customers and people' }, { axis: 'D', ja: 'パソコンや書類を、正確に進める仕事', en: 'A job where I handle computers and papers accurately' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    ,{ id: 18, axes: [], pair: [{ axis: 'H', ja: '体を動かして働く仕事', en: 'A job where I move my body' }, { axis: 'L', ja: 'ことばを使って、人を助ける仕事', en: 'A job where I help people with language' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    ,{ id: 19, axes: [], pair: [{ axis: 'T', ja: 'みんなで協力して進める仕事', en: 'A job where we work together' }, { axis: 'C', ja: '自分で新しい方法を試す仕事', en: 'A job where I try new ways myself' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    ,{ id: 20, axes: [], pair: [{ axis: 'S', ja: '毎日同じことを、落ち着いて続ける仕事', en: 'A job where I calmly repeat the same work' }, { axis: 'P', ja: '毎日いろいろな人に会う仕事', en: 'A job where I meet different people every day' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    ,{ id: 21, axes: [], pair: [{ axis: 'D', ja: '細かいところまで、確認する仕事', en: 'A job where I check small details' }, { axis: 'H', ja: 'ものを作ったり、運んだりする仕事', en: 'A job where I make or carry things' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    ,{ id: 22, axes: [], pair: [{ axis: 'C', ja: '目標をめざして、挑戦する仕事', en: 'A job where I aim for goals and take challenges' }, { axis: 'S', ja: '安定して、ゆっくり続けられる仕事', en: 'A stable job I can continue at my own pace' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    ,{ id: 23, axes: [], pair: [{ axis: 'L', ja: '外国の人や文化に関わる仕事', en: 'A job related to foreign people and cultures' }, { axis: 'T', ja: 'チームの仲間と、助け合う仕事', en: 'A job where teammates help each other' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    ,{ id: 24, axes: [], pair: [{ axis: 'P', ja: '人を笑顔にする仕事', en: 'A job that makes people smile' }, { axis: 'H', ja: '手を動かして、形に残る仕事', en: 'A job where my hands make something that remains' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
   ];
 
   // 短い質問（業種が決まっている人用。強みを知るため）

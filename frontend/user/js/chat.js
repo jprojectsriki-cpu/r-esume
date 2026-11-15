@@ -291,11 +291,15 @@
             var names = r.topIndustries.map(function (x) { return x.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1'); }).join('・');
             return [{ banner: { ja: '{診断|しんだん}クリア！', en: 'Done!' } }, { card: strengthCard(r) },
                 (function () {
-                    var b = B('{合|あ}いそうな{仕事|しごと}は、「' + esc1(names) + '」！（これは{目安|めやす}です）{履歴書|りれきしょ}づくりで、{業種|ぎょうしゅ}を{選|えら}ぶときに{使|つか}われます。', 'These jobs may suit you. This is only a guide, and it is used when you choose an industry for your resume.', 1);
-                    // 音声は「前半＋業種名×3＋後半」の部品をつないで流す（業種名は ind_<id>.mp3）
-                    b.keys = ['pResultA'].concat(r.topIndustries.map(function (x) { return 'ind_' + x.id; }), ['pResultB']);
-                    return b;
-                })()];
+                    var f = r.topIndustries[0], o = r.topIndustries.slice(1);
+                    function nm(x) { return esc1(x.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1')); }
+                    var b1 = B('いちばん{合|あ}いそうな{仕事|しごと}は、「' + nm(f) + '」です！', 'The job that suits you best is ' + f.en + '!', 1);
+                    b1.key = 'pTop_' + f.id;      // 業種ごとに、文まるごと録音した音声（pTop_<id>.mp3）
+                    var b2 = B('ほかには、「' + o.map(nm).join('」「') + '」も{合|あ}いそうです。', 'Also: ' + o.map(function (x) { return x.en; }).join(', ') + '.');
+                    var b3 = B('これは{目安|めやす}です。{履歴書|りれきしょ}づくりで、{業種|ぎょうしゅ}を{選|えら}ぶときに{使|つか}われます。', 'This is only a guide. It is used when you choose an industry for your resume.', 1);
+                    b3.key = 'pResultB';
+                    return [b1, b2, b3];
+                })()].reduce(function (x, y) { return x.concat(y); }, []);
         },
         opts: function () {
             var again = { k: 'again', ja: 'もう{一度|いちど}{診断|しんだん}する', en: 'Take it again' }, home = { k: 'home', ja: 'ホームへ', en: 'Back to home' };
