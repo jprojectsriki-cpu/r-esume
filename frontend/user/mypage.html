@@ -10,17 +10,17 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="css/loading.css?v=20261115b" rel="stylesheet"/>
-<link href="css/lp.css?v=20261115b" rel="stylesheet"/>
-<link href="css/auth.css?v=20261115b" rel="stylesheet"/>
-<script src="js/i18n.js?v=20261115b"></script>
+<link href="css/loading.css?v=20261115c" rel="stylesheet"/>
+<link href="css/lp.css?v=20261115c" rel="stylesheet"/>
+<link href="css/auth.css?v=20261115c" rel="stylesheet"/>
+<script src="js/i18n.js?v=20261115c"></script>
 <script>
         document.documentElement.classList.add('js');
         try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
     </script>
 </head>
 <body>
-<script src="js/loading.js?v=20261115b"></script>
+<script src="js/loading.js?v=20261115c"></script>
 <canvas aria-hidden="true" id="bg3d"></canvas>
 <header class="site-header">
 <div class="header-inner">
@@ -42,6 +42,11 @@
 <p class="my-name"><span id="myName"></span><span data-l="ja" lang="ja"> さん</span></p>
 <span class="my-role" id="myRole"></span>
 <p class="my-limit" id="myLimit"></p>
+            <div id="myRenew" hidden>
+                <p class="my-renew-note" id="renewNote"></p>
+                <button type="button" class="btn btn-lg btn-block" id="renewBtn" hidden><span data-l="ja" lang="ja"><ruby>利用期間<rt>りようきかん</rt></ruby>を<ruby>更新<rt>こうしん</rt></ruby>する</span><span data-l="en" lang="en">Renew your period of use</span></button>
+                <p class="form-msg" id="renewMsg" role="status" aria-live="polite"></p>
+            </div>
 <p class="my-soon" id="mySoon"><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby>の<ruby>入力<rt>にゅうりょく</rt></ruby>は、<ruby>次<rt>つぎ</rt></ruby>のステップで<ruby>公開<rt>こうかい</rt></ruby>します。</span><span data-l="en" lang="en">The resume editor will open soon.</span></p>
 <a class="btn btn-lg btn-block" id="adminLink" href="admin.html" hidden style="margin-top:16px"><span data-l="ja" lang="ja">管理画面を開く</span><span data-l="en" lang="en">Open the admin screen</span></a>
             <button class="btn btn-secondary btn-block" id="logoutBtn" style="margin-top:20px" type="button"><span data-l="ja" lang="ja">ログアウト</span><span data-l="en" lang="en">Log out</span></button>
@@ -53,14 +58,26 @@
 </div>
 </div>
 </main>
+
+<dialog id="dlgRenew" class="confirm">
+    <form method="dialog" id="renewForm">
+        <h2><span data-l="ja" lang="ja"><ruby>利用期間<rt>りようきかん</rt></ruby>を<ruby>更新<rt>こうしん</rt></ruby>しますか？</span><span data-l="en" lang="en">Renew your period of use?</span></h2>
+        <p><span data-l="ja" lang="ja"><ruby>更新<rt>こうしん</rt></ruby>の<ruby>料金<rt>りょうきん</rt></ruby>は、¥1,100（<ruby>税込<rt>ぜいこみ</rt></ruby>）です。<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>むと、<ruby>受付<rt>うけつけ</rt></ruby>のメールが<ruby>届<rt>とど</rt></ruby>きます。メールの<ruby>口座<rt>こうざ</rt></ruby>に、<ruby>7日<rt>なのか</rt></ruby><ruby>以内<rt>いない</rt></ruby>に<ruby>振<rt>ふ</rt></ruby>り<ruby>込<rt>こ</rt></ruby>んでください。<ruby>入金<rt>にゅうきん</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>したら、<ruby>利用<rt>りよう</rt></ruby><ruby>期限<rt>きげん</rt></ruby>が1<ruby>年<rt>ねん</rt></ruby>のびます。</span><span data-l="en" lang="en">The renewal fee is ¥1,100 (tax included). After you apply, we send you a confirmation email. Please transfer the money to the account in the email within 7 days. When we confirm your payment, your expiry date is extended by 1 year.</span></p>
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-secondary" id="renewNo"><span data-l="ja" lang="ja"><ruby>戻<rt>もど</rt></ruby>る</span><span data-l="en" lang="en">Back</span></button>
+            <button type="submit" class="btn" id="renewYes"><span data-l="ja" lang="ja"><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む</span><span data-l="en" lang="en">Apply</span></button>
+        </div>
+    </form>
+</dialog>
+
 <footer class="auth-foot">
 <div class="container">
 <p><span data-l="ja" lang="ja"><a href="index.html">トップページ</a>　© 2026 R-ESUME</span><span data-l="en" lang="en">ReicherRick. All rights reserved.</span></p>
 </div>
 </footer>
-<script src="js/config.js?v=20261115b"></script>
-<script src="js/common.js?v=20261115b"></script>
-<script src="js/bg3d.js?v=20261115b"></script>
-<script src="js/mypage.js?v=20261115b"></script>
+<script src="js/config.js?v=20261115c"></script>
+<script src="js/common.js?v=20261115c"></script>
+<script src="js/bg3d.js?v=20261115c"></script>
+<script src="js/mypage.js?v=20261115c"></script>
 </body>
 </html>

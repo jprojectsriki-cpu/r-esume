@@ -70,7 +70,7 @@ function adminIssue_(token, applicationId) {
   if (!g.ok) return g;
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) return { ok: false, message: '\u307b\u304b\u306e\u51e6\u7406\u304c\u52d5\u3044\u3066\u3044\u307e\u3059\u3002\u5c11\u3057\u5f85\u3063\u3066\u304b\u3089\u3001\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002' };
-  let a, user, validUntil;
+  let a, user, validUntil, renewal = false;
   try {
     a = readApplications_().filter(function (x) { return x.applicationId === applicationId; })[0];
     if (!a) return { ok: false, message: '\u7533\u8fbc\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002' };
@@ -79,6 +79,7 @@ function adminIssue_(token, applicationId) {
     user = readUsersAll_().filter(function (u) { return u.userId === a.userId; })[0];
     if (!user) return { ok: false, message: '\u7533\u8fbc\u306b\u5bfe\u5fdc\u3059\u308b\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002' };
 
+    renewal = !!user.activatedAt && user.status === 'active';   // \u3059\u3067\u306b\u767a\u884c\u3057\u305f\u3053\u3068\u304c\u3042\u308b\uff1d\u66f4\u65b0
     const now = new Date();
     // \u66f4\u65b0\u306e\u3068\u304d\u306f\u3001\u3044\u307e\u306e\u671f\u9650\u306e\u7d9a\u304d\u304b\u30891\u5e74\u3002\u521d\u3081\u3066\u306a\u3089\u3001\u4eca\u65e5\u304b\u30891\u5e74
     const cur = user.validUntil ? new Date(user.validUntil) : null;
@@ -102,14 +103,46 @@ function adminIssue_(token, applicationId) {
   }
 
   let mailed = true;
-  try { sendIssueMail_(user.name, user.email, validUntil); } catch (err) { console.error(err); mailed = false; }
+  try { sendIssueMail_(user.name, user.email, validUntil, renewal); } catch (err) { console.error(err); mailed = false; }
   return { ok: true, mailed: mailed, validUntil: validUntil.toISOString() };
 }
 
 /** \u304a\u5ba2\u69d8\u3078\u306e\u300c\u30a2\u30ab\u30a6\u30f3\u30c8\u767a\u884c\u300d\u30e1\u30fc\u30eb */
-function sendIssueMail_(name, email, validUntil) {
+function sendIssueMail_(name, email, validUntil, renewal) {
   const until = Utilities.formatDate(validUntil, 'Asia/Tokyo', 'yyyy\u5e74M\u6708d\u65e5');
   const untilEn = Utilities.formatDate(validUntil, 'Asia/Tokyo', 'MMM d, yyyy');
+  if (renewal) {
+    MailApp.sendEmail({
+      to: email,
+      subject: '\u3010R-ESUME\u3011\u5229\u7528\u671f\u9593\u3092\u66f4\u65b0\u3057\u307e\u3057\u305f / Your period of use was renewed',
+      name: 'R-ESUME',
+      body: [
+        name + ' \u69d8',
+        '',
+        '\u304a\u652f\u6255\u3044\u3092\u78ba\u8a8d\u3057\u3001\u5229\u7528\u671f\u9593\u3092\u66f4\u65b0\u3057\u307e\u3057\u305f\u3002',
+        '',
+        '\u25a0 \u65b0\u3057\u3044\u5229\u7528\u671f\u9650',
+        until + '\u307e\u3067',
+        '',
+        '\u25a0 \u30ed\u30b0\u30a4\u30f3',
+        LOGIN_URL,
+        '',
+        '----------------------------------------',
+        'Dear ' + name + ',',
+        '',
+        'We have confirmed your payment and renewed your period of use.',
+        '',
+        '* New expiry date',
+        untilEn,
+        '',
+        '* Log in',
+        LOGIN_URL,
+        '----------------------------------------',
+        'R-ESUME\uff5c\u7559\u5b66\u751f\u5411\u3051\u81ea\u52d5\u5c65\u6b74\u66f8\u4f5c\u6210\u30b7\u30b9\u30c6\u30e0'
+      ].join('\n')
+    });
+    return;
+  }
   MailApp.sendEmail({
     to: email,
     subject: '\u3010R-ESUME\u3011\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u767a\u884c\u3057\u307e\u3057\u305f / Your account is ready',

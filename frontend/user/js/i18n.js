@@ -34,11 +34,16 @@
         'もう一度ログインしてください。': 'Please log in again.',
         'このリンクは、期限が切れているか、すでに使われています。もう一度、パスワード再設定のメールを送ってください。': 'This link has expired or has already been used. Please send the password reset email again.',
         'ただいまメールの送信が集中しています。しばらくしてからもう一度お試しください。': 'We are sending many emails right now. Please try again in a little while.',
-        'ただいま混み合っています。少し待ってから、もう一度お試しください。': 'It is busy right now. Please wait a little and try again.'
+        'ただいま混み合っています。少し待ってから、もう一度お試しください。': 'It is busy right now. Please wait a little and try again.',
+        'アカウントが見つかりません。': 'Your account was not found.',
+        'このアカウントは、更新のお申し込みができません。': 'This account cannot apply for renewal.',
+        'いまは、更新のお申し込みはできません。利用期限の30日前から、お申し込みできます。': 'You cannot apply for renewal right now. You can apply from 30 days before your expiry date.'
     };
     function server(text) {
         if (!text) return '';
         if (SERVER[text]) return SERVER[text];
+        var r = /^すでに更新のお申し込み（(.+)）があります。/.exec(text);
+        if (r) return 'You already have a renewal application (' + r[1] + '). Please pay by the deadline written in the confirmation email.';
         var m = /^このメールアドレスでは、お支払い待ちのお申し込み（(.+)）があります。/.exec(text);
         if (m) return 'This email address already has an application waiting for payment (' + m[1] + '). Please pay by the deadline written in the confirmation email.';
         return text;

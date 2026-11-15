@@ -70,7 +70,7 @@ function adminIssue_(token, applicationId) {
   if (!g.ok) return g;
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) return { ok: false, message: 'ほかの処理が動いています。少し待ってから、もう一度お試しください。' };
-  let a, user, validUntil;
+  let a, user, validUntil, renewal = false;
   try {
     a = readApplications_().filter(function (x) { return x.applicationId === applicationId; })[0];
     if (!a) return { ok: false, message: '申込が見つかりません。' };
@@ -79,6 +79,7 @@ function adminIssue_(token, applicationId) {
     user = readUsersAll_().filter(function (u) { return u.userId === a.userId; })[0];
     if (!user) return { ok: false, message: '申込に対応するアカウントが見つかりません。' };
 
+    renewal = !!user.activatedAt && user.status === 'active';   // すでに発行したことがある＝更新
     const now = new Date();
     // 更新のときは、いまの期限の続きから1年。初めてなら、今日から1年
     const cur = user.validUntil ? new Date(user.validUntil) : null;
@@ -102,14 +103,46 @@ function adminIssue_(token, applicationId) {
   }
 
   let mailed = true;
-  try { sendIssueMail_(user.name, user.email, validUntil); } catch (err) { console.error(err); mailed = false; }
+  try { sendIssueMail_(user.name, user.email, validUntil, renewal); } catch (err) { console.error(err); mailed = false; }
   return { ok: true, mailed: mailed, validUntil: validUntil.toISOString() };
 }
 
 /** お客様への「アカウント発行」メール */
-function sendIssueMail_(name, email, validUntil) {
+function sendIssueMail_(name, email, validUntil, renewal) {
   const until = Utilities.formatDate(validUntil, 'Asia/Tokyo', 'yyyy年M月d日');
   const untilEn = Utilities.formatDate(validUntil, 'Asia/Tokyo', 'MMM d, yyyy');
+  if (renewal) {
+    MailApp.sendEmail({
+      to: email,
+      subject: '【R-ESUME】利用期間を更新しました / Your period of use was renewed',
+      name: 'R-ESUME',
+      body: [
+        name + ' 様',
+        '',
+        'お支払いを確認し、利用期間を更新しました。',
+        '',
+        '■ 新しい利用期限',
+        until + 'まで',
+        '',
+        '■ ログイン',
+        LOGIN_URL,
+        '',
+        '----------------------------------------',
+        'Dear ' + name + ',',
+        '',
+        'We have confirmed your payment and renewed your period of use.',
+        '',
+        '* New expiry date',
+        untilEn,
+        '',
+        '* Log in',
+        LOGIN_URL,
+        '----------------------------------------',
+        'R-ESUME｜留学生向け自動履歴書作成システム'
+      ].join('\n')
+    });
+    return;
+  }
   MailApp.sendEmail({
     to: email,
     subject: '【R-ESUME】アカウントを発行しました / Your account is ready',

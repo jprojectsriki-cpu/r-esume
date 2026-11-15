@@ -161,3 +161,19 @@ function diagnoseForgot() {
   const rl = CacheService.getScriptCache().get('resetmail_' + email);
   Logger.log('5. このメールアドレスへの、この1時間の再設定の回数：' + (rl || 0) + ' / ' + RESET_LIMIT_PER_EMAIL);
 }
+
+/**
+ * 【テスト用】再設定メールの回数の制限を、いったん解除する
+ * （同じメールアドレスには1時間に3回まで、全体では1時間に20回までの制限がある。テストを繰り返すと、この制限にかかる）
+ * 登録されているすべてのメールアドレスの回数と、今の時間帯の全体の回数を、0に戻す
+ */
+function clearResetLimitForTest() {
+  const cache = CacheService.getScriptCache();
+  let n = 0;
+  readUsersAll_().forEach(function (u) {
+    cache.remove('resetmail_' + String(u.email).toLowerCase());
+    n++;
+  });
+  cache.remove('resetglobal_' + Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyyMMddHH'));
+  Logger.log(n + ' 件のメールアドレスの回数と、全体の回数を、0に戻しました。');
+}

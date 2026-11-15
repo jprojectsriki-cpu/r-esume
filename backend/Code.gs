@@ -65,6 +65,10 @@ function doPost(e) {
         return json_(logout_(req.token));
       case 'me':
         return json_(checkSession_(req.token));
+      case 'myRenewal':
+        return json_(myRenewal_(req.token));
+      case 'renew':
+        return json_(renew_(req.token));
       case 'forgot':
         return json_(forgotPassword_(req.email));
       case 'resetCheck':

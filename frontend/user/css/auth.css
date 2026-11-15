@@ -42,3 +42,10 @@
 .auth-lead { margin-top: 10px; color: var(--ink-2); font-size: 15px; line-height: 2; }
 .auth-forgot { margin-top: 14px; text-align: center; font-size: 15px; }
 .auth-forgot a { font-weight: 700; }
+.my-renew-note { margin-top: 14px; padding: 12px 14px; background: #FFF9DB; border: 2px solid var(--ink); border-radius: 10px; font-size: 15px; line-height: 2; }
+#myRenew .btn { margin-top: 14px; }
+.confirm { width: min(440px, calc(100% - 32px)); border: 2px solid var(--ink); border-radius: 16px; padding: 22px; box-shadow: 6px 6px 0 var(--sun); }
+.confirm::backdrop { background: rgba(20, 36, 58, .5); }
+.confirm h2 { font-size: 20px; margin-bottom: 8px; }
+.confirm p { margin-bottom: 12px; line-height: 2; }
+.confirm-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }

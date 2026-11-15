@@ -215,7 +215,7 @@ function sendApplyMails_(name, email, a) {
       '以下の内容でお申し込みを受け付けました。',
       '',
       '■ 申込番号：' + a.applicationId,
-      '■ サービス：R-ESUME 履歴書作成（1年間）',
+      '■ サービス：R-ESUME 履歴書作成（1年間）' + (a.renewal ? '（利用期間の更新）' : ''),
       '■ 金額　　：' + yen_(amount) + '（税込・1年間）',
       '■ お支払い：' + PAYMENT_METHODS[a.payment],
       '■ 支払期限：' + deadline,
