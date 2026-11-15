@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title>ホーム | R-ESUME</title>
+<link href="img/favicon.png" rel="icon" type="image/png"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&amp;family=Dela+Gothic+One&amp;display=swap" rel="stylesheet"/>
+<link href="css/loading.css?v=20261115c" rel="stylesheet"/>
+<link href="css/lp.css?v=20261115c" rel="stylesheet"/>
+<link href="css/auth.css?v=20261115c" rel="stylesheet"/>
+<link href="css/game.css?v=20261116b" rel="stylesheet"/>
+<script src="js/i18n.js?v=20261116a"></script>
+<script>
+        document.documentElement.classList.add('js');
+        try { if (localStorage.getItem('resume_furigana') === 'off') document.documentElement.classList.add('furigana-off'); } catch (e) {}
+    </script>
+</head>
+<body>
+<script src="js/loading.js?v=20261115c"></script>
+<canvas aria-hidden="true" id="bg3d"></canvas>
+<header class="site-header">
+<div class="header-inner">
+<a aria-label="ホームへ" class="brand" data-aria-en="Go to the top of R-ESUME" href="dashboard.html"><span class="brand-mark"><img alt="" height="28" src="img/logo.png" width="24"/></span><span class="brand-name">R-ESUME</span></a>
+<div class="header-tools" data-skip="">
+<div aria-label="言語 / Language" class="lang-switch" data-aria-en="Language" role="group">
+<button aria-pressed="true" class="lang-opt" data-set-lang="ja" type="button">日本語</button>
+<button aria-pressed="false" class="lang-opt" data-set-lang="en" type="button">English</button>
+</div>
+<button aria-pressed="true" class="furi-btn" id="furiBtn" type="button"><span>ふりがな ON</span></button>
+</div>
+</div>
+</header>
+<main class="auth-main dash-main">
+<div class="dash">
+<div hidden="" id="myBody">
+<section class="auth-card dash-me">
+<div class="auth-badge" aria-hidden="true"><img src="img/logo.png" alt="" width="28" height="33"></div>
+<p class="my-hello"><span data-l="ja" lang="ja">ようこそ</span></p>
+<p class="my-name"><span id="myName"></span><span data-l="ja" lang="ja"> さん</span></p>
+<span class="my-role" id="myRole"></span>
+<p class="my-limit" id="myLimit"></p>
+<div id="myRenew" hidden>
+<p class="my-renew-note" id="renewNote"></p>
+<button type="button" class="btn btn-lg btn-block" id="renewBtn" hidden><span data-l="ja" lang="ja"><ruby>利用期間<rt>りようきかん</rt></ruby>を<ruby>更新<rt>こうしん</rt></ruby>する</span></button>
+<p class="form-msg" id="renewMsg" role="status" aria-live="polite"></p>
+</div>
+</section>
+<ol class="stages" aria-label="ステージ">
+<li><a class="stage is-open" href="resume.html"><span class="stage-no">1</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>履歴書<rt>りれきしょ</rt></ruby><ruby>作成<rt>さくせい</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>会話<rt>かいわ</rt></ruby>に<ruby>答<rt>こた</rt></ruby>えて、<ruby>履歴書<rt>りれきしょ</rt></ruby>を<ruby>作<rt>つく</rt></ruby>ります</span></span><span class="stage-tag" id="stageCount"></span></span></a></li>
+<li><div class="stage is-soon" aria-disabled="true"><span class="stage-no">2</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>職務経歴書<rt>しょくむけいれきしょ</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>仕事<rt>しごと</rt></ruby>の<ruby>経験<rt>けいけん</rt></ruby>を<ruby>書類<rt>しょるい</rt></ruby>にまとめます</span></span><span class="stage-tag"><span data-l="ja" lang="ja">もうすぐ</span></span></span></div></li>
+<li><div class="stage is-soon" aria-disabled="true"><span class="stage-no">3</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>想定<rt>そうてい</rt></ruby>メール</span></span><span class="stage-sub"><span data-l="ja" lang="ja">メールの<ruby>書<rt>か</rt></ruby>き<ruby>方<rt>かた</rt></ruby>を<ruby>練習<rt>れんしゅう</rt></ruby>します</span></span><span class="stage-tag"><span data-l="ja" lang="ja">もうすぐ</span></span></span></div></li>
+<li><div class="stage is-soon" aria-disabled="true"><span class="stage-no">4</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja"><ruby>面接練習<rt>めんせつれんしゅう</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>面接官<rt>めんせつかん</rt></ruby>の<ruby>質問<rt>しつもん</rt></ruby>に<ruby>答<rt>こた</rt></ruby>える<ruby>練習<rt>れんしゅう</rt></ruby>をします</span></span><span class="stage-tag"><span data-l="ja" lang="ja">もうすぐ</span></span></span></div></li>
+<li><div class="stage is-soon" aria-disabled="true"><span class="stage-no">5</span><span class="stage-body"><span class="stage-title"><span data-l="ja" lang="ja">エントリー<ruby>管理<rt>かんり</rt></ruby></span></span><span class="stage-sub"><span data-l="ja" lang="ja"><ruby>応募<rt>おうぼ</rt></ruby>した<ruby>会社<rt>かいしゃ</rt></ruby>を<ruby>記録<rt>きろく</rt></ruby>します</span></span><span class="stage-tag"><span data-l="ja" lang="ja">もうすぐ</span></span></span></div></li>
+</ol>
+<a class="btn btn-lg btn-block" id="adminLink" href="admin.html" hidden style="margin-top:20px"><span data-l="ja" lang="ja">管理画面を開く</span></a>
+<button class="btn btn-secondary btn-block" id="logoutBtn" style="margin-top:20px" type="button"><span data-l="ja" lang="ja">ログアウト</span></button>
+</div>
+<div hidden="" id="myError" class="auth-card">
+<p><span data-l="ja" lang="ja"><ruby>通信<rt>つうしん</rt></ruby>できませんでした。<ruby>時間<rt>じかん</rt></ruby>をおいて、もう<ruby>一度<rt>いちど</rt></ruby><ruby>開<rt>ひら</rt></ruby>いてください。</span></p>
+<a class="btn btn-secondary btn-block" href="login.html" style="margin-top:16px"><span data-l="ja" lang="ja">ログインへ</span></a>
+</div>
+</div>
+</main>
+
+<dialog id="dlgRenew" class="confirm">
+    <form method="dialog" id="renewForm">
+        <h2><span data-l="ja" lang="ja"><ruby>利用期間<rt>りようきかん</rt></ruby>を<ruby>更新<rt>こうしん</rt></ruby>しますか？</span><span data-l="en" lang="en">Renew your period of use?</span></h2>
+        <p><span data-l="ja" lang="ja"><ruby>更新<rt>こうしん</rt></ruby>の<ruby>料金<rt>りょうきん</rt></ruby>は、¥990（<ruby>税込<rt>ぜいこみ</rt></ruby>）です。<ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>むと、<ruby>受付<rt>うけつけ</rt></ruby>のメールが<ruby>届<rt>とど</rt></ruby>きます。メールの<ruby>口座<rt>こうざ</rt></ruby>に、<ruby>7日<rt>なのか</rt></ruby><ruby>以内<rt>いない</rt></ruby>に<ruby>振<rt>ふ</rt></ruby>り<ruby>込<rt>こ</rt></ruby>んでください。<ruby>入金<rt>にゅうきん</rt></ruby>を<ruby>確認<rt>かくにん</rt></ruby>したら、<ruby>利用<rt>りよう</rt></ruby><ruby>期限<rt>きげん</rt></ruby>が1<ruby>年<rt>ねん</rt></ruby>のびます。</span><span data-l="en" lang="en">The renewal fee is ¥990 (tax included). After you apply, we send you a confirmation email. Please transfer the money to the account in the email within 7 days. When we confirm your payment, your expiry date is extended by 1 year.</span></p>
+        <div class="confirm-actions">
+            <button type="button" class="btn btn-secondary" id="renewNo"><span data-l="ja" lang="ja"><ruby>戻<rt>もど</rt></ruby>る</span><span data-l="en" lang="en">Back</span></button>
+            <button type="submit" class="btn" id="renewYes"><span data-l="ja" lang="ja"><ruby>申<rt>もう</rt></ruby>し<ruby>込<rt>こ</rt></ruby>む</span><span data-l="en" lang="en">Apply</span></button>
+        </div>
+    </form>
+</dialog>
+
+<footer class="auth-foot">
+<div class="container">
+<p><span data-l="ja" lang="ja"><a href="index.html">トップページ</a>　© 2026 R-ESUME</span><span data-l="en" lang="en">ReicherRick. All rights reserved.</span></p>
+</div>
+</footer>
+<script src="js/config.js?v=20261115c"></script>
+<script src="js/common.js?v=20261115c"></script>
+<script src="js/bg3d.js?v=20261115c"></script>
+<script src="js/dashboard.js?v=20261116a"></script>
+</body>
+</html>

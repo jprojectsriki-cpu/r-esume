@@ -33,7 +33,7 @@
     }
     var expiredNote = function () {
         return '<p class="rs-warn">' + L('{利用|りよう}{期間|きかん}が{終|お}わっています。{履歴書|りれきしょ}の{作成|さくせい}・{編集|へんしゅう}・{印刷|いんさつ}をする{場合|ばあい}は{更新|こうしん}をしてください。', 'Your period of use has ended. To create, edit or print your resume, please renew.') +
-            ' <a href="mypage.html">' + L('マイページで{更新|こうしん}する', 'Renew on My page') + '</a></p>';
+            ' <a href="dashboard.html">' + L('ホームで{更新|こうしん}する', 'Renew on Home') + '</a></p>';
     };
 
     /* ---------- 値の読み書き（"edu.0.y" のような道すじ） ---------- */
@@ -301,7 +301,7 @@
         h += '</ul>';
         if (!expired) h += '<button type="button" class="btn btn-lg btn-block" id="rsNew"' + (list.length >= max ? ' disabled' : '') + '>' + L('＋ {新|あたら}しい{履歴書|りれきしょ}を{作|つく}る', '+ Create a new resume') + '</button>' +
             (list.length >= max ? '<p class="rs-hint">' + L('{履歴書|りれきしょ}は' + max + '通までです。{削除|さくじょ}すると、また{作|つく}れます。', 'You can have up to ' + max + ' resumes. Delete one to create another.') + '</p>' : '');
-        h += '<a class="btn btn-secondary btn-block rs-back" href="mypage.html">' + L('マイページへ{戻|もど}る', 'Back to My page') + '</a>';
+        h += '<a class="btn btn-secondary btn-block rs-back" href="dashboard.html">' + L('ホームへ{戻|もど}る', 'Back to Home') + '</a>';
         v.innerHTML = h; v.hidden = false;
     }
     function reloadList() {
