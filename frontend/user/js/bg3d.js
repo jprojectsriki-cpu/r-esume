@@ -7,6 +7,7 @@
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var W = 0, H = 0, dpr = 1, cur = 0;
     var colorful = cv.getAttribute('data-bg') === 'colorful';
+    var yellow = cv.getAttribute('data-bg') === 'yellow';   // LP（黄×黒）：白〜うす黄の面＋黒い線
     var HUES = [212, 198, 172, 48, 28, 336, 266];   // 青・水色・青緑・黄・橙・ピンク・紫（ローディングと同じ）
 
     // 正二十面体（立方体ではない立体）
@@ -43,7 +44,7 @@
             q = x * cc - y * sc; y = x * sc + y * cc; x = q;
             return [x, y, z];
         });
-        ctx.lineJoin = 'round'; ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+        ctx.lineJoin = 'round'; ctx.lineWidth = yellow ? 2 : 1.5; ctx.strokeStyle = yellow ? 'rgba(17,17,17,0.55)' : 'rgba(255,255,255,0.85)';
         F.forEach(function (f, fi) {
             var a = tv[f[0]], b = tv[f[1]], c = tv[f[2]];
             var ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2];
@@ -54,7 +55,8 @@
             var nl = Math.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]); n = [n[0] / nl, n[1] / nl, n[2] / nl];
             if (n[2] <= 0) return;                                                       // 裏面は描かない
             var lit = Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
-            if (colorful) ctx.fillStyle = 'hsla(' + HUES[fi % HUES.length] + ',80%,' + (62 + 18 * lit).toFixed(1) + '%,0.95)';
+            if (yellow) ctx.fillStyle = 'hsla(54,100%,' + (80 + 18 * lit).toFixed(1) + '%,0.72)';
+            else if (colorful) ctx.fillStyle = 'hsla(' + HUES[fi % HUES.length] + ',80%,' + (62 + 18 * lit).toFixed(1) + '%,0.95)';
             else ctx.fillStyle = 'hsla(' + hue.toFixed(1) + ',72%,' + (66 + 26 * lit).toFixed(1) + '%,0.92)';
             ctx.beginPath();
             [a, b, c].forEach(function (v, i) {

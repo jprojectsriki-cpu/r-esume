@@ -295,10 +295,12 @@
                     function nm(x) { return esc1(x.ja.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1')); }
                     var b1 = B('いちばん{合|あ}いそうな{仕事|しごと}は、「' + nm(f) + '」です！', 'The job that suits you best is ' + f.en + '!', 1);
                     b1.key = 'pTop_' + f.id;      // 業種ごとに、文まるごと録音した音声（pTop_<id>.mp3）
-                    var b2 = B('ほかには、「' + o.map(nm).join('」「') + '」も{合|あ}いそうです。', 'Also: ' + o.map(function (x) { return x.en; }).join(', ') + '.');
+                    var s = r.topIndustries[1], t = r.topIndustries[2];
+                    var b2 = B('{次|つぎ}に{合|あ}いそうな{仕事|しごと}は、「' + nm(s) + '」です！', 'Next: ' + s.en + '!', 1); b2.key = 'pSecond_' + s.id;
+                    var b2b = B('その{次|つぎ}は、「' + nm(t) + '」です！', 'Then: ' + t.en + '!', 1); b2b.key = 'pThird_' + t.id;
                     var b3 = B('これは{目安|めやす}です。{履歴書|りれきしょ}づくりで、{業種|ぎょうしゅ}を{選|えら}ぶときに{使|つか}われます。', 'This is only a guide. It is used when you choose an industry for your resume.', 1);
                     b3.key = 'pResultB';
-                    return [b1, b2, b3];
+                    return [b1, b2, b2b, b3];
                 })()].reduce(function (x, y) { return x.concat(y); }, []);
         },
         opts: function () {
@@ -668,7 +670,9 @@
             // 1つでも音声ファイルが無ければ、文章まるごとを端末の音声で読む
             a.addEventListener('error', function () { if (audio === a && !dead) { dead = true; audio = null; synth(item.text); } });
             a.addEventListener('ended', function () { if (audio === a) next(); });
-            var p = a.play(); if (p && p.catch) p.catch(function () {});
+            var fb = function () { if (audio === a && !dead) { dead = true; audio = null; synth(item.text); } };
+            a.addEventListener('abort', function () {});
+            var p = a.play(); if (p && p.catch) p.catch(fb);
         }
         next();
     }
