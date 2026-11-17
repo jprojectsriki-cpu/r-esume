@@ -85,7 +85,9 @@ a { color: var(--k); }
 /* ===== 最初の画面 ===== */
 .hero h1 { font-family: var(--font); font-weight: 900; color: var(--k); letter-spacing: .01em; }
 .hero .hl { background: var(--k); color: var(--y); padding: 0 .18em; margin: 0; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-.hero .hl rt { color: var(--k); }   /* ふりがなは黒い帯の外に出るので、黒にする */
+.hero .hl rt { color: var(--k); position: relative; top: -10px; }   /* ふりがなは黒い帯の外に出るので黒にし、帯から少しはなす */
+.hero h1 { line-height: 1.6; }   /* ふりがなを上にずらした分、行の間をあける */
+html.furigana-off .hero h1 { line-height: 1.3; }
 .hero-lead { color: var(--k); font-weight: 700; }
 .hero-tags { gap: 10px 14px; }
 .hero-tags li { background: var(--k); color: var(--y); border: 3px solid var(--y); box-shadow: 4px 4px 0 var(--k); border-radius: 0; padding: 4px 12px; font-weight: 800; transform: skewX(-8deg); }
