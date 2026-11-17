@@ -12,13 +12,13 @@
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var dlg, cv, ctx, textEl, count = 0, shownAt = 0, raf = 0, failTimer = 0, closing = null;
 
-    /* ---- 色とりどりの正二十面体 ---- */
+    /* ---- 色とりどりの正二十面体（2026-11-17 から黄×黒の画面に合う色：黒・赤・橙・黄・黄緑・水色・白） ---- */
     var t = (1 + Math.sqrt(5)) / 2;
     function norm(v) { var l = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]); return [v[0] / l, v[1] / l, v[2] / l]; }
     var V = [[-1, t, 0], [1, t, 0], [-1, -t, 0], [1, -t, 0], [0, -1, t], [0, 1, t], [0, -1, -t], [0, 1, -t], [t, 0, -1], [t, 0, 1], [-t, 0, -1], [-t, 0, 1]].map(norm);
     var F = [[0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11], [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
              [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9], [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]];
-    var HUES = [212, 198, 172, 48, 28, 336, 266];   // 青・水色・青緑・黄・橙・ピンク・紫
+    var COLORS = ['#111111', '#E60012', '#FF6D00', '#FFE600', '#76FF03', '#00E5FF', '#FFFFFF'];
     var L = norm([-0.45, 0.65, 0.75]);
     function draw(time) {
         var W = cv.clientWidth, H = cv.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -34,7 +34,7 @@
             q = x * cc - y * sc; y = x * sc + y * cc; x = q;
             return [x, y, z];
         });
-        ctx.lineJoin = 'round'; ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.lineJoin = 'round'; ctx.lineWidth = 2.5; ctx.strokeStyle = '#111111';
         F.forEach(function (f, i) {
             var a = tv[f[0]], b = tv[f[1]], c = tv[f[2]];
             var ux = b[0] - a[0], uy = b[1] - a[1], uz = b[2] - a[2], vx = c[0] - a[0], vy = c[1] - a[1], vz = c[2] - a[2];
@@ -42,8 +42,7 @@
             if (n[0] * (a[0] + b[0] + c[0]) + n[1] * (a[1] + b[1] + c[1]) + n[2] * (a[2] + b[2] + c[2]) < 0) n = [-n[0], -n[1], -n[2]];
             var nl = Math.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]); n = [n[0] / nl, n[1] / nl, n[2] / nl];
             if (n[2] <= 0) return;
-            var lit = Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
-            ctx.fillStyle = 'hsl(' + HUES[i % HUES.length] + ',78%,' + (50 + 18 * lit).toFixed(1) + '%)';
+            ctx.fillStyle = COLORS[i % COLORS.length];
             ctx.beginPath();
             [a, b, c].forEach(function (v, k) { var s = 1 + v[2] * 0.12, X = cx + v[0] * R * s, Y = cy - v[1] * R * s; if (k) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); });
             ctx.closePath(); ctx.fill(); ctx.stroke();

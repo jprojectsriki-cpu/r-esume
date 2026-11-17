@@ -1,18 +1,21 @@
-/* R-ESUME 共通ローディング画面（どのページでも使う） */
-#rLoading { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; overflow: hidden; color: #14243A; background: radial-gradient(circle at 50% 38%, #FFFFFF 0%, #E6F0FA 60%, #CFE3F7 100%); }
+/* R-ESUME 共通ローディング画面（どのページでも使う）。2026-11-17 から黄×黒（LP と同じ） */
+#rLoading { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; overflow: hidden; color: #111111;
+    background-color: #FFE600; background-image: radial-gradient(rgba(17,17,17,.14) 1.5px, transparent 1.5px); background-size: 16px 16px; }
 #rLoading[open] { display: grid; place-items: center; }
-#rLoading::backdrop { background: #E6F0FA; }
+#rLoading::backdrop { background: #FFE600; }
+#rLoading::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 10px; border-bottom: 2px solid #111;
+    background: linear-gradient(90deg, #111 0 14.28%, #E60012 14.28% 28.56%, #FF6D00 28.56% 42.84%, #FFE600 42.84% 57.12%, #76FF03 57.12% 71.4%, #00E5FF 71.4% 85.68%, #FFF 85.68% 100%); }
 html.is-loading { overflow: hidden; }
 .rl-box { display: grid; justify-items: center; gap: 14px; padding: 24px; text-align: center; }
 .rl-canvas { width: 220px; height: 220px; display: block; }
-.rl-logo { display: inline-flex; align-items: center; gap: 10px; }
-.rl-name { font-size: 22px; font-weight: 700; letter-spacing: .04em; font-family: "IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif; }
-.rl-text { font-family: "IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif; font-size: 16px; line-height: 1.8; }
-.rl-text .rl-en { display: block; font-size: 14px; color: #4A5C73; line-height: 1.5; }
+.rl-logo { display: inline-flex; align-items: center; gap: 10px; padding: 2px 18px; background: #111; border: 3px solid #fff; box-shadow: 5px 5px 0 #E60012; transform: skewX(-8deg); }
+.rl-name { display: inline-block; transform: skewX(8deg); color: #FFE600; font-size: 28px; font-weight: 400; letter-spacing: .06em; font-family: "Anton", "M PLUS 1p", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif; }
+.rl-text { font-family: "M PLUS 1p", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif; font-size: 16px; font-weight: 700; line-height: 1.8; color: #111; }
+.rl-text .rl-en { display: block; font-size: 14px; color: #333; line-height: 1.5; }
 .rl-dots { display: inline-flex; gap: 4px; margin-left: 2px; vertical-align: middle; }
-.rl-dots i { width: 6px; height: 6px; border-radius: 50%; background: #2160AD; animation: rl-bounce 1.2s ease-in-out infinite; }
-.rl-dots i:nth-child(2) { animation-delay: .15s; background: #1E88C8; }
-.rl-dots i:nth-child(3) { animation-delay: .3s; background: #FFB800; }
+.rl-dots i { width: 7px; height: 7px; border-radius: 0; background: #111; animation: rl-bounce 1.2s ease-in-out infinite; }
+.rl-dots i:nth-child(2) { animation-delay: .15s; background: #111; }
+.rl-dots i:nth-child(3) { animation-delay: .3s; background: #E60012; }
 @keyframes rl-bounce { 0%, 80%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-6px); opacity: 1; } }
 html.furigana-off #rLoading rt { display: none; }
 ruby rt { font-size: 0.5em; }
