@@ -1,132 +1,116 @@
-/* R-ESUME 性格分析（R-11a）：AIは使わず、点数の計算だけで「強み」と「合いそうな業種」を出す。
-   画面（会話）からは RPersonality.questions(mode) と RPersonality.score(answers, mode) だけ使う。 */
+/* R-ESUME 性格診断（STAGE 1・2026-11-17 作り直し）：AIは使わず、点数の計算だけで「強み」と「合いそうな業種」を出す。
+   12問・3択（はい＝2／どちらでもない＝1／いいえ＝0）。
+   画面からは RPersonality.questions()・score(answers)・reason(industryId, axes) を使う。
+   業種の id は前の版と同じ（ホーム・履歴書の会話で使っているため）。
+   文章の {漢字|よみ} は、画面でふりがなにする。 */
 (function (root) {
   'use strict';
 
-  // 7つの軸（強み）
+  // 7つの軸（強み）。power は「なぜ合うか」のひとことに使う
   var AXES = {
-    P: { ja: '人と話す・関わる', en: 'Talking with people' },
-    H: { ja: '体や手を動かす', en: 'Working with your body and hands' },
-    D: { ja: '細かく正確に進める', en: 'Being careful and accurate' },
-    T: { ja: 'チームで協力する', en: 'Working in a team' },
-    C: { ja: '新しいことに挑戦する', en: 'Taking on new challenges' },
-    S: { ja: 'コツコツ続ける・落ち着いている', en: 'Steady and calm' },
-    L: { ja: 'ことば・文化に興味がある', en: 'Interest in language and culture' }
+    P: { ja: '人と話す・関わる', power: '人と{話|はな}す{力|ちから}', type: 'おしゃべり', en: 'Talking with people' },
+    H: { ja: '体や手を動かす', power: '{体|からだ}を{動|うご}かす{力|ちから}', type: 'てきぱき', en: 'Working with your body and hands' },
+    D: { ja: '細かく正確に進める', power: '{細|こま}かく{正確|せいかく}に{進|すす}める{力|ちから}', type: 'きっちり', en: 'Being careful and accurate' },
+    T: { ja: 'チームで協力する', power: 'チームで{協力|きょうりょく}する{力|ちから}', type: 'なかま{思|おも}い', en: 'Working in a team' },
+    C: { ja: '新しいことに挑戦する', power: '{新|あたら}しいことに{挑戦|ちょうせん}する{力|ちから}', type: 'チャレンジ', en: 'Taking on new challenges' },
+    S: { ja: 'コツコツ続ける・落ち着いている', power: 'コツコツ{続|つづ}ける{力|ちから}', type: 'じっくり', en: 'Steady and calm' },
+    L: { ja: 'ことば・文化に興味がある', power: 'ことばを{使|つか}う{力|ちから}', type: 'ことば{好|ず}き', en: 'Interest in language and culture' }
+  };
+  // 強みの名前（ふりがなつき）
+  var AXIS_RUBY = {
+    P: '{人|ひと}と{話|はな}す・{関|かか}わる', H: '{体|からだ}や{手|て}を{動|うご}かす', D: '{細|こま}かく{正確|せいかく}に{進|すす}める',
+    T: 'チームで{協力|きょうりょく}する', C: '{新|あたら}しいことに{挑戦|ちょうせん}する', S: 'コツコツ{続|つづ}ける・{落|お}ち{着|つ}いている', L: 'ことば・{文化|ぶんか}に{興味|きょうみ}がある'
   };
   var AXIS_ORDER = ['P', 'H', 'D', 'T', 'C', 'S', 'L'];
 
-  // 質問16問。axes の先頭が主な軸（重み2）、2つ目があれば補助の軸（重み1）
+  // 質問12問。axes の先頭が主な軸（2倍）、2つ目があれば補助の軸（1倍）。key は音声ファイルの名前
   var QUESTIONS = [
-    { id: 1, axes: ['P'], ja: '初対面の人とも、すぐに話せる。', en: 'I can easily talk with people I have just met.' },
-    { id: 2, axes: ['P', 'T'], ja: '人の役に立つと、うれしい。', en: 'I feel happy when I am useful to others.' },
-    { id: 3, axes: ['H'], ja: 'じっと座っているより、体を動かすほうが好き。', en: 'I prefer moving my body to sitting still.' },
-    { id: 4, axes: ['H'], ja: 'ものを作ったり、直したりするのが好き。', en: 'I like making or fixing things.' },
-    { id: 5, axes: ['D'], ja: '数字や文字の間違いに、よく気がつく。', en: 'I often notice mistakes in numbers or letters.' },
-    { id: 6, axes: ['D', 'S'], ja: '決められた手順どおりに、正確にやるのが得意。', en: 'I am good at following set steps accurately.' },
-    { id: 7, axes: ['T'], ja: 'グループで協力して、目標をめざすのが好き。', en: 'I like working with a group toward a goal.' },
-    { id: 8, axes: ['T', 'P'], ja: '人が困っていたら、自分から声をかける。', en: 'When someone is in trouble, I speak to them first.' },
-    { id: 9, axes: ['C'], ja: '新しいことに挑戦するのが好き。', en: 'I like trying new things.' },
-    { id: 10, axes: ['C', 'P'], ja: 'いろいろな人に会う、変化のある仕事がいい。', en: 'I want a job with change, where I meet many people.' },
-    { id: 11, axes: ['S'], ja: '毎日同じことを、コツコツ続けるのが苦にならない。', en: 'I do not mind doing the same thing steadily every day.' },
-    { id: 12, axes: ['S', 'D'], ja: '落ち着いた環境で、集中して働きたい。', en: 'I want to work with focus in a calm place.' },
-    { id: 13, axes: ['L'], ja: '日本語や英語など、ことばを使うのが好き。', en: 'I like using languages such as Japanese and English.' },
-    { id: 14, axes: ['L'], ja: '外国と日本の文化の違いを、おもしろいと思う。', en: 'I find the differences between countries and Japan interesting.' },
-    { id: 15, axes: ['S', 'P'], ja: '忙しいときも、あわてずに対応できる。', en: 'I can stay calm and respond even when busy.' },
-    { id: 16, axes: ['C'], ja: '目標（数字など）があると、やる気が出る。', en: 'I get motivated when there is a target (such as a number).' }
-    ,{ id: 17, axes: [], pair: [{ axis: 'P', ja: 'お客さんや人と話す仕事', en: 'A job where I talk with customers and people' }, { axis: 'D', ja: 'パソコンや書類を、正確に進める仕事', en: 'A job where I handle computers and papers accurately' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
-    ,{ id: 18, axes: [], pair: [{ axis: 'H', ja: '体を動かして働く仕事', en: 'A job where I move my body' }, { axis: 'L', ja: 'ことばを使って、人を助ける仕事', en: 'A job where I help people with language' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
-    ,{ id: 19, axes: [], pair: [{ axis: 'T', ja: 'みんなで協力して進める仕事', en: 'A job where we work together' }, { axis: 'C', ja: '自分で新しい方法を試す仕事', en: 'A job where I try new ways myself' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
-    ,{ id: 20, axes: [], pair: [{ axis: 'S', ja: '毎日同じことを、落ち着いて続ける仕事', en: 'A job where I calmly repeat the same work' }, { axis: 'P', ja: '毎日いろいろな人に会う仕事', en: 'A job where I meet different people every day' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
-    ,{ id: 21, axes: [], pair: [{ axis: 'D', ja: '細かいところまで、確認する仕事', en: 'A job where I check small details' }, { axis: 'H', ja: 'ものを作ったり、運んだりする仕事', en: 'A job where I make or carry things' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
-    ,{ id: 22, axes: [], pair: [{ axis: 'C', ja: '目標をめざして、挑戦する仕事', en: 'A job where I aim for goals and take challenges' }, { axis: 'S', ja: '安定して、ゆっくり続けられる仕事', en: 'A stable job I can continue at my own pace' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
-    ,{ id: 23, axes: [], pair: [{ axis: 'L', ja: '外国の人や文化に関わる仕事', en: 'A job related to foreign people and cultures' }, { axis: 'T', ja: 'チームの仲間と、助け合う仕事', en: 'A job where teammates help each other' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
-    ,{ id: 24, axes: [], pair: [{ axis: 'P', ja: '人を笑顔にする仕事', en: 'A job that makes people smile' }, { axis: 'H', ja: '手を動かして、形に残る仕事', en: 'A job where my hands make something that remains' }], ja: 'どちらが、あなたに近い？', en: 'Which is closer to you?' }
+    { id: 1, key: 'p_q01', axes: ['P'], ja: '{初対面|しょたいめん}の{人|ひと}とも、すぐに{話|はな}せる？' },
+    { id: 2, key: 'p_q02', axes: ['P', 'T'], ja: '{人|ひと}の{役|やく}に{立|た}つと、うれしい？' },
+    { id: 3, key: 'p_q03', axes: ['H'], ja: 'じっと{座|すわ}っているより、{体|からだ}を{動|うご}かすほうが{好|す}き？' },
+    { id: 4, key: 'p_q04', axes: ['H'], ja: 'ものを{作|つく}ったり、{運|はこ}んだりするのが{好|す}き？' },
+    { id: 5, key: 'p_q05', axes: ['D'], ja: '{数字|すうじ}や{文字|もじ}のまちがいに、よく{気|き}がつく？' },
+    { id: 6, key: 'p_q06', axes: ['D', 'S'], ja: '{決|き}められた{手順|てじゅん}どおりに、{正確|せいかく}にやるのが{得意|とくい}？' },
+    { id: 7, key: 'p_q07', axes: ['T'], ja: 'みんなで{協力|きょうりょく}して、{目標|もくひょう}をめざすのが{好|す}き？' },
+    { id: 8, key: 'p_q08', axes: ['C'], ja: '{新|あたら}しいことに{挑戦|ちょうせん}するのが{好|す}き？' },
+    { id: 9, key: 'p_q09', axes: ['C'], ja: '{目標|もくひょう}（{数字|すうじ}など）があると、やる{気|き}が{出|で}る？' },
+    { id: 10, key: 'p_q10', axes: ['S'], ja: '{毎日|まいにち}{同|おな}じことを、コツコツ{続|つづ}けるのが{苦|く}にならない？' },
+    { id: 11, key: 'p_q11', axes: ['L'], ja: '{日本語|にほんご}や{英語|えいご}など、ことばを{使|つか}うのが{好|す}き？' },
+    { id: 12, key: 'p_q12', axes: ['L', 'P'], ja: '{外国|がいこく}の{人|ひと}や{文化|ぶんか}と{関|かか}わるのが{好|す}き？' }
+  ];
+  var CHOICES = [
+    { v: 2, ja: 'はい' },
+    { v: 1, ja: 'どちらでもない' },
+    { v: 0, ja: 'いいえ' }
   ];
 
-  // 短い質問（業種が決まっている人用。強みを知るため）
-  var SHORT_IDS = [1, 4, 5, 7, 9, 11, 13, 15];
-
-  // 業種ごとの重み（0〜3）。順番は同点のときの優先順
+  // 業種。w＝軸ごとの重み（0〜3）。順番は同点のときの優先順。ex＝留学生がイメージしやすい職場の例
   var INDUSTRIES = [
-    { id: 'food', ja: '飲食・接客', en: 'Food service', w: { P: 3, H: 2, D: 0, T: 2, C: 1, S: 1, L: 1 } },
-    { id: 'retail', ja: '小売・販売', en: 'Retail and sales clerk', w: { P: 3, H: 1, D: 1, T: 2, C: 1, S: 1, L: 1 } },
-    { id: 'hotel', ja: 'ホテル・宿泊', en: 'Hotel and lodging', w: { P: 3, H: 1, D: 2, T: 2, C: 0, S: 1, L: 2 } },
-    { id: 'care', ja: '介護', en: 'Nursing care', w: { P: 2, H: 2, D: 1, T: 3, C: 0, S: 3, L: 0 } },
-    { id: 'factory', ja: '製造・工場', en: 'Manufacturing and factory', w: { P: 0, H: 3, D: 3, T: 1, C: 0, S: 3, L: 0 } },
-    { id: 'logistics', ja: '物流・倉庫', en: 'Logistics and warehouse', w: { P: 0, H: 3, D: 2, T: 2, C: 0, S: 2, L: 0 } },
-    { id: 'construction', ja: '建設', en: 'Construction', w: { P: 0, H: 3, D: 1, T: 3, C: 1, S: 2, L: 0 } },
-    { id: 'office', ja: 'IT・事務', en: 'IT and office work', w: { P: 0, H: 0, D: 3, T: 1, C: 2, S: 2, L: 1 } },
-    { id: 'sales', ja: '営業', en: 'Sales', w: { P: 3, H: 0, D: 0, T: 1, C: 3, S: 0, L: 1 } },
-    { id: 'language', ja: '通訳・翻訳・語学', en: 'Interpreting, translation and language', w: { P: 2, H: 0, D: 2, T: 0, C: 1, S: 0, L: 3 } }
+    { id: 'food', ja: '{飲食|いんしょく}・{接客|せっきゃく}', en: 'Food service', ex: '{居酒屋|いざかや}、レストラン、カフェ、ファストフード、{回転|かいてん}ずし', w: { P: 3, H: 2, D: 0, T: 2, C: 1, S: 1, L: 1 } },
+    { id: 'retail', ja: '{小売|こうり}・{販売|はんばい}', en: 'Retail and sales clerk', ex: 'コンビニ、スーパー、ドラッグストア、{携帯|けいたい}ショップ、{家電量販店|かでんりょうはんてん}、{免税店|めんぜいてん}', w: { P: 3, H: 1, D: 1, T: 2, C: 1, S: 1, L: 1 } },
+    { id: 'hotel', ja: 'ホテル・{宿泊|しゅくはく}', en: 'Hotel and lodging', ex: 'ホテルのフロント、{旅館|りょかん}、ベッドメイキング、レストランの{配膳|はいぜん}', w: { P: 3, H: 1, D: 2, T: 2, C: 0, S: 1, L: 2 } },
+    { id: 'care', ja: '{介護|かいご}', en: 'Nursing care', ex: '{介護施設|かいごしせつ}（{老人|ろうじん}ホーム）、デイサービス、グループホーム', w: { P: 2, H: 2, D: 1, T: 3, C: 0, S: 3, L: 0 } },
+    { id: 'factory', ja: '{製造|せいぞう}・{工場|こうじょう}', en: 'Manufacturing and factory', ex: '{食品工場|しょくひんこうじょう}（お{弁当|べんとう}・パン）、{自動車部品|じどうしゃぶひん}の{工場|こうじょう}、{電子部品|でんしぶひん}の{工場|こうじょう}', w: { P: 0, H: 3, D: 3, T: 1, C: 0, S: 3, L: 0 } },
+    { id: 'logistics', ja: '{物流|ぶつりゅう}・{倉庫|そうこ}', en: 'Logistics and warehouse', ex: '{倉庫|そうこ}の{仕分|しわ}け・ピッキング、{宅配|たくはい}の{配送|はいそう}センター、ネット{通販|つうはん}の{倉庫|そうこ}', w: { P: 0, H: 3, D: 2, T: 2, C: 0, S: 2, L: 0 } },
+    { id: 'construction', ja: '{建設|けんせつ}', en: 'Construction', ex: '{建設現場|けんせつげんば}、{内装工事|ないそうこうじ}、{塗装|とそう}、{足場|あしば}の{組|く}み{立|た}て', w: { P: 0, H: 3, D: 1, T: 3, C: 1, S: 2, L: 0 } },
+    { id: 'office', ja: 'IT・{事務|じむ}', en: 'IT and office work', ex: '{会社|かいしゃ}の{事務|じむ}、データ{入力|にゅうりょく}、プログラマー、ITサポート', w: { P: 0, H: 0, D: 3, T: 1, C: 2, S: 2, L: 1 } },
+    { id: 'sales', ja: '{営業|えいぎょう}', en: 'Sales', ex: '{不動産会社|ふどうさんがいしゃ}、{人材会社|じんざいがいしゃ}、インターネット{回線|かいせん}の{営業|えいぎょう}', w: { P: 3, H: 0, D: 0, T: 1, C: 3, S: 0, L: 1 } },
+    { id: 'language', ja: '{通訳|つうやく}・{翻訳|ほんやく}・{語学|ごがく}', en: 'Interpreting, translation and language', ex: '{通訳|つうやく}・{翻訳|ほんやく}の{会社|かいしゃ}、{観光案内所|かんこうあんないじょ}、{空港|くうこう}の{案内|あんない}、{日本語学校|にほんごがっこう}の{事務|じむ}', w: { P: 2, H: 0, D: 2, T: 0, C: 1, S: 0, L: 3 } }
   ];
 
-  function questions(mode) {
-    if (mode !== 'short') return QUESTIONS.slice();
-    return QUESTIONS.filter(function (q) { return SHORT_IDS.indexOf(q.id) >= 0; });
-  }
+  function questions() { return QUESTIONS.slice(); }
+  function indById(id) { for (var i = 0; i < INDUSTRIES.length; i++) if (INDUSTRIES[i].id === id) return INDUSTRIES[i]; return null; }
 
-  // answers: { 質問の番号: 1〜5（5＝そう思う）、2択の質問は選んだ軸のキー }。答えていない質問は計算に入れない。
-  // 「全部5」のような答え方のクセを消すため、自分の平均からの差で強みを決める。
-  // 戻り値：axes＝軸ごとの 0〜100（50が自分の平均）、topAxes／topIndustries＝上位3つ、
-  //         flat＝true のときは差が出なかった（おすすめを出さない）
-  function score(answers, mode) {
+  // answers: { 質問の番号: 0〜2（2＝はい） }。答えていない質問は計算に入れない。
+  // 「全部はい」のような答え方のクセを消すため、自分の平均からの差で強みを決める。
+  // 戻り値：axes＝軸ごとの 5〜100（50が自分の平均）、topAxes／topIndustries＝上位3つ
+  function score(answers) {
     answers = answers || {};
-    var qs = questions(mode);
-    var sum = {}, min = {}, max = {}, pick = {}, seen = {};
-    qs.forEach(function (q) {
-      if (q.pair) {
-        var c = answers[q.id];
-        if (c !== q.pair[0].axis && c !== q.pair[1].axis) return;
-        q.pair.forEach(function (o) { seen[o.axis] = (seen[o.axis] || 0) + 1; });
-        pick[c] = (pick[c] || 0) + 1;
-        return;
-      }
-      var a = Number(answers[q.id]);
-      if (!(a >= 1 && a <= 5)) return;
+    var sum = {}, max = {};
+    QUESTIONS.forEach(function (q) {
+      var a = answers[q.id];
+      if (a === undefined || a === null || a === '') return;
+      a = Number(a);
+      if (!(a >= 0 && a <= 2)) return;
       q.axes.forEach(function (k, i) {
         var w = i === 0 ? 2 : 1;
         sum[k] = (sum[k] || 0) + a * w;
-        min[k] = (min[k] || 0) + 1 * w;
-        max[k] = (max[k] || 0) + 5 * w;
+        max[k] = (max[k] || 0) + 2 * w;
       });
     });
-    var L = {}, F = {}, keys = [];
-    AXIS_ORDER.forEach(function (k) {
-      if (max[k]) L[k] = (sum[k] - min[k]) / (max[k] - min[k]);
-      if (seen[k]) F[k] = (pick[k] || 0) / seen[k];
-      if (k in L || k in F) keys.push(k);
-    });
-    function mean(o) { var n = 0, t = 0; Object.keys(o).forEach(function (k) { t += o[k]; n++; }); return n ? t / n : 0; }
-    var mL = mean(L), mF = mean(F), dev = {}, lo = 1, hi = -1;
-    keys.forEach(function (k) {
-      var parts = [];
-      if (k in L) parts.push(L[k] - mL);
-      if (k in F) parts.push(F[k] - mF);
-      dev[k] = parts.reduce(function (x, y) { return x + y; }, 0) / parts.length;
-      lo = Math.min(lo, dev[k]); hi = Math.max(hi, dev[k]);
-    });
-    function pc(v) { return Math.max(5, Math.min(100, Math.round(50 + v * 100))); }
-    var axes = {};
-    keys.forEach(function (k) { axes[k] = pc(dev[k]); });
-    if (!keys.length) {   // 答えがまったく無いときだけ（差が小さくても、かならず結果を出す）
-      keys.forEach(function (k) { axes[k] = 50; });
-      return { axes: axes, topAxes: [], industries: [], topIndustries: [], flat: true };
-    }
+    var Lv = {}, keys = [];
+    AXIS_ORDER.forEach(function (k) { if (max[k]) { Lv[k] = sum[k] / max[k]; keys.push(k); } });
+    if (!keys.length) return { axes: {}, topAxes: [], industries: [], topIndustries: [] };
+    var mean = keys.reduce(function (t, k) { return t + Lv[k]; }, 0) / keys.length;
+    var dev = {}, axes = {};
+    keys.forEach(function (k) { dev[k] = Lv[k] - mean; axes[k] = Math.max(5, Math.min(100, Math.round(50 + dev[k] * 100))); });
     var topAxes = keys
-      .map(function (k) { return { key: k, pct: axes[k], d: dev[k], i: AXIS_ORDER.indexOf(k) }; })
+      .map(function (k) { return { key: k, d: dev[k], i: AXIS_ORDER.indexOf(k) }; })
       .sort(function (a, b) { return b.d - a.d || a.i - b.i; })
       .slice(0, 3)
-      .map(function (o) { return { key: o.key, pct: o.pct, ja: AXES[o.key].ja, en: AXES[o.key].en }; });
+      .map(function (o) { return { key: o.key, pct: axes[o.key] }; });
     var industries = INDUSTRIES.map(function (ind, i) {
       var t = 0, n = 0;
       keys.forEach(function (k) { t += ind.w[k] * dev[k]; n += ind.w[k] * ind.w[k]; });
-      return { id: ind.id, ja: ind.ja, en: ind.en, v: n ? t / Math.sqrt(n) : 0, i: i };
+      return { id: ind.id, v: n ? t / Math.sqrt(n) : 0, i: i };
     }).sort(function (a, b) { return b.v - a.v || a.i - b.i; })
-      .map(function (o) { return { id: o.id, ja: o.ja, en: o.en, pct: pc(o.v) }; });
-    return { axes: axes, topAxes: topAxes, industries: industries, topIndustries: industries.slice(0, 3), flat: false };
+      .map(function (o) { return { id: o.id, pct: Math.max(5, Math.min(100, Math.round(50 + o.v * 100))) }; });
+    return { axes: axes, topAxes: topAxes, industries: industries, topIndustries: industries.slice(0, 3) };
   }
 
-  var api = { AXES: AXES, AXIS_ORDER: AXIS_ORDER, QUESTIONS: QUESTIONS, SHORT_IDS: SHORT_IDS, INDUSTRIES: INDUSTRIES, questions: questions, score: score };
+  // 「なぜ合うか」のひとこと：その業種で重み3（なければ2）の強みのうち、本人の点数が高い順に2つ
+  function reason(industryId, axes) {
+    var ind = indById(industryId); if (!ind) return '';
+    axes = axes || {};
+    var need = AXIS_ORDER.filter(function (k) { return ind.w[k] === 3; });
+    if (!need.length) need = AXIS_ORDER.filter(function (k) { return ind.w[k] === 2; });
+    need.sort(function (a, b) { return (axes[b] || 0) - (axes[a] || 0) || AXIS_ORDER.indexOf(a) - AXIS_ORDER.indexOf(b); });
+    var p = need.slice(0, 2).map(function (k) { return AXES[k].power; });
+    return (p.length === 2 ? p[0] + 'と、' + p[1] : p[0]) + 'が{生|い}かせます。';
+  }
+
+  var api = { AXES: AXES, AXIS_RUBY: AXIS_RUBY, AXIS_ORDER: AXIS_ORDER, QUESTIONS: QUESTIONS, CHOICES: CHOICES, SHORT_IDS: [], INDUSTRIES: INDUSTRIES,
+              questions: questions, score: score, reason: reason, indById: indById, VERSION: 2 };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.RPersonality = api;
 })(typeof window !== 'undefined' ? window : this);

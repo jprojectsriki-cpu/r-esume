@@ -7,6 +7,7 @@
     var s = A.load();
     var rid = (location.hash || '').replace('#', '');
     if (!s || !s.token || !A.ready()) { location.replace('login.html'); return; }
+    if (rid === 'persona') { location.replace('persona.html'); return; }   // 性格診断は persona.html に移った（2026-11-17）
     if (!rid) { location.replace('resume.html'); return; }
 
     function $(id) { return document.getElementById(id); }
@@ -204,7 +205,7 @@
         opts: function () { return [
             { k: 'go', ja: '{性格診断|せいかくしんだん}をする', en: 'Take the diagnosis', sj: '{終|お}わったら、ここに{戻|もど}れます', se: 'You can come back here afterwards' },
             { k: 'pick', ja: '{自分|じぶん}で{業種|ぎょうしゅ}を{選|えら}ぶ', en: 'Choose an industry myself' }]; },
-        go: function (k) { if (k === 'go') return { nav: 'chat.html#persona' }; tmp.afterInd = 'name'; return 'industry'; } };
+        go: function (k) { if (k === 'go') return { nav: 'persona.html?back=' + encodeURIComponent(rid) }; tmp.afterInd = 'name'; return 'industry'; } };
     // 診断の結果と選んだ業種が合わないときの、ひとこと
     N.advice = { stage: 1, kind: 'choice',
         g: function () {

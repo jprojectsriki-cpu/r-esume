@@ -1,0 +1,70 @@
+/* R-ESUME STAGE 1 性格診断（persona.html）。app-yellow.css の後に読み込む */
+.pz-main { place-items: start center; padding-top: 24px; }
+.pz { position: relative; z-index: 1; width: min(560px, 100%); display: grid; gap: 18px; }
+
+/* 上の進み具合 */
+.pz-hud { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px 12px; padding: 10px 14px; background: var(--k); color: #fff; border: 3px solid var(--k); box-shadow: 5px 5px 0 var(--red); }
+.pz-stage { font-family: var(--font-en); font-size: 18px; letter-spacing: .06em; color: var(--y); }
+.pz-count { justify-self: end; font-family: var(--font-en); font-size: 18px; letter-spacing: .06em; }
+.pz-bar { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; }
+.pz-bar i { height: 10px; background: #444; transform: skewX(-12deg); }
+.pz-bar i.done { background: var(--y); }
+.pz-bar i.cur { background: var(--red); }
+
+/* レジュメルと吹き出し */
+.pz-talk { display: grid; justify-items: center; gap: 0; }
+.pz-cat { display: block; width: 108px; height: auto; image-rendering: pixelated; filter: drop-shadow(4px 4px 0 rgba(17,17,17,.35)); animation: pz-bob 1.6s steps(2) infinite; }
+@keyframes pz-bob { 50% { transform: translateY(-4px); } }
+.pz-bubble { position: relative; width: 100%; margin-top: 14px; padding: 18px 18px 16px; background: #fff; color: var(--k); border: 4px solid var(--k); box-shadow: 6px 6px 0 var(--k); display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+.pz-bubble::before { content: ""; position: absolute; top: -16px; left: calc(50% - 12px); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 16px solid var(--k); }
+.pz-bubble::after { content: ""; position: absolute; top: -9px; left: calc(50% - 7px); width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 10px solid #fff; }
+.pz-say { margin: 0; font-size: 19px; line-height: 2; font-weight: 800; }
+.pz-voice { width: 48px; height: 48px; border: 3px solid var(--k); background: var(--y); font-size: 20px; cursor: pointer; box-shadow: 3px 3px 0 var(--k); }
+.pz-voice[hidden] { display: none; }
+.pz-voice.is-on { background: var(--red); }
+
+/* 3択 */
+.pz-choices { display: grid; gap: 14px; }
+.pz-choice { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 60px; padding: 8px 18px; background: #fff; color: var(--k); border: 4px solid var(--k); box-shadow: 6px 6px 0 var(--k); font: inherit; font-size: 19px; font-weight: 900; text-align: left; cursor: pointer; transform: skewX(-6deg); transition: transform .1s, box-shadow .1s, background .1s; }
+.pz-choice > * { transform: skewX(6deg); }
+.pz-choice:hover { background: var(--y-soft); }
+.pz-choice:active { transform: skewX(-6deg) translate(3px, 3px); box-shadow: 3px 3px 0 var(--k); }
+.pz-choice:focus-visible { outline: 3px solid var(--k); outline-offset: 4px; }
+.pz-choice.is-picked { background: var(--y); }
+.pz-mark { display: inline-grid; place-items: center; width: 36px; height: 36px; background: var(--k); color: var(--y); font-size: 22px; line-height: 1; flex: none; }
+.pz-choice.c0 .pz-mark { color: #fff; background: var(--red); }
+.pz-back { justify-self: start; min-height: 44px; margin-top: 4px; padding: 0 6px; border: 0; background: none; color: var(--k); font: inherit; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+
+/* 結果 */
+.pz-clear { display: grid; justify-items: center; gap: 2px; padding: 14px 12px; background: var(--k); color: var(--y); border: 4px solid var(--k); box-shadow: 6px 6px 0 var(--red); transform: skewX(-6deg); text-align: center; }
+.pz-clear > * { transform: skewX(6deg); }
+.pz-clear-en { font-family: var(--font-en); font-size: 30px; letter-spacing: .08em; line-height: 1.2; }
+.pz-clear-ja { color: #fff; font-weight: 900; font-size: 18px; }
+.pz-card { margin-top: 18px; padding: 16px 18px; background: #fff; color: var(--k); border: 4px solid var(--k); box-shadow: 6px 6px 0 var(--k); }
+.pz-h { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-weight: 900; font-size: 18px; }
+.pz-h-en { font-family: var(--font-en); font-weight: 400; font-size: 15px; letter-spacing: .06em; padding: 0 8px; background: var(--k); color: var(--y); }
+.pz-type { text-align: center; }
+.pz-type .pz-h { justify-content: center; }
+.pz-type-name { margin: 0; display: inline-block; padding: 2px 16px; background: var(--k); color: var(--y); font-size: 28px; font-weight: 900; line-height: 1.8; }
+.pz-type-name rt { color: var(--k); }
+.pz-str { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.pz-str li { display: grid; gap: 4px; }
+.pz-str-name { font-weight: 800; line-height: 2; }
+.pz-meter { display: block; height: 14px; background: #fff; border: 3px solid var(--k); }
+.pz-meter i { display: block; height: 100%; background: var(--k); }
+.pz-str li:first-child .pz-meter i { background: var(--red); }
+.pz-jobs { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.pz-job { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: start; padding-bottom: 14px; border-bottom: 3px solid var(--k); }
+.pz-job:last-child { padding-bottom: 0; border-bottom: 0; }
+.pz-rank { display: grid; place-items: center; height: 44px; background: var(--k); color: var(--y); font-family: var(--font-en); font-size: 20px; letter-spacing: .04em; transform: skewX(-8deg); }
+.pz-job:first-child .pz-rank { background: var(--red); color: #fff; }
+.pz-job-name { margin: 0; font-size: 21px; font-weight: 900; line-height: 1.9; }
+.pz-job-ex { margin: 4px 0 0; line-height: 2; }
+.pz-tag { display: inline-block; margin-right: 8px; padding: 0 8px; background: var(--y); border: 2px solid var(--k); font-size: 14px; font-weight: 900; line-height: 1.6; }
+.pz-job-why { margin: 6px 0 0; padding: 6px 10px; background: var(--y-soft); border-left: 6px solid var(--k); font-weight: 800; line-height: 2; }
+.pz-note { margin: 18px 0 0; padding: 12px 14px; background: var(--k); color: #fff; border-left: 8px solid var(--y); line-height: 2; font-weight: 700; }
+.pz-acts { margin-top: 22px; display: grid; gap: 16px; }
+.pz-acts .btn { text-decoration: none; }
+
+@media (prefers-reduced-motion: reduce) { .pz-cat { animation: none; } .pz-choice { transition: none; } }
+@media (max-width: 420px) { .pz-say { font-size: 18px; } .pz-choice { font-size: 18px; } .pz-job { grid-template-columns: 48px 1fr; } }
