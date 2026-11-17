@@ -1,5 +1,5 @@
 /* R-ESUME 性格診断（STAGE 1・2026-11-17 作り直し）：AIは使わず、点数の計算だけで「強み」と「合いそうな業種」を出す。
-   12問・3択（はい＝2／どちらでもない＝1／いいえ＝0）。
+   14問・2択（「AとB、どっちが好き？」）。全部同じ答え方をしても差が出るように、強み同士をくらべる形にした（3版）。
    画面からは RPersonality.questions()・score(answers)・reason(industryId, axes) を使う。
    業種の id は前の版と同じ（ホーム・履歴書の会話で使っているため）。
    文章の {漢字|よみ} は、画面でふりがなにする。 */
@@ -23,26 +23,25 @@
   };
   var AXIS_ORDER = ['P', 'H', 'D', 'T', 'C', 'S', 'L'];
 
-  // 質問12問。axes の先頭が主な軸（2倍）、2つ目があれば補助の軸（1倍）。key は音声ファイルの名前
-  var QUESTIONS = [
-    { id: 1, key: 'p_q01', axes: ['P'], ja: '{初対面|しょたいめん}の{人|ひと}とも、すぐに{話|はな}せる？' },
-    { id: 2, key: 'p_q02', axes: ['P', 'T'], ja: '{人|ひと}の{役|やく}に{立|た}つと、うれしい？' },
-    { id: 3, key: 'p_q03', axes: ['H'], ja: 'じっと{座|すわ}っているより、{体|からだ}を{動|うご}かすほうが{好|す}き？' },
-    { id: 4, key: 'p_q04', axes: ['H'], ja: 'ものを{作|つく}ったり、{運|はこ}んだりするのが{好|す}き？' },
-    { id: 5, key: 'p_q05', axes: ['D'], ja: '{数字|すうじ}や{文字|もじ}のまちがいに、よく{気|き}がつく？' },
-    { id: 6, key: 'p_q06', axes: ['D', 'S'], ja: '{決|き}められた{手順|てじゅん}どおりに、{正確|せいかく}にやるのが{得意|とくい}？' },
-    { id: 7, key: 'p_q07', axes: ['T'], ja: 'みんなで{協力|きょうりょく}して、{目標|もくひょう}をめざすのが{好|す}き？' },
-    { id: 8, key: 'p_q08', axes: ['C'], ja: '{新|あたら}しいことに{挑戦|ちょうせん}するのが{好|す}き？' },
-    { id: 9, key: 'p_q09', axes: ['C'], ja: '{目標|もくひょう}（{数字|すうじ}など）があると、やる{気|き}が{出|で}る？' },
-    { id: 10, key: 'p_q10', axes: ['S'], ja: '{毎日|まいにち}{同|おな}じことを、コツコツ{続|つづ}けるのが{苦|く}にならない？' },
-    { id: 11, key: 'p_q11', axes: ['L'], ja: '{日本語|にほんご}や{英語|えいご}など、ことばを{使|つか}うのが{好|す}き？' },
-    { id: 12, key: 'p_q12', axes: ['L', 'P'], ja: '{外国|がいこく}の{人|ひと}や{文化|ぶんか}と{関|かか}わるのが{好|す}き？' }
+  // 質問14問（2択「どっちが好き？」）。7つの強みが、それぞれ4回ずつ出る（P-H, H-D, D-T, T-C, C-S, S-L, L-P, P-D, H-T, D-C, T-S, C-L, S-P, L-H）。
+  // 画面では A・B の左右（上下）をランダムに入れかえる
+  var PAIRS = [
+    { id: 1, a: { axis: 'P', ja: 'お{客|きゃく}さんと{話|はな}す{仕事|しごと}' }, b: { axis: 'H', ja: '{体|からだ}を{動|うご}かす{仕事|しごと}' } },
+    { id: 2, a: { axis: 'H', ja: '{物|もの}を{運|はこ}んだり{作|つく}ったりする' }, b: { axis: 'D', ja: '{数字|すうじ}や{書類|しょるい}を、まちがえずにチェックする' } },
+    { id: 3, a: { axis: 'D', ja: '{一人|ひとり}で{正確|せいかく}に{作業|さぎょう}を{進|すす}める' }, b: { axis: 'T', ja: 'みんなで{声|こえ}をかけ{合|あ}って{進|すす}める' } },
+    { id: 4, a: { axis: 'T', ja: 'チームで{決|き}まったやり{方|かた}を{守|まも}る' }, b: { axis: 'C', ja: '{自分|じぶん}で{新|あたら}しいやり{方|かた}を{考|かんが}える' } },
+    { id: 5, a: { axis: 'C', ja: '{毎日|まいにち}ちがうことが{起|お}きる{仕事|しごと}' }, b: { axis: 'S', ja: '{毎日|まいにち}{同|おな}じことを{落|お}ち{着|つ}いてする{仕事|しごと}' } },
+    { id: 6, a: { axis: 'S', ja: '{静|しず}かな{場所|ばしょ}でコツコツ{働|はたら}く' }, b: { axis: 'L', ja: '{外国|がいこく}の{人|ひと}と、いろいろなことばで{話|はな}す' } },
+    { id: 7, a: { axis: 'L', ja: '{日本語|にほんご}や{英語|えいご}を{使|つか}って、{通訳|つうやく}や{案内|あんない}をする' }, b: { axis: 'P', ja: '{初|はじ}めての{人|ひと}とも、すぐ{仲|なか}よくなる' } },
+    { id: 8, a: { axis: 'P', ja: 'たくさんの{人|ひと}と{話|はな}す' }, b: { axis: 'D', ja: 'パソコンで{正確|せいかく}に{入力|にゅうりょく}する' } },
+    { id: 9, a: { axis: 'H', ja: '{自分|じぶん}の{手|て}で{物|もの}を{作|つく}り{上|あ}げる' }, b: { axis: 'T', ja: '{仲間|なかま}を{助|たす}けて、チームで{目標|もくひょう}をめざす' } },
+    { id: 10, a: { axis: 'D', ja: 'マニュアルどおりに{正確|せいかく}にやる' }, b: { axis: 'C', ja: '{目標|もくひょう}の{数字|すうじ}をめざしてチャレンジする' } },
+    { id: 11, a: { axis: 'T', ja: 'みんなで{協力|きょうりょく}して{働|はたら}く' }, b: { axis: 'S', ja: '{一人|ひとり}で{黙々|もくもく}と{続|つづ}ける' } },
+    { id: 12, a: { axis: 'C', ja: '{新|あたら}しいことに{挑戦|ちょうせん}する' }, b: { axis: 'L', ja: '{外国|がいこく}の{文化|ぶんか}を{学|まな}ぶ' } },
+    { id: 13, a: { axis: 'S', ja: '{落|お}ち{着|つ}いて{同|おな}じ{作業|さぎょう}を{続|つづ}ける' }, b: { axis: 'P', ja: 'いろいろな{人|ひと}と{話|はな}す' } },
+    { id: 14, a: { axis: 'L', ja: 'ことばを{使|つか}う{仕事|しごと}' }, b: { axis: 'H', ja: '{体|からだ}を{使|つか}う{仕事|しごと}' } }
   ];
-  var CHOICES = [
-    { v: 2, ja: 'はい' },
-    { v: 1, ja: 'どちらでもない' },
-    { v: 0, ja: 'いいえ' }
-  ];
+  var QUESTIONS = PAIRS;   // 前の版の名前でも使えるように
 
   // 業種。w＝軸ごとの重み（0〜3）。順番は同点のときの優先順。ex＝留学生がイメージしやすい職場の例
   var INDUSTRIES = [
@@ -58,44 +57,48 @@
     { id: 'language', ja: '{通訳|つうやく}・{翻訳|ほんやく}・{語学|ごがく}', en: 'Interpreting, translation and language', ex: '{通訳|つうやく}・{翻訳|ほんやく}の{会社|かいしゃ}、{観光案内所|かんこうあんないじょ}、{空港|くうこう}の{案内|あんない}、{日本語学校|にほんごがっこう}の{事務|じむ}', w: { P: 2, H: 0, D: 2, T: 0, C: 1, S: 0, L: 3 } }
   ];
 
-  function questions() { return QUESTIONS.slice(); }
+  function questions() { return PAIRS.slice(); }
   function indById(id) { for (var i = 0; i < INDUSTRIES.length; i++) if (INDUSTRIES[i].id === id) return INDUSTRIES[i]; return null; }
 
-  // answers: { 質問の番号: 0〜2（2＝はい） }。答えていない質問は計算に入れない。
-  // 「全部はい」のような答え方のクセを消すため、自分の平均からの差で強みを決める。
-  // 戻り値：axes＝軸ごとの 5〜100（50が自分の平均）、topAxes／topIndustries＝上位3つ
+  // answers: { 質問の番号: 選んだ強みの記号（'P' など） }。答えていない質問は数えない。
+  // 強み＝選ばれた回数（0〜4）。2択なので、全部同じ答え方をしても、かならず差が出る。
+  // 同じ回数の強みは、その強み同士を直接くらべた質問の答えで決め、それでも同じなら表の順。
+  // 戻り値：axes＝強みごとの 0〜100（選ばれた回数×25）、topAxes／topIndustries＝上位3つ
   function score(answers) {
     answers = answers || {};
-    var sum = {}, max = {};
-    QUESTIONS.forEach(function (q) {
-      var a = answers[q.id];
-      if (a === undefined || a === null || a === '') return;
-      a = Number(a);
-      if (!(a >= 0 && a <= 2)) return;
-      q.axes.forEach(function (k, i) {
-        var w = i === 0 ? 2 : 1;
-        sum[k] = (sum[k] || 0) + a * w;
-        max[k] = (max[k] || 0) + 2 * w;
-      });
+    var cnt = {}, seen = {}, win = {};   // win['P>H'] = true
+    AXIS_ORDER.forEach(function (k) { cnt[k] = 0; seen[k] = 0; });
+    var done = 0;
+    PAIRS.forEach(function (q) {
+      var c = answers[q.id];
+      if (c !== q.a.axis && c !== q.b.axis) return;
+      done++;
+      seen[q.a.axis]++; seen[q.b.axis]++;
+      cnt[c]++;
+      var other = c === q.a.axis ? q.b.axis : q.a.axis;
+      win[c + '>' + other] = true;
     });
-    var Lv = {}, keys = [];
-    AXIS_ORDER.forEach(function (k) { if (max[k]) { Lv[k] = sum[k] / max[k]; keys.push(k); } });
-    if (!keys.length) return { axes: {}, topAxes: [], industries: [], topIndustries: [] };
-    var mean = keys.reduce(function (t, k) { return t + Lv[k]; }, 0) / keys.length;
-    var dev = {}, axes = {};
-    keys.forEach(function (k) { dev[k] = Lv[k] - mean; axes[k] = Math.max(5, Math.min(100, Math.round(50 + dev[k] * 100))); });
-    var topAxes = keys
-      .map(function (k) { return { key: k, d: dev[k], i: AXIS_ORDER.indexOf(k) }; })
-      .sort(function (a, b) { return b.d - a.d || a.i - b.i; })
-      .slice(0, 3)
-      .map(function (o) { return { key: o.key, pct: axes[o.key] }; });
+    if (!done) return { axes: {}, topAxes: [], industries: [], topIndustries: [] };
+    var axes = {};
+    AXIS_ORDER.forEach(function (k) { axes[k] = seen[k] ? Math.round(cnt[k] / seen[k] * 100) : 0; });
+    var mean = AXIS_ORDER.reduce(function (t, k) { return t + axes[k]; }, 0) / AXIS_ORDER.length;
+    // 同じ回数のグループの中で、直接対決の勝ち数
+    function h2h(k) { var n = 0; AXIS_ORDER.forEach(function (o) { if (o !== k && axes[o] === axes[k] && win[k + '>' + o]) n++; }); return n; }
+    var order = AXIS_ORDER.slice().sort(function (a, b) {
+      return axes[b] - axes[a] || h2h(b) - h2h(a) || AXIS_ORDER.indexOf(a) - AXIS_ORDER.indexOf(b);
+    });
+    var topAxes = order.slice(0, 3).map(function (k) { return { key: k, pct: axes[k] }; });
+    // 業種：強みの「平均との差」×重み。重みの多い業種が有利にならないよう、重みの大きさでならす
+    var tie = {}; order.forEach(function (k, i) { tie[k] = (order.length - i) * 0.001; });   // 同点の強みの順番を少しだけ反映
     var industries = INDUSTRIES.map(function (ind, i) {
       var t = 0, n = 0;
-      keys.forEach(function (k) { t += ind.w[k] * dev[k]; n += ind.w[k] * ind.w[k]; });
+      AXIS_ORDER.forEach(function (k) { t += ind.w[k] * ((axes[k] - mean) / 100 + tie[k]); n += ind.w[k] * ind.w[k]; });
       return { id: ind.id, v: n ? t / Math.sqrt(n) : 0, i: i };
     }).sort(function (a, b) { return b.v - a.v || a.i - b.i; })
       .map(function (o) { return { id: o.id, pct: Math.max(5, Math.min(100, Math.round(50 + o.v * 100))) }; });
-    return { axes: axes, topAxes: topAxes, industries: industries, topIndustries: industries.slice(0, 3) };
+    var vals = AXIS_ORDER.map(function (k) { return axes[k]; });
+    var flat = done === PAIRS.length && Math.max.apply(null, vals) === Math.min.apply(null, vals);   // どの強みも同じ（差が出なかった）
+    return { axes: axes, topAxes: topAxes, industries: industries, topIndustries: industries.slice(0, 3), flat: flat };
   }
 
   // 「なぜ合うか」のひとこと：その業種で重み3（なければ2）の強みのうち、本人の点数が高い順に2つ
@@ -109,8 +112,8 @@
     return (p.length === 2 ? p[0] + 'と、' + p[1] : p[0]) + 'が{生|い}かせます。';
   }
 
-  var api = { AXES: AXES, AXIS_RUBY: AXIS_RUBY, AXIS_ORDER: AXIS_ORDER, QUESTIONS: QUESTIONS, CHOICES: CHOICES, SHORT_IDS: [], INDUSTRIES: INDUSTRIES,
-              questions: questions, score: score, reason: reason, indById: indById, VERSION: 2 };
+  var api = { AXES: AXES, AXIS_RUBY: AXIS_RUBY, AXIS_ORDER: AXIS_ORDER, PAIRS: PAIRS, QUESTIONS: QUESTIONS, SHORT_IDS: [], INDUSTRIES: INDUSTRIES,
+              questions: questions, score: score, reason: reason, indById: indById, VERSION: 3 };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.RPersonality = api;
 })(typeof window !== 'undefined' ? window : this);

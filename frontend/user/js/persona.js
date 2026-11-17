@@ -1,7 +1,7 @@
 /* R-ESUME STAGE 1 性格診断（persona.html・2026-11-17 作り直し）
- * レジュメルが吹き出しで質問 → 3択のボタンで答える（12問）→ 結果（タイプ・強み上位3・合う業種上位3＋ひとこと・目安）。
+ * レジュメルが「どっちが好きか、答えてね。」→ 2択のボタン（A・B。左右はランダム）で答える（14問）→ 結果（タイプ・強み上位3・合う業種上位3＋ひとこと・目安）。
  * 結果はユーザーごとに1つ（personaSave で上書き）。途中の答えは、この端末に一時保存して続きから再開できる。
- * 音声（案B）：🔊を押したときだけ流す。1つのせりふ＝mp3 1つ（audio/ja/キー.mp3）。ファイルがないせりふは🔊を出さない。
+ * 音声（案B）：🔊を押したときだけ流す。せりふは p_start・p_ask（全問で同じ）・p_result の3つ（audio/ja/キー.mp3）。ファイルがないせりふは🔊を出さない。
  *   端末の読み上げには切りかえない。音が止まっても、文字とボタンで進める。
  * persona.html?back=<履歴書ID> で開いたときは、結果の画面に「履歴書の会話にもどる」を出す。 */
 (function () {
@@ -14,19 +14,21 @@
     function esc(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function fu(x) { return esc(x).replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>'); }   // {漢字|よみ} → ふりがな
     var back = (location.search.match(/[?&]back=([A-Za-z0-9_-]+)/) || [])[1] || '';
-    var WIP = 'resume_persona_wip';
+    var WIP = 'resume_persona_wip3';   // 3版（2択）。前の版の途中データは使わない
     var N = P.QUESTIONS.length;
     var LINES = {
-        start: { key: 'p_start', ja: 'ぼくはレジュメル！{12|じゅうに}の{質問|しつもん}に{答|こた}えると、あなたに{合|あ}いそうな{仕事|しごと}が{分|わ}かるよ。{直感|ちょっかん}で{答|こた}えてね。' },
+        start: { key: 'p_start', ja: 'ぼくはレジュメル！{14|じゅうよん}の{質問|しつもん}に{答|こた}えると、あなたに{合|あ}いそうな{仕事|しごと}が{分|わ}かるよ。{直感|ちょっかん}で{答|こた}えてね。' },
+        ask: { key: 'p_ask', ja: 'どっちが{好|す}きか、{答|こた}えてね。' },
+        flat: { key: '', ja: 'どれも{同|おな}じくらい{好|す}きみたい！もう{一度|いちど}、{直感|ちょっかん}で{選|えら}んでみてね。' },
         again: { key: '', ja: 'おかえり！{前回|ぜんかい}の{結果|けっか}だよ。{何度|なんど}でもやり{直|なお}せるよ。' },
         result: { key: 'p_result', ja: '{診断|しんだん}クリア！あなたに{合|あ}いそうな{仕事|しごと}は、これだよ。' }
     };
 
-    var answers = {}, qi = 0, persona = null, msg = $('pzMsg');
+    var answers = {}, flip = {}, qi = 0, persona = null, msg = $('pzMsg');
     function showMsg(t) { msg.textContent = t || ''; msg.className = 'form-msg' + (t ? ' is-error' : ''); }
 
     /* ---------- 途中の答え（この端末だけ） ---------- */
-    function saveWip() { try { localStorage.setItem(WIP, JSON.stringify({ a: answers, i: qi })); } catch (e) {} }
+    function saveWip() { try { localStorage.setItem(WIP, JSON.stringify({ a: answers, f: flip, i: qi })); } catch (e) {} }
     function loadWip() { try { var w = JSON.parse(localStorage.getItem(WIP) || 'null'); return w && w.a ? w : null; } catch (e) { return null; } }
     function clearWip() { try { localStorage.removeItem(WIP); } catch (e) {} }
 
@@ -73,21 +75,22 @@
         hud(false); showMsg('');
         say(LINES.start);
         $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzGo">はじめる</button>';
-        $('pzGo').addEventListener('click', function () { answers = {}; qi = 0; saveWip(); showQ(); });
+        $('pzGo').addEventListener('click', function () { newRound(); showQ(); });
     }
+    function newRound() { answers = {}; flip = {}; P.PAIRS.forEach(function (q) { flip[q.id] = Math.random() < 0.5; }); qi = 0; saveWip(); }
     function showQ() {
-        var q = P.QUESTIONS[qi];
+        var q = P.PAIRS[qi];
         hud(true); showMsg('');
-        say({ key: q.key, ja: q.ja });
-        var cur = answers[q.id];
+        say(LINES.ask);
+        var cur = answers[q.id], opts = flip[q.id] ? [q.b, q.a] : [q.a, q.b];
         $('pzBody').innerHTML = '<div class="pz-choices" role="group" aria-label="答え">' +
-            P.CHOICES.map(function (c) {
-                return '<button type="button" class="pz-choice c' + c.v + (cur === c.v ? ' is-picked' : '') + '" data-v="' + c.v + '"><span class="pz-mark" aria-hidden="true">' + (c.v === 2 ? '○' : c.v === 1 ? '△' : '×') + '</span><span>' + c.ja + '</span></button>';
+            opts.map(function (o, i) {
+                return '<button type="button" class="pz-choice' + (cur === o.axis ? ' is-picked' : '') + '" data-v="' + o.axis + '"><span class="pz-mark" aria-hidden="true">' + (i ? 'B' : 'A') + '</span><span>' + fu(o.ja) + '</span></button>';
             }).join('') + '</div>' +
             '<button type="button" class="pz-back" id="pzBack">← もどる</button>';
         $('pzBody').querySelector('.pz-choices').addEventListener('click', function (e) {
             var b = e.target.closest('button[data-v]'); if (!b) return;
-            answers[q.id] = +b.getAttribute('data-v');
+            answers[q.id] = b.getAttribute('data-v');
             qi++; saveWip();
             if (qi >= N) finish(); else showQ();
         });
@@ -98,8 +101,14 @@
     }
     function finish() {
         var r = P.score(answers);
+        if (r.flat) {   // どの強みも同じ：結果を出さずに、もう一度
+            hud(false); say(LINES.flat);
+            $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzGo">もう' + fu('{一度|いちど}') + 'やる</button>';
+            $('pzGo').addEventListener('click', function () { newRound(); showQ(); });
+            return;
+        }
         var p = {
-            v: 2, mode: 'full', answers: answers, axes: r.axes,
+            v: 3, mode: 'pair', answers: answers, axes: r.axes,
             top: r.topAxes.map(function (a) { return a.key; }),
             suggest: r.topIndustries.map(function (x) { return x.id; }),
             at: new Date().toISOString()
@@ -145,7 +154,7 @@
             '<a class="btn btn-lg btn-block' + (back ? ' btn-secondary' : '') + '" href="dashboard.html">ホームへ</a>' +
             '<button type="button" class="btn btn-lg btn-block btn-secondary" id="pzAgain">もう{一度|いちど}やる</button></div>';
         $('pzBody').innerHTML = h.replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>');
-        $('pzAgain').addEventListener('click', function () { answers = {}; qi = 0; saveWip(); showQ(); window.scrollTo(0, 0); });
+        $('pzAgain').addEventListener('click', function () { newRound(); showQ(); window.scrollTo(0, 0); });
     }
 
     function kick(res) { A.clear(); A.flash((res && res.message) || 'もう一度ログインしてください。'); location.replace('login.html'); }
@@ -154,7 +163,7 @@
     window.RLoading.hold(A.api({ action: 'personaGet', token: s.token }).then(function (res) {
         if (!res || res.ok === false) { if (res && res.reason) return kick(res); showMsg((res && res.message) || '読み込めませんでした。'); return; }
         var w = loadWip();
-        if (w && w.i > 0 && w.i < N) { answers = w.a; qi = w.i; showQ(); return; }   // 途中から
+        if (w && w.i > 0 && w.i < N && w.f) { answers = w.a; flip = w.f; qi = w.i; showQ(); return; }   // 途中から
         persona = res.persona && res.persona.top && res.persona.top.length ? res.persona : null;
         if (persona) showResult(false); else showStart();
     }).catch(function () {
