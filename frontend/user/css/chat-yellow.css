@@ -1,0 +1,72 @@
+/* R-ESUME 会話で作る履歴書（chat.html）：黄×黒（2026-11-18・STAGE 2 ①見た目をそろえる）。
+   chat.css → game.css → app-yellow.css の後に、最後に読み込む。レジュメルはドット絵（img/resumel.svg） */
+.chat-main { background: transparent; }
+.app { position: relative; z-index: 1; background: transparent; font-family: var(--font); color: var(--k); }
+/* ヘッダーに7色の帯（12px）が増えたぶん、会話の高さを合わせる（ヘッダー 74px） */
+.app { height: calc(100vh - 74px); height: calc(100dvh - 74px); }
+.app .bg1, .app .bg2, .app .bg3 { display: none; }
+
+/* 上の進み具合（PART） */
+.hud { margin: 10px 10px 4px; padding: 8px 12px; background: var(--k); border: 3px solid var(--k); box-shadow: 4px 4px 0 var(--red); }
+.stg { background: var(--y); color: var(--k); font-family: var(--font-en); font-weight: 400; letter-spacing: .06em; font-size: 16px; }
+.seg i { background: #444; }
+.seg i.on { background: var(--y); }
+.cnt { color: #fff; font-family: var(--font-en); font-weight: 400; letter-spacing: .04em; font-size: 16px; }
+.form-msg { color: var(--k); }
+
+/* レジュメルの吹き出し */
+.chr { width: 64px; filter: drop-shadow(3px 3px 0 rgba(17,17,17,.35)); }
+.chr img { display: block; width: 64px; height: auto; image-rendering: pixelated; }
+.nm { background: var(--k); color: var(--y); font-family: var(--font); font-weight: 900; }
+.gw { filter: drop-shadow(5px 5px 0 var(--k)); }
+.gb { clip-path: none; background: #fff; color: var(--k); border: 4px solid var(--k); font-weight: 800; }
+.gb b { color: var(--k); background: var(--y); padding: 0 .15em; font-weight: 900; }
+.say { background: var(--y); border: 3px solid var(--k); clip-path: none; box-shadow: 3px 3px 0 var(--k); }
+.say:hover { background: var(--y-soft); }
+.say:focus-visible { box-shadow: 3px 3px 0 var(--k); outline: 3px solid var(--k); outline-offset: 2px; }
+.say svg { stroke: var(--k); }
+.hint { margin-left: 70px; color: var(--k); background: rgba(255,255,255,.85); border-left: 6px solid var(--k); }
+
+/* あなたの答え */
+.ub { filter: drop-shadow(4px 4px 0 var(--red)); }
+.ubi { background: var(--k); color: var(--y); }
+
+/* 区切りのバナー・カード */
+.ban { filter: drop-shadow(4px 4px 0 var(--red)); }
+.bani { background: var(--k); color: var(--y); font-family: var(--font); font-weight: 900; }
+.card { margin-left: 70px; filter: drop-shadow(5px 5px 0 var(--k)); }
+.cardi { color: var(--k); }
+.cardi h3 { font-family: var(--font); font-weight: 900; }
+.row .m i { background: #E5E5E5; }
+.row .m i.on { background: var(--k); }
+
+/* 下の答える場所：黒い帯＋上に7色の帯 */
+.dockw { background: var(--k); clip-path: none; padding-top: 0; border-top: 4px solid var(--k); }
+.dockw:before { position: static; display: block; height: 10px; transform: none; background: var(--stripes); border-bottom: 2px solid var(--k); }
+.cw { filter: drop-shadow(4px 4px 0 var(--y)); }
+.ch { color: var(--k); }
+.ch:hover { background: var(--y-soft); }
+.ch:active { background: var(--y); }
+.ch:focus-visible { box-shadow: inset 0 0 0 5px var(--red); }
+.ar { border-left-color: var(--k); }
+.rk { background: var(--k); color: var(--y); font-family: var(--font-en); font-weight: 400; }
+.t { font-family: var(--font); font-weight: 900; }
+.s { color: #333; }
+.sc button { color: var(--k); font-family: var(--font-en); font-weight: 400; }
+.sc button.a { background: var(--y); }
+.sc button.b { background: var(--y-soft); }
+.sc button:focus-visible { box-shadow: inset 0 0 0 5px var(--red); }
+.err { color: var(--k); background: var(--y); border-left-color: var(--red); }
+.f { color: var(--k); }
+.f:focus-within { background: var(--y-soft); }
+.f input, .f textarea { color: var(--k); }
+.go { background: var(--red); color: #fff; font-family: var(--font); font-weight: 900; }
+.go:hover { background: #C40010; }
+.go:focus-visible { box-shadow: inset 0 0 0 4px var(--y); }
+.lk:focus-visible { outline-color: var(--y); }
+.pkh { background: var(--y); color: var(--k); }
+.pki { color: var(--k); }
+.pki input { accent-color: var(--k); }
+.pki:focus-within { background: var(--y-soft); }
+.pki em { color: var(--k); background: var(--y); }
+.pki.off, .pki.dis { background: #CFCFCF; color: #444; }

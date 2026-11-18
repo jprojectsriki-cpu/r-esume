@@ -1,0 +1,49 @@
+/* R-ESUME 履歴書の一覧・確認と修正（resume.html）：黄×黒（2026-11-18・STAGE 2 ①見た目をそろえる）。
+   resume.css → game.css → app-yellow.css の後に、最後に読み込む */
+.rs-main { padding-top: 24px; }
+.rs-card { position: relative; z-index: 1; }
+.rs-card h1 { font-family: var(--font); font-weight: 900; }
+.rs-card h1 > span, .rs-card h1 [data-l] { background: var(--k); color: var(--y); padding: 0 .2em; }
+.rs-card h1 rt { color: var(--k); }
+
+/* お知らせ・注意 */
+.rs-warn { background: var(--y-soft); border: 3px solid var(--k); border-left: 10px solid var(--red); border-radius: 0; }
+.rs-ok { background: #fff; border: 3px solid var(--k); border-left: 10px solid #4CAF00; border-radius: 0; color: var(--k); }
+.rs-note { background: var(--y-soft); border-left: 8px solid var(--k); border-radius: 0; }
+.rs-count, .rs-empty, .rs-hint, .rs-status { color: #333; }
+.rs-status.is-error { color: #B3000E; }
+
+/* 一覧 */
+.rs-item { border: 4px solid var(--k); border-radius: 0; box-shadow: 6px 6px 0 var(--k); }
+.rs-item-main strong { font-weight: 900; }
+.rs-item-main small { color: #333; }
+.rs-acts .btn, .rs-row-acts .btn { border: 3px solid var(--k); border-radius: 0; box-shadow: 4px 4px 0 var(--k); }
+#rsNew { border: 3px solid var(--k); border-radius: 0; box-shadow: 5px 5px 0 var(--k); }
+
+/* 確認と修正：上のステップ */
+.rs-link { color: var(--k); font-weight: 800; text-decoration-thickness: 2px; }
+.rs-steps button { border: 3px solid var(--k); border-radius: 0; transform: skewX(-8deg); font-family: var(--font-en); font-weight: 400; font-size: 18px; }
+.rs-steps button.is-done { background: var(--y-soft); }
+.rs-steps button.is-cur { background: var(--k); color: var(--y); box-shadow: 3px 3px 0 var(--red); }
+.rs-h2 { font-family: var(--font); font-weight: 900; }
+.rs-h2 span { background: none; background-color: var(--k); color: var(--y); padding: 0 .3em; }
+.rs-h2 span rt { color: var(--k); }
+
+/* 入力欄 */
+.rs-f label, .rs-lab { font-weight: 900; color: var(--k); }
+.rs-opt { border-radius: 0; background: var(--y-soft); color: var(--k); border: 2px solid var(--k); font-weight: 700; }
+.rs-f input:not([type=checkbox]), .rs-f select, .rs-f textarea, .rs-row3 input { border: 3px solid var(--k); border-radius: 0; font-weight: 700; }
+.rs-f input:focus, .rs-f select:focus, .rs-f textarea:focus, .rs-row3 input:focus { outline: 3px solid var(--k); outline-offset: 2px; background: var(--y-soft); }
+.rs-f input:disabled, .rs-f select:disabled, .rs-f textarea:disabled { background: #EFEFEF; color: #444; }
+.rs-check input { accent-color: var(--k); }
+.rs-title { background: var(--y-soft); border-radius: 0; border-left: 6px solid var(--k); }
+.rs-sub { border-left: 6px solid var(--k); background: var(--y-soft); border-radius: 0; }
+.rs-age { color: var(--k); }
+.rs-row { border: 3px solid var(--k); border-radius: 0; box-shadow: 4px 4px 0 var(--k); }
+.rs-del { border: 3px solid var(--red); border-radius: 0; color: #B3000E; font-weight: 900; }
+
+/* 「履歴書にはこう書かれます」・確認 */
+.rs-pv { border: 3px dashed var(--k); border-radius: 0; }
+.rs-pv-h, .rs-pv li span:first-child { color: #333; }
+.rs-pv li { border-bottom-color: #CFCFCF; }
+.rs-nav .btn { border: 3px solid var(--k); border-radius: 0; box-shadow: 5px 5px 0 var(--k); }

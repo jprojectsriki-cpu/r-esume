@@ -127,7 +127,7 @@
 
     /* ---------- 吹き出しの部品 ---------- */
     function B(ja, en, say, spj, spe) { return { ja: ja, en: en, say: !!say, key: say ? nid : '', sj: spj, se: spe, keys: null }; }
-    var CAT = '<svg width="76" height="92" viewBox="0 0 80 96" aria-hidden="true"><g stroke="#EAF2FB" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M20 96Q20 72 40 70Q60 72 60 96Z" fill="#111827"/><path d="M13 36L17 5L39 21Z" fill="#111827"/><path d="M67 36L63 5L41 21Z" fill="#111827"/><ellipse cx="40" cy="45" rx="30" ry="26" fill="#111827"/><path d="M40 72L25 65V81Z" fill="#D7263D"/><path d="M40 72L55 65V81Z" fill="#D7263D"/><rect x="36" y="68" width="8" height="8" rx="2" fill="#FFD43B"/><path d="M58 15L73 2L78 8L63 21Z" fill="#FFD43B" stroke="#14243A"/><path d="M58 15L63 21L56 22Z" fill="#14243A" stroke="#14243A" stroke-width="1"/></g><path d="M20 12L24 22L32 17Z" fill="#FFD43B"/><path d="M60 12L56 22L48 17Z" fill="#FFD43B"/><ellipse cx="27" cy="43" rx="8" ry="10" fill="#FFD43B"/><ellipse cx="53" cy="43" rx="8" ry="10" fill="#FFD43B"/><ellipse cx="27" cy="43" rx="2.6" ry="8" fill="#111827"/><ellipse cx="53" cy="43" rx="2.6" ry="8" fill="#111827"/><circle cx="30" cy="38" r="2" fill="#fff"/><circle cx="56" cy="38" r="2" fill="#fff"/><path d="M36 54H44L40 59Z" fill="#FFD43B"/><g stroke="#EAF2FB" stroke-width="2" stroke-linecap="round" fill="none"><path d="M40 59Q35 65 30 62M40 59Q45 65 50 62"/><path d="M15 52L2 49M15 58L2 61M65 52L78 49M65 58L78 61"/></g></svg>';
+    var CAT = '<img src="img/resumel.svg?v=20261117a" alt="" width="64" height="60">';   // ドット絵のレジュメル（2026-11-18）
     var SPK = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14243A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
     var BACK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
 
@@ -599,7 +599,7 @@
         $('cChat').innerHTML = h;
         $('cDock').innerHTML = dockHtml();
         var st = N[nid].stage;
-        $('cStg').textContent = 'STAGE ' + st;
+        $('cStg').textContent = 'PART ' + st;   // ホームの STAGE と重ならないよう、会話の中は PART（2026-11-18）
         $('cCnt').textContent = st + '/' + STAGES;
         var sg = ''; for (var i = 1; i <= STAGES; i++) sg += '<i' + (i <= st ? ' class="on"' : '') + '></i>';
         $('cSeg').innerHTML = sg;
