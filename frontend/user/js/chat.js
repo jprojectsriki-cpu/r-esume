@@ -24,6 +24,7 @@
     function fu(x) { return x.replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>'); }
     function plain(x) { return x.replace(/\{([^|}]+)\|([^}]+)\}/g, '$1').replace(/<[^>]+>/g, ''); }
     function L(ja, en) { return T(fu(ja), esc(en)); }
+    function BL(en, ja, row) { return '<span class="bl' + (row ? ' bl-row' : '') + '"><span class="bl-en" aria-hidden="true">' + en + '</span><span class="bl-ja">' + fu(ja) + '</span></span>'; }   // ボタンの文字：英語と日本語の2段（2026-11-18）
 
     var LIM = { rows: 19, lic: 6, mot: 500, wish: 150 };
     var STAGES = 7;
@@ -498,7 +499,7 @@
     function dockHtml() {
         var n = N[nid], h = '<p class="err" id="cErr" role="alert"></p>';
         var q = plain(curG.filter(function (x) { return x.say; }).map(function (x) { return T(x.ja, x.en); })[0] || '');
-        var go = '<button type="button" class="go" data-act="send">' + T('送る', 'Send') + '</button>';
+        var go = '<button type="button" class="go" data-act="send">' + BL('SEND', '{送|おく}る') + '</button>';
         if (n.kind === 'choice') {
             n.opts().forEach(function (o, i) {
                 h += '<div class="cw' + (i % 2 ? ' o' : '') + '"><button type="button" class="ch" data-i="' + i + '">' + (o.rank ? '<span class="rk">' + o.rank + '</span>' : '<span class="ar"></span>') +
@@ -516,7 +517,7 @@
                 });
             });
             h += '<p class="pkh">その他</p><label class="pki"><input type="checkbox" data-q="other"' + (pk.indexOf('other') >= 0 ? ' checked' : '') + '><span class="pkt">その他（自分で入力）</span></label></div>' +
-                '<div class="inp"><button type="button" class="go" data-act="send" style="flex:1">' + T('送る', 'Send') + '</button></div>';
+                '<div class="inp"><button type="button" class="go" data-act="send" style="flex:1">' + BL('SEND', '{送|おく}る') + '</button></div>';
         } else if (n.kind === 'row') {
             var r = D[ROW.key][ROW.i] || {}, kinds = ROW_KINDS[ROW.key], nowR = r.k === '現在に至る' ? ' disabled' : '';
             h += '<div class="rowf">' +
@@ -531,9 +532,9 @@
             else if (n.kind === 'ym') h += '<div class="inp"><div class="f sels">' + yearSel('cY', n.yr(), v0.y, T('年', 'Year')) + monthSel('cM', v0.m) + '</div>' + go + '</div>';
             else if (n.kind === 'date3') h += '<div class="inp"><div class="f sels">' + yearSel('cY', n.yr(), v0.y, T('年', 'Year')) + monthSel('cM', v0.m) + daySel('cD', v0.y, v0.m, v0.d) + '</div>' + go + '</div>';
         }
-        h += '<div class="sub">' + (trail.length ? '<button type="button" class="lk" data-act="back">' + BACK + T('戻る', 'Back') + '</button>' : '<span></span>') +
-            (n.opt && n.kind !== 'choice' ? '<button type="button" class="lk" data-act="skip">' + T('スキップ', 'Skip') + '</button>' : '') +
-            '<button type="button" class="lk" data-act="exit">' + (FIX ? L('{確認|かくにん}の{画面|がめん}へ', 'Back to check') : L('{一覧|いちらん}へ', 'List')) + '</button></div>';
+        h += '<div class="sub">' + (trail.length ? '<button type="button" class="lk" data-act="back">' + BACK + BL('BACK', '{戻|もど}る', 1) + '</button>' : '<span></span>') +
+            (n.opt && n.kind !== 'choice' ? '<button type="button" class="lk" data-act="skip">' + BL('SKIP', 'スキップ', 1) + '</button>' : '') +
+            '<button type="button" class="lk" data-act="exit">' + (FIX ? BL('BACK', '{確認|かくにん}の{画面|がめん}へ', 1) : BL('BACK', '{一覧|いちらん}へ', 1)) + '</button></div>';
         return h;
     }
     function render() {

@@ -114,3 +114,15 @@ a.stage:focus-visible { outline: 3px solid var(--k); outline-offset: 5px; }
 
 /* ヘッダーのボタンは、LP と同じく右に寄せる */
 .site-header .header-tools { margin-left: auto; }
+
+/* ボタンの文字：英語（大）と日本語（小・ふりがなつき）の2段（2026-11-18 ユーザー決定）。
+   <span class="bl"><span class="bl-en" aria-hidden="true">SEND</span><span class="bl-ja">送る</span></span>
+   読み上げソフトには日本語だけを読ませる。会話の答えや説明の文は日本語のまま */
+.bl { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; vertical-align: middle; text-align: center; }
+.bl-en { font-family: var(--font-en); font-weight: 400; letter-spacing: .06em; font-size: 1.08em; line-height: 1.2; }
+.bl-ja { font-family: var(--font); font-weight: 800; font-size: .64em; line-height: 1.55; letter-spacing: 0; }
+.bl-ja rt { font-size: .62em; }
+html.furigana-off .bl-ja { line-height: 1.3; }
+.bl.bl-row { flex-direction: row; align-items: baseline; gap: 6px; }
+.bl.bl-row .bl-ja { font-size: .8em; }
+.btn .bl, .cf-btn .bl, .cf-add .bl, .go .bl, .lk .bl { pointer-events: none; }

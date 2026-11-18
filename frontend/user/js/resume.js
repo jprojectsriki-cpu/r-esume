@@ -14,6 +14,7 @@
     function esc(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function fu(x) { return x.replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>'); }
     function L(ja, en) { return T(fu(ja), esc(en)); }               // 画面の文章（HTML）
+    function BL(en, ja, row) { return '<span class="bl' + (row ? ' bl-row' : '') + '"><span class="bl-en" aria-hidden="true">' + en + '</span><span class="bl-ja">' + fu(ja) + '</span></span>'; }   // ボタンの文字：英語と日本語の2段（2026-11-18）
 
     var box = I.msgBox($('rsMsg'));
     var list = [], max = 3, expired = false;
@@ -121,19 +122,19 @@
         if (!list.length) h += '<p class="rs-empty">' + L('まだ{履歴書|りれきしょ}がありません。{下|した}のボタンから{作|つく}ります。', 'You have no resumes yet.') + '</p>';
         h += '<ul class="rs-list">';
         list.forEach(function (r) {
-            var main = expired ? '<button type="button" class="btn" data-act="view" data-id="' + esc(r.resumeId) + '">' + L('{見|み}る', 'View') + '</button>'
-                : (r.done ? '<button type="button" class="btn" data-act="view" data-id="' + esc(r.resumeId) + '">' + L('{確認|かくにん}する', 'Check') + '</button>'
-                    : '<a class="btn" href="chat.html#' + esc(r.resumeId) + '">' + L('{続|つづ}きから{作|つく}る', 'Continue') + '</a>');
+            var main = expired ? '<button type="button" class="btn" data-act="view" data-id="' + esc(r.resumeId) + '">' + BL('VIEW', '{見|み}る') + '</button>'
+                : (r.done ? '<button type="button" class="btn" data-act="view" data-id="' + esc(r.resumeId) + '">' + BL('CHECK', '{確認|かくにん}する') + '</button>'
+                    : '<a class="btn" href="chat.html#' + esc(r.resumeId) + '">' + BL('CONTINUE', '{続|つづ}きから{作|つく}る') + '</a>');
             h += '<li class="rs-item"><div class="rs-item-main"><strong>' + esc(r.title) + '</strong>' +
-                '<span class="rs-badge' + (r.done ? ' is-done' : '') + '">' + (r.done ? L('{完成|かんせい}', 'Done') : L('{作|つく}りかけ', 'In progress')) + '</span>' +
+                '<span class="rs-badge' + (r.done ? ' is-done' : '') + '">' + (r.done ? BL('DONE', '{完成|かんせい}', 1) : BL('IN PROGRESS', '{作|つく}りかけ', 1)) + '</span>' +
                 '<small>' + L('{更新|こうしん}', 'Updated') + '：' + esc(when(r.updatedAt)) + '</small></div><div class="rs-acts">' + main +
-                (expired ? '' : '<button type="button" class="btn btn-secondary" data-act="copy" data-id="' + esc(r.resumeId) + '"' + (list.length >= max ? ' disabled' : '') + '>' + L('コピー', 'Copy') + '</button>' +
-                    '<button type="button" class="btn btn-secondary" data-act="del" data-id="' + esc(r.resumeId) + '">' + L('{削除|さくじょ}', 'Delete') + '</button>') + '</div></li>';
+                (expired ? '' : '<button type="button" class="btn btn-secondary" data-act="copy" data-id="' + esc(r.resumeId) + '"' + (list.length >= max ? ' disabled' : '') + '>' + BL('COPY', 'コピー') + '</button>' +
+                    '<button type="button" class="btn btn-secondary" data-act="del" data-id="' + esc(r.resumeId) + '">' + BL('DELETE', '{削除|さくじょ}') + '</button>') + '</div></li>';
         });
         h += '</ul>';
-        if (!expired) h += '<button type="button" class="btn btn-lg btn-block" id="rsNew"' + (list.length >= max ? ' disabled' : '') + '>' + L('＋ {新|あたら}しい{履歴書|りれきしょ}を{作|つく}る', '+ Create a new resume') + '</button>' +
+        if (!expired) h += '<button type="button" class="btn btn-lg btn-block" id="rsNew"' + (list.length >= max ? ' disabled' : '') + '>' + BL('＋ NEW', '{新|あたら}しい{履歴書|りれきしょ}を{作|つく}る') + '</button>' +
             (list.length >= max ? '<p class="rs-hint">' + L('{履歴書|りれきしょ}は' + max + '{通|つう}までです。{削除|さくじょ}すると、また{作|つく}れます。', 'You can have up to ' + max + ' resumes.') + '</p>' : '');
-        h += '<a class="btn btn-secondary btn-block rs-back" href="dashboard.html">' + L('ホームへ{戻|もど}る', 'Back to Home') + '</a>';
+        h += '<a class="btn btn-secondary btn-block rs-back" href="dashboard.html">' + BL('HOME', 'ホームへ{戻|もど}る') + '</a>';
         v.innerHTML = h; v.hidden = false;
     }
     function reloadList() {
@@ -146,7 +147,7 @@
     /* ---------- 確認の画面 ---------- */
     function fixBtn(id, label) {
         if (expired) return '';
-        return '<button type="button" class="cf-btn" data-fix="' + esc(id) + '" aria-label="' + esc(label) + 'を直す">' + L('{直|なお}す', 'Fix') + '</button>';
+        return '<button type="button" class="cf-btn" data-fix="' + esc(id) + '" aria-label="' + esc(label) + 'を直す">' + BL('EDIT', '{直|なお}す') + '</button>';
     }
     function val(v, required) {
         v = String(v == null ? '' : v).trim();
@@ -166,20 +167,20 @@
             var ym = r.y ? eraYear(r.y, r.m, d.era) + (r.m ? (+r.m) + '月' : '') : '';
             var txt = ((r.t || '').trim() + (r.k ? '　' + r.k : '')).trim();
             h += '<li class="cf-line"><span class="cf-ym">' + esc(ym) + '</span><span class="cf-txt">' + esc(txt) + '</span>' +
-                (expired ? '' : '<span class="cf-lact"><button type="button" class="cf-btn" data-row="' + key + '.' + i + '">' + L('{直|なお}す', 'Fix') + '</button><button type="button" class="cf-btn cf-del" data-delrow="' + key + '.' + i + '">' + L('{消|け}す', 'Delete') + '</button></span>') + '</li>';
+                (expired ? '' : '<span class="cf-lact"><button type="button" class="cf-btn" data-row="' + key + '.' + i + '">' + BL('EDIT', '{直|なお}す') + '</button><button type="button" class="cf-btn cf-del" data-delrow="' + key + '.' + i + '">' + BL('DELETE', '{消|け}す') + '</button></span>') + '</li>';
         });
         h += '</ol>';
         var full = key === 'lic' ? rows.length >= LIM.lic : d.edu.length + d.work.length >= LIM.rows;
-        if (!expired) h += '<button type="button" class="cf-add" data-fix="' + addFix + '"' + (full ? ' disabled' : '') + '>' + L('＋ {足|た}す', '+ Add') + '</button>' + (full ? '<p class="rs-hint">' + L('{行|ぎょう}がいっぱいです。', 'The rows are full.') + '</p>' : '');
+        if (!expired) h += '<button type="button" class="cf-add" data-fix="' + addFix + '"' + (full ? ' disabled' : '') + '>' + BL('＋ ADD', '{足|た}す') + '</button>' + (full ? '<p class="rs-hint">' + L('{行|ぎょう}がいっぱいです。', 'The rows are full.') + '</p>' : '');
         return h;
     }
     function renderConfirm() {
         $('viewList').hidden = true;
         var d = cur.data, v = $('viewEdit'), h = '';
         var a = ageOf(d), miss = missing(), ws = warns();
-        h += '<div class="rs-top"><button type="button" class="rs-link" id="rsToList">‹ ' + L('{一覧|いちらん}へ{戻|もど}る', 'Back to the list') + '</button><span class="rs-status" id="rsStatus" role="status" aria-live="polite"></span></div>';
+        h += '<div class="rs-top"><button type="button" class="rs-link" id="rsToList">‹ ' + BL('BACK', '{一覧|いちらん}へ{戻|もど}る', 1) + '</button><span class="rs-status" id="rsStatus" role="status" aria-live="polite"></span></div>';
         if (expired) h += expiredNote();
-        h += '<h1><span>' + L('{確認|かくにん}', 'Check') + '</span>' + (d.done ? '<span class="rs-badge is-done">' + L('{完成|かんせい}', 'Done') + '</span>' : '') + '</h1>';
+        h += '<h1><span>' + L('{確認|かくにん}', 'Check') + '</span>' + (d.done ? '<span class="rs-badge is-done">' + BL('DONE', '{完成|かんせい}', 1) + '</span>' : '') + '</h1>';
         h += '<div class="rs-f rs-title"><label for="cfTitle">' + L('{履歴書|りれきしょ}の{名前|なまえ}（{自分|じぶん}だけが{見|み}ます）', 'Resume name') + '</label><input id="cfTitle" data-k="title" maxlength="40" value="' + esc(cur.title) + '"' + (expired ? ' disabled' : '') + '></div>';
         if (miss.length) h += '<div class="rs-warn"><p>' + L('「{完成|かんせい}する」には、{次|つぎ}の{項目|こうもく}が{必要|ひつよう}です。', 'These items are needed to complete.') + '</p><ul>' + miss.map(function (x) { return '<li>' + fu(x[0]) + '</li>'; }).join('') + '</ul></div>';
         if (ws.length) h += '<div class="rs-note"><p>' + L('{確認|かくにん}してください（このまま{完成|かんせい}することもできます）。', 'Please check these.') + '</p><ul>' + ws.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
@@ -215,9 +216,9 @@
         h += '<section class="cf-sec"><h2 class="cf-h">' + L('{提出|ていしゅつ}する{前|まえ}のチェック', 'Before you submit') + '</h2><div class="rs-checks">' +
             CHECKS.map(function (c, i) { return '<div class="rs-f rs-check"><label><input type="checkbox" data-k="check.' + i + '"' + (d.check && d.check[i] ? ' checked' : '') + (expired ? ' disabled' : '') + '><span>' + L(c[0], c[1]) + '</span></label></div>'; }).join('') + '</div>' +
             '<p class="rs-hint">' + L('{履歴書|りれきしょ}の{日付|ひづけ}は、{表示|ひょうじ}・{印刷|いんさつ}するたびに、{今日|きょう}の{日付|ひづけ}が{自動|じどう}で{入|はい}ります。', 'The date is filled in automatically.') + '</p></section>';
-        if (!expired) h += '<button type="button" class="btn btn-lg btn-block cf-done" id="cfDone"' + (miss.length ? ' disabled' : '') + '>' + L('{完成|かんせい}する', 'Complete') + '</button>' +
+        if (!expired) h += '<button type="button" class="btn btn-lg btn-block cf-done" id="cfDone"' + (miss.length ? ' disabled' : '') + '>' + BL('COMPLETE', '{完成|かんせい}する') + '</button>' +
             (miss.length ? '<p class="rs-hint">' + L('{上|うえ}の{必要|ひつよう}な{項目|こうもく}を{入|い}れると、{押|お}せるようになります。', 'Fill in the needed items to complete.') + '</p>' : '');
-        h += '<button type="button" class="btn btn-secondary btn-block rs-back" id="rsToList2">' + L('{一覧|いちらん}へ{戻|もど}る', 'Back to the list') + '</button>';
+        h += '<button type="button" class="btn btn-secondary btn-block rs-back" id="rsToList2">' + BL('BACK', '{一覧|いちらん}へ{戻|もど}る') + '</button>';
         v.innerHTML = h; v.hidden = false;
         setStatus(dirty ? 'dirty' : (lastSaved ? 'saved' : ''));
     }

@@ -21,7 +21,7 @@
 
     function syncEye() {
         var show = pw.type === 'text';
-        eye.innerHTML = T(show ? rb('隠', 'かく') + 'す' : rb('表示', 'ひょうじ'), show ? 'Hide' : 'Show');
+        eye.innerHTML = '<span class="bl"><span class="bl-en" aria-hidden="true">' + (show ? 'HIDE' : 'SHOW') + '</span><span class="bl-ja">' + (show ? rb('隠', 'かく') + 'す' : rb('表示', 'ひょうじ')) + '</span></span>';   // 英語と日本語の2段（2026-11-18）
     }
     I.onChange(syncEye);
     eye.addEventListener('click', function () {

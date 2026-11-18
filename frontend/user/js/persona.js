@@ -13,6 +13,7 @@
     function $(id) { return document.getElementById(id); }
     function esc(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function fu(x) { return esc(x).replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>'); }   // {漢字|よみ} → ふりがな
+    function BL(en, ja) { return '<span class="bl"><span class="bl-en" aria-hidden="true">' + en + '</span><span class="bl-ja">' + ja + '</span></span>'; }   // ボタンの文字：英語と日本語の2段（2026-11-18）
     var back = (location.search.match(/[?&]back=([A-Za-z0-9_-]+)/) || [])[1] || '';
     var backFix = /[?&]fix=work(&|$)/.test(location.search);   // 確認の画面の「直す」から来たとき：もどったら業種の質問だけ答え直す
     var WIP = 'resume_persona_wip3';   // 3版（2択）。前の版の途中データは使わない
@@ -75,7 +76,7 @@
     function showStart() {
         hud(false); showMsg('');
         say(LINES.start);
-        $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzGo">はじめる</button>';
+        $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzGo">' + BL('START', 'はじめる') + '</button>';
         $('pzGo').addEventListener('click', function () { newRound(); showQ(); });
     }
     function newRound() { answers = {}; flip = {}; P.PAIRS.forEach(function (q) { flip[q.id] = Math.random() < 0.5; }); qi = 0; saveWip(); }
@@ -88,7 +89,7 @@
             opts.map(function (o, i) {
                 return '<button type="button" class="pz-choice' + (cur === o.axis ? ' is-picked' : '') + '" data-v="' + o.axis + '"><span class="pz-mark" aria-hidden="true">' + (i ? 'B' : 'A') + '</span><span>' + fu(o.ja) + '</span></button>';
             }).join('') + '</div>' +
-            '<button type="button" class="pz-back" id="pzBack">← もどる</button>';
+            '<button type="button" class="pz-back" id="pzBack">← ' + BL('BACK', 'もどる').replace('class="bl"', 'class="bl bl-row"') + '</button>';
         $('pzBody').querySelector('.pz-choices').addEventListener('click', function (e) {
             var b = e.target.closest('button[data-v]'); if (!b) return;
             answers[q.id] = b.getAttribute('data-v');
@@ -104,7 +105,7 @@
         var r = P.score(answers);
         if (r.flat) {   // どの強みも同じ：結果を出さずに、もう一度
             hud(false); say(LINES.flat);
-            $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzGo">もう' + fu('{一度|いちど}') + 'やる</button>';
+            $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzGo">' + BL('RETRY', 'もう' + fu('{一度|いちど}') + 'やる') + '</button>';
             $('pzGo').addEventListener('click', function () { newRound(); showQ(); });
             return;
         }
@@ -126,7 +127,7 @@
     function failSave(res) {
         if (res && res.reason) return kick(res);
         showMsg((res && res.message) || '保存できませんでした。通信を確かめて、もう一度押してください。');
-        $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzRetry">もう一度保存する</button>';
+        $('pzBody').innerHTML = '<button type="button" class="btn btn-lg btn-block" id="pzRetry">' + BL('RETRY', 'もう' + fu('{一度|いちど}{保存|ほぞん}') + 'する') + '</button>';
         $('pzRetry').addEventListener('click', finish);
     }
     function showResult(fresh) {
@@ -151,9 +152,9 @@
             }).join('') + '</ol></section>';
         h += '<p class="pz-note">これは{目安|めやす}です。{本当|ほんとう}に{向|む}いているかは、{働|はたら}いてみて{分|わ}かることもあります。{気|き}になる{仕事|しごと}を{自由|じゆう}に{選|えら}んでください。</p>';
         h += '<div class="pz-acts">' +
-            (back ? '<a class="btn btn-lg btn-block" href="chat.html' + (backFix ? '?fix=work' : '') + '#' + esc(back) + '">{履歴書|りれきしょ}の{会話|かいわ}にもどる</a>' : '') +
-            '<a class="btn btn-lg btn-block' + (back ? ' btn-secondary' : '') + '" href="dashboard.html">ホームへ</a>' +
-            '<button type="button" class="btn btn-lg btn-block btn-secondary" id="pzAgain">もう{一度|いちど}やる</button></div>';
+            (back ? '<a class="btn btn-lg btn-block" href="chat.html' + (backFix ? '?fix=work' : '') + '#' + esc(back) + '">' + BL('BACK', '{履歴書|りれきしょ}の{会話|かいわ}にもどる') + '</a>' : '') +
+            '<a class="btn btn-lg btn-block' + (back ? ' btn-secondary' : '') + '" href="dashboard.html">' + BL('HOME', 'ホームへ') + '</a>' +
+            '<button type="button" class="btn btn-lg btn-block btn-secondary" id="pzAgain">' + BL('RETRY', 'もう{一度|いちど}やる') + '</button></div>';
         $('pzBody').innerHTML = h.replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>');
         $('pzAgain').addEventListener('click', function () { newRound(); showQ(); window.scrollTo(0, 0); });
     }
