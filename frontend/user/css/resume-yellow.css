@@ -94,3 +94,6 @@ h1 .rs-badge { margin-left: 12px; vertical-align: middle; font-size: 14px; }
 .cf-ttl { display: inline-block; }
 .cf-era label { white-space: nowrap; }
 .rs-item-main small { display: block; }
+/* 確認の画面の見出しの「完成」：見出しの黒地・黄色の文字を引きつがないように（2026-11-18） */
+.rs-card h1 > .rs-badge { background: #fff; color: var(--k); padding: 0 10px; }
+.rs-card h1 > .rs-badge.is-done { background: var(--lime); color: var(--k); }
