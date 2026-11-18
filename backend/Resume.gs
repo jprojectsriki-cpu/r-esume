@@ -59,7 +59,10 @@ function resumeAuth_(token, write) {
 }
 
 function resumeSummary_(r) {
-  return { resumeId: r.resumeId, title: r.title, updatedAt: iso_(r.updatedAt), createdAt: iso_(r.createdAt) };
+  // done：会話を最後まで進めて「完成する」を押したか（2026-11-18。一覧で「続きから作る」「確認する」を分けるため）
+  let done = false;
+  try { const d = JSON.parse(r.data || '{}'); done = d.done === true; } catch (e) { done = false; }
+  return { resumeId: r.resumeId, title: r.title, updatedAt: iso_(r.updatedAt), createdAt: iso_(r.createdAt), done: done };
 }
 
 function cleanTitle_(t) {

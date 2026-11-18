@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="noindex" name="robots"/>
-<title data-en="Resumes | R-ESUME">履歴書 | R-ESUME</title>
+<title>履歴書 | R-ESUME</title>
 <link href="img/favicon.png" rel="icon" type="image/png"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -16,7 +16,7 @@
 <link href="css/resume.css?v=20261116b" rel="stylesheet"/>
 <link href="css/game.css?v=20261116b" rel="stylesheet"/>
 <link href="css/app-yellow.css?v=20261117a" rel="stylesheet"/>
-<link href="css/resume-yellow.css?v=20261118a" rel="stylesheet"/>
+<link href="css/resume-yellow.css?v=20261118b" rel="stylesheet"/>
 <script src="js/i18n.js?v=20261116b"></script>
 <script>
         document.documentElement.classList.add('js');
@@ -46,19 +46,9 @@
 </div>
 </main>
 
-<dialog id="dlgOpen" class="confirm">
-    <h2><span data-l="ja" lang="ja">どうしますか？</span><span data-l="en" lang="en">What would you like to do?</span></h2>
-    <p><span data-l="ja" lang="ja"><ruby>会話<rt>かいわ</rt></ruby>の<ruby>続<rt>つづ</rt></ruby>きから<ruby>作<rt>つく</rt></ruby>るか、<ruby>入力画面<rt>にゅうりょくがめん</rt></ruby>で<ruby>内容<rt>ないよう</rt></ruby>を<ruby>直<rt>なお</rt></ruby>すかを<ruby>選<rt>えら</rt></ruby>べます。</span><span data-l="en" lang="en">Continue the chat, or check and edit your answers on the form.</span></p>
-    <div class="confirm-actions" style="flex-direction:column;align-items:stretch">
-        <button type="button" class="btn" id="openChat"><span data-l="ja" lang="ja"><ruby>会話<rt>かいわ</rt></ruby>の<ruby>続<rt>つづ</rt></ruby>きから<ruby>作<rt>つく</rt></ruby>る</span><span data-l="en" lang="en">Continue the chat</span></button>
-        <button type="button" class="btn btn-secondary" id="openForm"><span data-l="ja" lang="ja"><ruby>入力画面<rt>にゅうりょくがめん</rt></ruby>で<ruby>確認<rt>かくにん</rt></ruby>・<ruby>修正<rt>しゅうせい</rt></ruby>する</span><span data-l="en" lang="en">Check and edit on the form</span></button>
-        <button type="button" class="btn btn-secondary" id="openNo"><span data-l="ja" lang="ja"><ruby>戻<rt>もど</rt></ruby>る</span><span data-l="en" lang="en">Back</span></button>
-    </div>
-</dialog>
-
 <dialog id="dlgDel" class="confirm">
     <form method="dialog" id="delForm">
-        <h2><span data-l="ja" lang="ja"><ruby>削除<rt>さくじょ</rt></ruby>しますか？</span><span data-l="en" lang="en">Delete this resume?</span></h2>
+        <h2 id="delTitle"><ruby>削除<rt>さくじょ</rt></ruby>しますか？</h2>
         <p><strong id="delName"></strong></p>
         <p><span data-l="ja" lang="ja"><ruby>削除<rt>さくじょ</rt></ruby>すると、<ruby>元<rt>もと</rt></ruby>に<ruby>戻<rt>もど</rt></ruby>せません。</span><span data-l="en" lang="en">This cannot be undone.</span></p>
         <div class="confirm-actions">
@@ -76,6 +66,7 @@
 <script src="js/config.js?v=20261115c"></script>
 <script src="js/common.js?v=20261115c"></script>
 <script src="js/bg3d.js?v=20261117a"></script>
-<script src="js/resume.js?v=20261116g"></script>
+<script src="js/personality.js?v=20261117c"></script>
+<script src="js/resume.js?v=20261118a"></script>
 </body>
 </html>

@@ -70,3 +70,13 @@
 .pki:focus-within { background: var(--y-soft); }
 .pki em { color: var(--k); background: var(--y); }
 .pki.off, .pki.dis { background: #CFCFCF; color: #444; }
+
+/* セレクト（年・月・日）と、1行を直す画面（2026-11-18 STAGE 2 ②） */
+.f.sels { gap: 8px; padding: 0 18px 0 16px; }
+.sel { flex: 1; min-width: 0; min-height: 50px; border: 0; background: transparent; font: inherit; font-weight: 900; font-size: 18px; color: var(--k); cursor: pointer; }
+.sel-y { flex: 1.4; }
+.sel-k { flex: 1; }
+.sel:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+.sel:disabled, .f input:disabled { color: #999; cursor: default; }
+.rowf { display: grid; gap: 10px; }
+@media (max-width: 480px) { .inp:has(.sels) { flex-wrap: wrap; } .inp:has(.sels) .f { flex: 1 1 100%; } .inp:has(.sels) .go { flex: 1 1 100%; } .sel { font-size: 17px; } }

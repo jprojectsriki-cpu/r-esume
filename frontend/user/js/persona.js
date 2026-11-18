@@ -14,6 +14,7 @@
     function esc(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function fu(x) { return esc(x).replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>'); }   // {漢字|よみ} → ふりがな
     var back = (location.search.match(/[?&]back=([A-Za-z0-9_-]+)/) || [])[1] || '';
+    var backFix = /[?&]fix=work(&|$)/.test(location.search);   // 確認の画面の「直す」から来たとき：もどったら業種の質問だけ答え直す
     var WIP = 'resume_persona_wip3';   // 3版（2択）。前の版の途中データは使わない
     var N = P.QUESTIONS.length;
     var LINES = {
@@ -150,7 +151,7 @@
             }).join('') + '</ol></section>';
         h += '<p class="pz-note">これは{目安|めやす}です。{本当|ほんとう}に{向|む}いているかは、{働|はたら}いてみて{分|わ}かることもあります。{気|き}になる{仕事|しごと}を{自由|じゆう}に{選|えら}んでください。</p>';
         h += '<div class="pz-acts">' +
-            (back ? '<a class="btn btn-lg btn-block" href="chat.html#' + esc(back) + '">{履歴書|りれきしょ}の{会話|かいわ}にもどる</a>' : '') +
+            (back ? '<a class="btn btn-lg btn-block" href="chat.html' + (backFix ? '?fix=work' : '') + '#' + esc(back) + '">{履歴書|りれきしょ}の{会話|かいわ}にもどる</a>' : '') +
             '<a class="btn btn-lg btn-block' + (back ? ' btn-secondary' : '') + '" href="dashboard.html">ホームへ</a>' +
             '<button type="button" class="btn btn-lg btn-block btn-secondary" id="pzAgain">もう{一度|いちど}やる</button></div>';
         $('pzBody').innerHTML = h.replace(/\{([^|}]+)\|([^}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>');

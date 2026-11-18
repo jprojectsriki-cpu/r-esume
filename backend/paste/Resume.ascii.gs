@@ -59,7 +59,10 @@ function resumeAuth_(token, write) {
 }
 
 function resumeSummary_(r) {
-  return { resumeId: r.resumeId, title: r.title, updatedAt: iso_(r.updatedAt), createdAt: iso_(r.createdAt) };
+  // done\uff1a\u4f1a\u8a71\u3092\u6700\u5f8c\u307e\u3067\u9032\u3081\u3066\u300c\u5b8c\u6210\u3059\u308b\u300d\u3092\u62bc\u3057\u305f\u304b\uff082026-11-18\u3002\u4e00\u89a7\u3067\u300c\u7d9a\u304d\u304b\u3089\u4f5c\u308b\u300d\u300c\u78ba\u8a8d\u3059\u308b\u300d\u3092\u5206\u3051\u308b\u305f\u3081\uff09
+  let done = false;
+  try { const d = JSON.parse(r.data || '{}'); done = d.done === true; } catch (e) { done = false; }
+  return { resumeId: r.resumeId, title: r.title, updatedAt: iso_(r.updatedAt), createdAt: iso_(r.createdAt), done: done };
 }
 
 function cleanTitle_(t) {
